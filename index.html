@@ -1707,6 +1707,16 @@
   <div class="modal v3-modal">
     <div class="v3-header">
       <div><h2 id="taskModalTitle">Новая задача</h2></div>
+      <div class="v3-header-actions">
+        <div style="position:relative;" id="taskMenuWrap">
+          <button class="modal-menu-btn" id="taskMenuBtn" title="Actions">⋯</button>
+          <div class="modal-menu-drop" id="taskMenuDrop">
+            <div class="modal-menu-item danger" id="deleteTaskBtn">🗑 Удалить задачу</div>
+          </div>
+        </div>
+        <button class="modal-menu-btn" data-close="taskModal" style="font-size:18px;">✕</button>
+      </div>
+    </div>
 
     <div class="v3-body">
 
