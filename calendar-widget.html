@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Calendar Widget</title>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f4ff;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .widget {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(66,133,244,0.12);
+    overflow: hidden;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #4285F4, #34A853);
+    color: #fff;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-icon {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header-title { font-size: 18px; font-weight: 700; }
+  .header-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .refresh-btn {
+    background: rgba(255,255,255,0.2);
+    border: none; border-radius: 8px;
+    color: #fff; cursor: pointer;
+    padding: 7px 12px; font-size: 14px;
+    transition: background 0.2s;
+    display: none;
+  }
+  .refresh-btn:hover { background: rgba(255,255,255,0.35); }
+  .refresh-btn.visible { display: block; }
+
+  /* LOGIN */
+  .login-section {
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .login-section h2 { font-size: 18px; color: #333; margin-bottom: 8px; }
+  .login-section p { font-size: 14px; color: #888; margin-bottom: 28px; line-height: 1.5; }
+  .google-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 15px; font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    transition: box-shadow 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+  .google-btn:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); background: #f8f8f8; }
+  .google-logo { width: 20px; height: 20px; }
+
+  /* MINI CALENDAR */
+  .mini-cal {
+    padding: 16px 24px 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .mini-cal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .mini-cal-title { font-size: 15px; font-weight: 600; color: #333; }
+  .mini-cal-nav { display: flex; gap: 4px; }
+  .nav-btn {
+    background: none; border: 1px solid #e8e8e8; border-radius: 6px;
+    cursor: pointer; color: #555; padding: 3px 9px; font-size: 14px;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { background: #f0f4ff; border-color: #4285F4; }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 2px; text-align: center;
+  }
+  .cal-dow { font-size: 11px; font-weight: 600; color: #aaa; padding: 4px 2px; }
+  .cal-day {
+    font-size: 13px; padding: 4px 2px; border-radius: 6px;
+    cursor: default; min-height: 28px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .cal-day.other-month { color: #ddd; }
+  .cal-day.today .day-num {
+    background: #4285F4; color: #fff; font-weight: 700;
+    border-radius: 50%; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .event-dot {
+    width: 4px; height: 4px; background: #34A853;
+    border-radius: 50%; margin: 2px auto 0;
+  }
+  .cal-day.today .event-dot { background: #fff; }
+
+  /* EVENTS */
+  .events-section { padding: 16px 24px 24px; }
+  .events-title {
+    font-size: 11px; font-weight: 700; color: #aaa;
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px;
+  }
+  .event-group { margin-bottom: 18px; }
+  .event-date-label {
+    font-size: 12px; font-weight: 700; color: #4285F4;
+    margin-bottom: 8px; text-transform: capitalize;
+  }
+  .event-card {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 14px; border-radius: 10px;
+    background: #f8f9ff; border-left: 3px solid #4285F4;
+    margin-bottom: 6px; transition: background 0.15s;
+  }
+  .event-card:hover { background: #eef2ff; }
+  .event-time { font-size: 12px; color: #888; white-space: nowrap; padding-top: 2px; min-width: 52px; }
+  .event-name { font-size: 14px; font-weight: 500; }
+  .event-loc { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  .empty { text-align: center; padding: 32px 0; color: #ccc; font-size: 14px; }
+  .spinner {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 40px; gap: 12px; color: #aaa; font-size: 14px;
+  }
+  .spin {
+    width: 28px; height: 28px;
+    border: 3px solid #e8e8e8; border-top-color: #4285F4;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SIGNED-IN user badge */
+  .user-badge {
+    display: none;
+    font-size: 12px; opacity: 0.85;
+  }
+  .user-badge.visible { display: block; }
+
+  .sign-out-btn {
+    background: rgba(255,255,255,0.15); border: none;
+    border-radius: 6px; color: #fff; cursor: pointer;
+    padding: 4px 10px; font-size: 12px; margin-top: 6px;
+    display: none;
+  }
+  .sign-out-btn.visible { display: block; }
+  .sign-out-btn:hover { background: rgba(255,255,255,0.3); }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">📅</div>
+      <div>
+        <div class="header-title">Google Calendar</div>
+        <div class="user-badge" id="userBadge"></div>
+        <button class="sign-out-btn" id="signOutBtn" onclick="signOut()">Выйти</button>
+      </div>
+    </div>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadEvents()">↻</button>
+  </div>
+
+  <!-- LOGIN VIEW -->
+  <div class="login-section" id="loginSection">
+    <h2>Войди в Google</h2>
+    <p>Подключи свой Google Calendar, чтобы видеть события прямо здесь.</p>
+    <button class="google-btn" onclick="signIn()">
+      <svg class="google-logo" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Войти через Google
+    </button>
+  </div>
+
+  <!-- CALENDAR VIEW (hidden until logged in) -->
+  <div id="calendarView" class="hidden">
+    <div class="mini-cal">
+      <div class="mini-cal-header">
+        <div class="mini-cal-title" id="calTitle"></div>
+        <div class="mini-cal-nav">
+          <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="events-section">
+      <div class="events-title">Ближайшие 14 дней</div>
+      <div id="eventsList"><div class="spinner"><div class="spin"></div>Загружаем события…</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CLIENT_ID = '688204045140-2i8l9m1bpobklij5g2rcekvv5keojt5o.apps.googleusercontent.com';
+const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
+const MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+let tokenClient, accessToken = null;
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let allEvents = [];
+
+// Init Google Identity Services
+window.onload = () => {
+  // Check stored token
+  const stored = sessionStorage.getItem('gcal_token');
+  if (stored) {
+    accessToken = stored;
+    showCalendar();
+    loadEvents();
+  }
+
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPE,
+    callback: (response) => {
+      if (response.error) { console.error(response); return; }
+      accessToken = response.access_token;
+      sessionStorage.setItem('gcal_token', accessToken);
+      showCalendar();
+      loadEvents();
+      // Get user info
+      fetchUserInfo();
+    }
+  });
+};
+
+function signIn() {
+  tokenClient.requestAccessToken();
+}
+
+function signOut() {
+  google.accounts.oauth2.revoke(accessToken, () => {});
+  accessToken = null;
+  sessionStorage.removeItem('gcal_token');
+  document.getElementById('loginSection').classList.remove('hidden');
+  document.getElementById('calendarView').classList.add('hidden');
+  document.getElementById('refreshBtn').classList.remove('visible');
+  document.getElementById('signOutBtn').classList.remove('visible');
+  document.getElementById('userBadge').classList.remove('visible');
+  document.getElementById('userBadge').textContent = '';
+}
+
+function showCalendar() {
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('calendarView').classList.remove('hidden');
+  document.getElementById('refreshBtn').classList.add('visible');
+  document.getElementById('signOutBtn').classList.add('visible');
+}
+
+async function fetchUserInfo() {
+  try {
+    const r = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const data = await r.json();
+    const badge = document.getElementById('userBadge');
+    badge.textContent = data.email || '';
+    badge.classList.add('visible');
+  } catch(e) {}
+}
+
+async function loadEvents() {
+  const listEl = document.getElementById('eventsList');
+  listEl.innerHTML = '<div class="spinner"><div class="spin"></div>Загружаем события…</div>';
+
+  const now = new Date();
+  const end = new Date(now);
+  end.setDate(end.getDate() + 14);
+
+  try {
+    const url = new URL('https://www.googleapis.com/calendar/v3/calendars/primary/events');
+    url.searchParams.set('timeMin', now.toISOString());
+    url.searchParams.set('timeMax', end.toISOString());
+    url.searchParams.set('singleEvents', 'true');
+    url.searchParams.set('orderBy', 'startTime');
+    url.searchParams.set('maxResults', '30');
+
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (res.status === 401) {
+      signOut();
+      return;
+    }
+
+    const data = await res.json();
+    allEvents = data.items || [];
+    renderMiniCal();
+    renderEvents();
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty">Ошибка: ${e.message}</div>`;
+  }
+}
+
+function changeMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderMiniCal();
+}
+
+function renderMiniCal() {
+  document.getElementById('calTitle').textContent = `${MONTHS_RU[currentMonth]} ${currentYear}`;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  DAYS_RU.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const today = new Date();
+  let startDow = new Date(currentYear, currentMonth, 1).getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrev = new Date(currentYear, currentMonth, 0).getDate();
+
+  const eventDates = new Set();
+  allEvents.forEach(ev => {
+    const dt = ev.start?.dateTime || ev.start?.date;
+    if (!dt) return;
+    const d = new Date(dt.includes('T') ? dt : dt + 'T00:00:00');
+    if (d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
+      eventDates.add(d.getDate());
+    }
+  });
+
+  for (let i = startDow - 1; i >= 0; i--) {
+    const el = document.createElement('div');
+    el.className = 'cal-day other-month';
+    el.innerHTML = `<span class="day-num">${daysInPrev - i}</span>`;
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    const isToday = d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+    el.className = 'cal-day' + (isToday ? ' today' : '');
+    el.innerHTML = `<span class="day-num">${d}</span>${eventDates.has(d) ? '<div class="event-dot"></div>' : ''}`;
+    grid.appendChild(el);
+  }
+
+  const total = startDow + daysInMonth;
+  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= rem; d++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day other-month';
+    el.innerHTML = `<span class="day-num">${d}</span>`;
+    grid.appendChild(el);
+  }
+}
+
+function renderEvents() {
+  const listEl = document.getElementById('eventsList');
+  if (!allEvents.length) {
+    listEl.innerHTML = '<div class="empty">Нет событий на ближайшие 2 недели</div>';
+    return;
+  }
+
+  const groups = {};
+  allEvents.forEach(ev => {
+    const dt = ev.start?.dateTime || ev.start?.date;
+    if (!dt) return;
+    const key = dt.split('T')[0];
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(ev);
+  });
+
+  listEl.innerHTML = '';
+  Object.keys(groups).sort().forEach(dateKey => {
+    const group = document.createElement('div');
+    group.className = 'event-group';
+
+    const d = new Date(dateKey + 'T12:00:00');
+    const today = new Date();
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    let label;
+    if (d.toDateString() === today.toDateString()) label = 'Сегодня';
+    else if (d.toDateString() === tomorrow.toDateString()) label = 'Завтра';
+    else label = d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'event-date-label';
+    labelEl.textContent = label;
+    group.appendChild(labelEl);
+
+    groups[dateKey].forEach(ev => {
+      const card = document.createElement('div');
+      card.className = 'event-card';
+      const start = ev.start?.dateTime;
+      const end = ev.end?.dateTime;
+      const fmt = t => new Date(t).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      const time = start ? `${fmt(start)}–${fmt(end)}` : 'Весь день';
+      card.innerHTML = `
+        <div class="event-time">${time}</div>
+        <div>
+          <div class="event-name">${ev.summary || '(без названия)'}</div>
+          ${ev.location ? `<div class="event-loc">📍 ${ev.location}</div>` : ''}
+        </div>
+      `;
+      group.appendChild(card);
+    });
+
+    listEl.appendChild(group);
+  });
+}
+</script>
+</body>
+</html>
