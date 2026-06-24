@@ -395,7 +395,7 @@
   .task-actions button:hover { background: #e8e2d6; color: var(--text); }
 
   /* Kanban */
-  .kanban { display: grid; grid-template-columns: 220px repeat(7, 300px); gap: 10px; margin-bottom: 18px; min-width: max-content; }
+  .kanban { display: flex; gap: 10px; margin-bottom: 18px; min-width: max-content; align-items: flex-start; }
   .kanban-col { background: var(--surface-2); border-radius: 14px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; max-height: calc(100vh - 190px); }
   .kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .kanban-col-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
@@ -417,6 +417,22 @@
   .kanban-card-title { font-weight: 500; font-size: 14px; flex: 1; }
   .prio-icon { flex-shrink: 0; display: flex; align-items: center; }
   .kanban-card.done-card .kanban-card-title { text-decoration: line-through; color: var(--muted); }
+  /* Done checkbox */
+  .card-done-btn { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #cbc3b5; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s, background .15s, border-color .15s; margin-top: 1px; }
+  .kanban-card:hover .card-done-btn { opacity: 1; }
+  .card-done-btn.is-done { opacity: 1 !important; background: var(--success); border-color: var(--success); }
+  .card-done-btn.is-done::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; line-height: 1; }
+  /* Context menu */
+  .kcard-ctx-menu { position: fixed; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,.15); padding: 6px 0; z-index: 9999; min-width: 150px; display: none; }
+  .kcard-ctx-menu.open { display: block; }
+  .kcard-ctx-item { padding: 8px 16px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text); }
+  .kcard-ctx-item:hover { background: var(--surface-2); }
+  .kcard-ctx-item.danger { color: #c03030; }
+  .kcard-ctx-item.danger:hover { background: #fff0f0; }
+  /* Category selector in inline add */
+  .inline-cat-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .inline-cat-btn { font-size: 11px; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); cursor: pointer; transition: all .12s; }
+  .inline-cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
   .kanban-add { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 10px; border-radius: 8px; border: 1px dashed var(--border); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; width: 100%; text-align: left; transition: all .15s; }
   .kanban-add:hover { background: var(--surface); color: var(--text); }
 
@@ -440,6 +456,7 @@
   .day-col-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
   .kanban-col.col-today { background: #fff8f3; border-color: #fadcce; }
   .kanban-col.col-today .kanban-col-title { color: var(--accent) !important; }
+  .kanban-col.col-backlog { box-shadow: 3px 0 12px rgba(0,0,0,0.08); }
 
   /* Quick-add */
   .quick-add { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; margin-bottom: 12px; border: 1px dashed var(--border); transition: all .15s; }
@@ -653,6 +670,12 @@
 #mood textarea:focus { outline:none; border-color:var(--accent); }
 #mood textarea::placeholder { color:var(--muted); }
 
+/* Reflection questions inside mood tracker */
+#mood .ref-q { margin-bottom:12px; }
+#mood .ref-q:last-child { margin-bottom:0; }
+#mood .ref-q label { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.04em; display:block; margin-bottom:5px; }
+#mood .ref-q textarea { min-height:56px; }
+
 /* Save button — same as .btn */
 #mood .mt-primary-btn { background:var(--accent); color:#fff; padding:12px 20px; border-radius:10px; font:inherit; font-size:15px; font-weight:600; border:0; cursor:pointer; width:100%; margin-top:4px; }
 #mood .mt-primary-btn:hover { background:#e5573a; }
@@ -756,66 +779,6 @@
 #mood .jnl-note { margin:10px 0 10px; padding:10px 12px; background:var(--surface-2); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; font-size:13px; line-height:1.6; color:var(--text); font-style:italic; }
 @media(max-width:760px){ #mood .jnl-charts-grid { grid-template-columns:1fr; } }
 
-/* ── REFLECTION (unified design) ── */
-#reflection .ref-ratings-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:2px; }
-#reflection .ref-rating-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-bottom:10px; }
-/* Sliders */
-#reflection .ref-slider-wrap { padding-top:4px; }
-#reflection .ref-slider-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; min-height:42px; }
-#reflection .ref-slider-emoji { font-size:32px; line-height:1; transition:transform .15s; }
-#reflection .ref-slider-wrap[data-touched="1"] .ref-slider-emoji { transform:scale(1.15); }
-#reflection .ref-slider-num { font-size:16px; font-weight:700; color:var(--accent); min-width:36px; }
-#reflection .ref-slider-input {
-  -webkit-appearance:none; appearance:none;
-  width:100%; height:5px; border-radius:3px;
-  background:var(--border); outline:none; cursor:pointer;
-  transition:background .1s;
-}
-#reflection .ref-slider-input::-webkit-slider-thumb {
-  -webkit-appearance:none; appearance:none;
-  width:22px; height:22px; border-radius:50%;
-  background:var(--accent); cursor:pointer;
-  box-shadow:0 2px 8px rgba(255,107,74,.4);
-  transition:transform .1s, box-shadow .1s;
-}
-#reflection .ref-slider-input::-webkit-slider-thumb:hover { transform:scale(1.18); box-shadow:0 3px 14px rgba(255,107,74,.5); }
-#reflection .ref-slider-input::-moz-range-thumb {
-  width:22px; height:22px; border-radius:50%; border:none;
-  background:var(--accent); cursor:pointer;
-  box-shadow:0 2px 8px rgba(255,107,74,.4);
-}
-#reflection .ref-slider-ticks { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:5px; padding:0 2px; }
-/* Untouched state */
-#reflection .ref-slider-wrap[data-touched="0"] .ref-slider-num { color:var(--muted); }
-#reflection .ref-q { margin-bottom:16px; }
-#reflection .ref-q:last-child { margin-bottom:0; }
-#reflection .ref-q label { font-size:13px; color:var(--muted); font-weight:500; display:block; margin-bottom:7px; }
-#reflection .ref-q textarea { border-radius:10px; border:1.5px solid var(--border); background:var(--surface); font:inherit; font-size:14px; line-height:1.5; padding:10px 12px; width:100%; resize:vertical; color:var(--text); transition:.12s; }
-#reflection .ref-q textarea:focus { outline:none; border-color:var(--accent); background:var(--surface); }
-#reflection .ref-q textarea::placeholder { color:var(--muted); }
-/* Save button */
-#reflection .ref-save { background:var(--accent); color:#fff; padding:13px 24px; border-radius:10px; font:inherit; font-size:15px; font-weight:600; border:0; cursor:pointer; width:100%; margin-bottom:24px; transition:.12s; }
-#reflection .ref-save:hover { background:#e5573a; }
-/* History entries */
-#reflection .ref-entry { border-bottom:1px solid var(--border); }
-#reflection .ref-entry:last-child { border-bottom:none; }
-#reflection .ref-entry-hd { display:flex; align-items:center; gap:12px; padding:11px 0; cursor:pointer; user-select:none; }
-#reflection .ref-entry-hd:hover .ref-score-dot { background:var(--accent); color:#fff; }
-#reflection .ref-score-dot { width:36px; height:36px; display:grid; place-items:center; border-radius:10px; background:var(--accent-soft); font-weight:700; color:var(--accent); flex-shrink:0; font-size:13px; transition:.12s; }
-#reflection .ref-entry-date { font-weight:600; font-size:14px; flex:1; }
-#reflection .ref-entry-meta { color:var(--muted); font-size:12px; }
-#reflection .ref-entry-chev { color:var(--muted); font-size:16px; flex-shrink:0; transition:transform .18s; line-height:1; }
-#reflection .ref-entry.open .ref-entry-chev { transform:rotate(90deg); }
-#reflection .ref-entry-body { display:none; padding:4px 0 14px 48px; }
-#reflection .ref-entry.open .ref-entry-body { display:block; animation:ref-fade .15s ease; }
-@keyframes ref-fade { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-#reflection .ref-entry-row { font-size:13px; color:var(--muted); margin-bottom:5px; line-height:1.5; }
-#reflection .ref-entry-row b { color:var(--text); font-weight:500; }
-#reflection .ref-entry-win { margin:8px 0; padding:10px 12px; background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; font-size:13px; line-height:1.6; color:#6b2c13; font-style:italic; }
-@media(max-width:760px) {
-  #reflection .ref-ratings-row { grid-template-columns:1fr; gap:14px; }
-  #reflection .card-row { grid-template-columns:1fr; }
-}
 
 /* ═══════════════════════════════════════════════
    MOBILE RESPONSIVE  ≤ 640px
@@ -947,7 +910,6 @@
 
   /* ── Kanban: horizontal scroll ── */
   .kanban {
-    grid-template-columns: 220px repeat(7, 300px);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
     padding-bottom: 8px;
     scroll-snap-type: x mandatory;
@@ -1022,7 +984,6 @@
     <nav class="nav">
       <button class="nav-item active" data-screen="today" data-tip="Dashboard"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><rect x="3" y="4" width="6" height="6" rx="1"/></svg></span><span class="nav-label">Home</span></button>
       <button class="nav-item" data-screen="mood" data-tip="Mood Tracker"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M15 3v5a1 1 0 0 0 1 1h5"/><path d="M8 13h.01"/><path d="M16 13h.01"/><path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/></svg></span><span class="nav-label">Mood</span></button>
-      <button class="nav-item" data-screen="reflection" data-tip="Reflection"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg></span><span class="nav-label">Journal</span></button>
       <button class="nav-item" data-screen="finances" data-tip="Finances"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span><span class="nav-label">Finance</span></button>
       <button class="nav-item" data-screen="habits" data-tip="Трекер привычек"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="m9 12 2 2 4-4"/></svg></span><span class="nav-label">Привычки</span></button>
     </nav>
@@ -1047,9 +1008,9 @@
             <button class="kanban-filter" data-filter="low">🟢 Low</button>
           </div>
         </div>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -14px;padding:0 14px 4px;"><div class="kanban" id="kanbanBoard">
-          <!-- Backlog column -->
-          <div class="kanban-col col-backlog" data-col="backlog">
+        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -14px;padding:0 14px 4px;align-items:flex-start;">
+          <!-- Backlog column: fixed, does not scroll -->
+          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:14px;z-index:5;">
             <div class="kanban-col-header">
               <span class="kanban-col-title">Backlog</span>
               <span class="kanban-col-count" id="cnt-backlog">0</span>
@@ -1067,23 +1028,24 @@
             </div>
             <button class="kanban-add" data-col="backlog"><span style="font-size:16px;line-height:1;">+</span> Add</button>
           </div>
-          <!-- Day columns: injected by initDayColumns() -->
-        </div></div>
-      </div>
-
-      <!-- Calendar card (moved from kanban) -->
-      <div class="card" id="calendarCard" style="padding:0;overflow:hidden;margin-bottom:18px;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid var(--border);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7a7368" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <strong style="font-size:12px;font-weight:700;color:#7a7368;text-transform:uppercase;letter-spacing:.06em;">Calendar</strong>
-          <div style="display:flex;align-items:center;gap:4px;margin-left:auto;">
-            <button onclick="gcalNav(-1)" style="border:1px solid #e0dbd3;background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;color:#5f6368;display:flex;align-items:center;justify-content:center;">‹</button>
-            <button onclick="gcalNav(1)"  style="border:1px solid #e0dbd3;background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;color:#5f6368;display:flex;align-items:center;justify-content:center;">›</button>
-            <div id="gcalRange" style="text-align:center;font-size:12px;font-weight:600;color:#3c4043;border:1.5px solid #1a73e8;border-radius:6px;padding:4px 10px;"></div>
+          <!-- Day columns: scrollable -->
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding-bottom:4px;" id="kanbanBoard">
+            <!-- injected by initDayColumns() -->
           </div>
         </div>
-        <div id="gcalBody" style="overflow-y:auto;max-height:380px;padding:0 0 12px;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">
-          <div style="padding:24px;text-align:center;color:#9e9e9e;font-size:13px;">Loading calendar…</div>
+      </div>
+
+      <!-- Calendar: today's schedule -->
+      <div class="card" id="calendarCard" style="padding:0;overflow:hidden;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 11px;border-bottom:1px solid var(--border);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <strong style="font-size:12px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:.06em;">Today's Schedule</strong>
+          <div id="gcalRange" style="margin-left:auto;font-size:11px;font-weight:600;color:#70757a;background:#f1f3f4;border-radius:20px;padding:3px 10px;"></div>
+          <button onclick="gcalLoad()" title="Refresh" style="border:none;background:none;cursor:pointer;color:#70757a;font-size:14px;padding:2px 4px;line-height:1;" title="Refresh">↺</button>
+          <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:#1a73e8;text-decoration:none;font-weight:600;white-space:nowrap;">Open ↗</a>
+        </div>
+        <div id="gcalBody" style="overflow-y:auto;max-height:300px;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">
+          <div style="padding:24px;text-align:center;color:#9e9e9e;font-size:13px;">⏳ Loading…</div>
         </div>
       </div>
 
@@ -1290,6 +1252,16 @@
                 </div>
               </div>
               <div class="metric-card">
+                <div class="metric-head">
+                  <div class="mt-label">Фокус</div>
+                  <div class="metric-value"><span id="mtFocusValue">5</span>/10</div>
+                </div>
+                <div class="metric-slider">
+                  <input type="range" id="mtFocusRange" min="1" max="10" value="5" />
+                  <div class="range-labels"><span>низкий</span><span>высокий</span></div>
+                </div>
+              </div>
+              <div class="metric-card">
                 <div class="mt-label">Цикл</div>
                 <div>
                   <div class="cycle-main" id="mtCycleMainLabel">—</div>
@@ -1317,6 +1289,23 @@
             <h2 class="mt-section-title">Короткая заметка</h2>
             <div class="mt-helper">Что важно запомнить про день?</div>
             <textarea id="mtNote" placeholder="Например: плохо спала, было собеседование, вечером стало спокойнее после прогулки"></textarea>
+          </div>
+
+          <div class="mt-card compact">
+            <h2 class="mt-section-title">Рефлексия дня</h2>
+            <div class="mt-helper">Необязательно — заполни то, что откликается.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div>
+                <div class="ref-q"><label>🏆 Главная победа дня</label><textarea id="mtRefWin" rows="2" placeholder="Что получилось сегодня?"></textarea></div>
+                <div class="ref-q"><label>🎯 Один шаг на завтра</label><textarea id="mtRefTomorrow" rows="2" placeholder="Что самое важное завтра?"></textarea></div>
+                <div class="ref-q"><label>💬 Главный вывод дня</label><textarea id="mtRefConclusion" rows="2" placeholder="Ключевое ощущение или инсайт..."></textarea></div>
+              </div>
+              <div>
+                <div class="ref-q"><label>✅ Что прошло хорошо?</label><textarea id="mtRefGood" rows="2" placeholder="Даже мелочи считаются..."></textarea></div>
+                <div class="ref-q"><label>⚠️ Что не сработало?</label><textarea id="mtRefBad" rows="2" placeholder="..."></textarea></div>
+                <div class="ref-q"><label>📱 Что отвлекало?</label><textarea id="mtRefDistract" rows="2" placeholder="..."></textarea></div>
+              </div>
+            </div>
           </div>
 
           <button class="mt-primary-btn" id="mtSaveBtn">Сохранить чек-ин</button>
@@ -1408,100 +1397,6 @@
     <div class="mt-toast" id="mtToast"></div>
     </section>
 
-    <!-- REFLECTION -->
-    <section class="screen" id="reflection">
-
-      <div class="header-row" style="margin-bottom:24px;">
-        <div>
-          <h1>Daily Reflection</h1>
-          <p class="subtitle">End-of-day check-in · 3–5 minutes</p>
-        </div>
-      </div>
-
-      <!-- Ratings -->
-      <div class="card">
-        <h2>How was your day?</h2>
-        <div class="ref-ratings-row">
-          <div>
-            <div class="ref-rating-label">Mood</div>
-            <div class="ref-slider-wrap" id="refMood" data-touched="0">
-              <div class="ref-slider-top">
-                <span class="ref-slider-emoji" id="refMoodEmoji"></span>
-                <span class="ref-slider-num" id="refMoodNum"></span>
-              </div>
-              <input type="range" min="1" max="10" value="5" class="ref-slider-input" id="refMoodRange">
-              <div class="ref-slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-            </div>
-          </div>
-          <div>
-            <div class="ref-rating-label">Energy</div>
-            <div class="ref-slider-wrap" id="refEnergy" data-touched="0">
-              <div class="ref-slider-top">
-                <span class="ref-slider-emoji" id="refEnergyEmoji"></span>
-                <span class="ref-slider-num" id="refEnergyNum"></span>
-              </div>
-              <input type="range" min="1" max="10" value="5" class="ref-slider-input" id="refEnergyRange">
-              <div class="ref-slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-            </div>
-          </div>
-          <div>
-            <div class="ref-rating-label">Focus</div>
-            <div class="ref-slider-wrap" id="refFocus" data-touched="0">
-              <div class="ref-slider-top">
-                <span class="ref-slider-emoji" id="refFocusEmoji"></span>
-                <span class="ref-slider-num" id="refFocusNum"></span>
-              </div>
-              <input type="range" min="1" max="10" value="5" class="ref-slider-input" id="refFocusRange">
-              <div class="ref-slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Questions 2-col -->
-      <div class="card-row" style="align-items:start;margin-bottom:18px;">
-        <div class="card" style="margin-bottom:0;">
-          <h2>Wins & Plans</h2>
-          <div class="ref-q">
-            <label>🏆 Main win of the day</label>
-            <textarea id="refWin" rows="3" placeholder="What did you accomplish today?"></textarea>
-          </div>
-          <div class="ref-q">
-            <label>🎯 One small step for tomorrow</label>
-            <textarea id="refTomorrow" rows="3" placeholder="What's most important tomorrow?"></textarea>
-          </div>
-          <div class="ref-q">
-            <label>💬 Main takeaway of the day</label>
-            <textarea id="refConclusion" rows="3" placeholder="Key insight or feeling from today..."></textarea>
-          </div>
-        </div>
-        <div class="card" style="margin-bottom:0;">
-          <h2>Reflection</h2>
-          <div class="ref-q">
-            <label>✅ What went well today?</label>
-            <textarea id="refGood" rows="3" placeholder="Even small things count..."></textarea>
-          </div>
-          <div class="ref-q">
-            <label>⚠️ What didn't work?</label>
-            <textarea id="refBad" rows="3" placeholder="..."></textarea>
-          </div>
-          <div class="ref-q">
-            <label>📱 What distracted you?</label>
-            <textarea id="refDistract" rows="3" placeholder="..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <button class="ref-save" id="saveReflectionBtn">Save reflection</button>
-
-      <!-- History -->
-      <div class="card" id="refHistoryCard">
-        <h2>History</h2>
-        <div id="refHistory"><div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0;">No records yet</div></div>
-      </div>
-
-    </section>
-
     <!-- FINANCES -->
     <section class="screen" id="finances">
       <div class="header-row">
@@ -1512,7 +1407,10 @@
       <div id="finDashboard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;">
         <div class="card" style="text-align:center;">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Доход</div>
-          <div id="finDashIncome" style="font-size:22px;font-weight:700;color:var(--success);">€0</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:22px;font-weight:700;color:var(--success);">€</span>
+            <input id="finIncome" type="number" placeholder="0" style="font-size:22px;font-weight:700;border:none;background:transparent;width:90px;outline:none;color:var(--success);text-align:center;" oninput="updatePercentages()">
+          </div>
         </div>
         <div class="card" style="text-align:center;">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Расходы</div>
@@ -1521,15 +1419,6 @@
         <div class="card" style="text-align:center;">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Баланс</div>
           <div id="finDashBalance" style="font-size:22px;font-weight:700;">€0</div>
-        </div>
-      </div>
-
-      <!-- Income -->
-      <div class="card" style="margin-bottom:14px;">
-        <h3 style="margin-bottom:10px;">💵 Сколько заработала</h3>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input id="finIncome" type="number" placeholder="0" style="font-size:20px;font-weight:700;border:none;background:transparent;width:100%;outline:none;color:var(--text);">
-          <span style="color:var(--muted);font-size:18px;">€</span>
         </div>
       </div>
 
@@ -1701,6 +1590,12 @@
 
 <!-- Toast host -->
 <div class="toast-host" id="toastHost"></div>
+
+<!-- Kanban card context menu -->
+<div class="kcard-ctx-menu" id="kcardCtxMenu">
+  <div class="kcard-ctx-item" id="kcardCtxDone">✓ Отметить как выполнено</div>
+  <div class="kcard-ctx-item danger" id="kcardCtxDelete">🗑 Удалить карточку</div>
+</div>
 
 <!-- Add Task Modal (hidden/removed) -->
 <div class="modal-backdrop" id="taskModal" style="display:none!important;">
@@ -2092,6 +1987,8 @@
       btn.classList.add('active');
       document.getElementById(target).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Re-render calendar when switching to dashboard
+      if (target === 'today' && window.gcalLoad) window.gcalLoad();
     });
   });
 
@@ -2497,6 +2394,47 @@
     openModal('taskModal');
   }
 
+  // ── Done toggle ────────────────────────────────────────────────────────
+  function toggleCardDone(card) {
+    const isDone = card.dataset.done === '1';
+    card.dataset.done = isDone ? '0' : '1';
+    renderCardInner(card);
+    bindKanbanCard(card);
+    saveKanban();
+    updateCounts();
+  }
+  window.toggleCardDone = toggleCardDone;
+
+  // ── Context menu ───────────────────────────────────────────────────────
+  const _ctxMenu     = document.getElementById('kcardCtxMenu');
+  const _ctxDoneBtn  = document.getElementById('kcardCtxDone');
+  const _ctxDelBtn   = document.getElementById('kcardCtxDelete');
+  let   _ctxCard     = null;
+
+  function showCardCtxMenu(e, card) {
+    e.preventDefault();
+    e.stopPropagation();
+    _ctxCard = card;
+    const isDone = card.dataset.done === '1';
+    _ctxDoneBtn.textContent = isDone ? '↩ Снять отметку' : '✓ Отметить как выполнено';
+    _ctxMenu.style.left = Math.min(e.clientX, window.innerWidth - 170) + 'px';
+    _ctxMenu.style.top  = Math.min(e.clientY, window.innerHeight - 90) + 'px';
+    _ctxMenu.classList.add('open');
+  }
+
+  _ctxDoneBtn.addEventListener('click', () => {
+    if (_ctxCard) toggleCardDone(_ctxCard);
+    _ctxMenu.classList.remove('open');
+    _ctxCard = null;
+  });
+  _ctxDelBtn.addEventListener('click', () => {
+    if (_ctxCard) { _ctxCard.remove(); saveKanban(); updateCounts(); toast('Задача удалена', 'error'); }
+    _ctxMenu.classList.remove('open');
+    _ctxCard = null;
+  });
+  document.addEventListener('click', () => _ctxMenu.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') _ctxMenu.classList.remove('open'); });
+
   function bindKanbanCard(card) {
     card.setAttribute('draggable', 'true');
     let didDrag = false;
@@ -2518,6 +2456,7 @@
       if (didDrag) return;
       openCardForEdit(card);
     });
+    card.addEventListener('contextmenu', e => showCardCtxMenu(e, card));
   }
 
   function bindKanbanCol(col) {
@@ -2633,6 +2572,7 @@
     const stBarHtml = stTotal > 0 ? `<div class="subtask-bar"><div class="subtask-bar-fill" style="width:${stTotal?Math.round(stDone/stTotal*100):0}%"></div></div>` : '';
     card.innerHTML = `
       <div class="kanban-card-header-row">
+        <button class="card-done-btn${isDone ? ' is-done' : ''}" title="${isDone ? 'Снять отметку' : 'Отметить как выполнено'}" onclick="event.stopPropagation(); toggleCardDone(this.closest('.kanban-card'))"></button>
         <div class="kanban-card-title">${escapeHtml(title)}</div>
         ${prioIcon ? `<span class="prio-icon" title="${prioLabel}">${prioIcon}</span>` : ''}
       </div>
@@ -2645,7 +2585,7 @@
       ${dl ? `<div class="deadline-row ${dl.cls}">${dl.icon} ${dl.text}</div>` : ''}`;
   }
 
-  function addKanbanCard(colId, { title, cat, prio, date, time, desc, estimate, startDate, startTime, pomos, pomosDone, subtasks, color }, cardId) {
+  function addKanbanCard(colId, { title, cat, prio, date, time, desc, estimate, startDate, startTime, pomos, pomosDone, subtasks, color, done }, cardId) {
     const col = document.getElementById('col-' + colId);
     if (!col) return;
     const card = document.createElement('div');
@@ -2663,6 +2603,7 @@
     card.dataset.pomos     = pomos    != null ? String(pomos)     : '0';
     card.dataset.pomosDone = pomosDone != null ? String(pomosDone) : '0';
     card.dataset.subtasks  = subtasks ? JSON.stringify(subtasks) : '[]';
+    if (done) card.dataset.done = '1';
     renderCardInner(card, colId);
     bindKanbanCard(card);
     col.appendChild(card);
@@ -2696,6 +2637,7 @@
           pomos:       parseInt(card.dataset.pomos     || '0'),
           pomosDone:   parseInt(card.dataset.pomosDone || '0'),
           subtasks:    card.dataset.subtasks || '[]',
+          done:        card.dataset.done === '1',
         };
         state[colId].push(item);
         rows.push({ id: card.dataset.id, status: colId, position: pos, ...item });
@@ -2738,7 +2680,7 @@
             if (!col || !saved[colId]) return;
             col.innerHTML = '';
             saved[colId].forEach(item => {
-              addKanbanCard(colId, { title: item.title, cat: item.cat, prio: item.prio, date: item.date, time: item.time, desc: item.desc, estimate: item.estimate, startDate: item.startDate, startTime: item.startTime, color: item.color, pomos: item.pomos, pomosDone: item.pomosDone, subtasks: item.subtasks ? JSON.parse(item.subtasks) : [] });
+              addKanbanCard(colId, { title: item.title, cat: item.cat, prio: item.prio, date: item.date, time: item.time, desc: item.desc, estimate: item.estimate, startDate: item.startDate, startTime: item.startTime, color: item.color, pomos: item.pomos, pomosDone: item.pomosDone, subtasks: item.subtasks ? JSON.parse(item.subtasks) : [], done: item.done });
             });
           });
         }
@@ -2774,6 +2716,8 @@
 
       const col = document.createElement('div');
       col.className = 'kanban-col' + (isToday ? ' col-today' : '');
+      col.style.width = '300px';
+      col.style.flexShrink = '0';
       col.dataset.col = key;
       col.innerHTML = `
         <div class="kanban-col-header">
@@ -2811,6 +2755,27 @@
     if (!addBtn || !wrap) return;
 
     let selectedPrio = 'med';
+    let selectedCat  = 'career';
+
+    // Inject category buttons into the wrap
+    if (!wrap.querySelector('.inline-cat-row')) {
+      const catRow = document.createElement('div');
+      catRow.className = 'inline-cat-row';
+      const CATS = Object.entries(CAT_LABELS);
+      CATS.forEach(([key, label]) => {
+        const btn = document.createElement('button');
+        btn.className = 'inline-cat-btn' + (key === 'career' ? ' active' : '');
+        btn.dataset.c = key;
+        btn.textContent = label;
+        btn.addEventListener('click', () => {
+          catRow.querySelectorAll('.inline-cat-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedCat = key;
+        });
+        catRow.appendChild(btn);
+      });
+      wrap.appendChild(catRow);
+    }
 
     addBtn.addEventListener('click', () => {
       // Close any other open inline-add
@@ -2840,7 +2805,7 @@
     function commitAdd() {
       const title = wrap.querySelector('.inline-add-input').value.trim();
       if (title) {
-        addKanbanCard(colId, { title, cat: 'career', prio: selectedPrio, pomos: 1, pomosDone: 0, subtasks: [], color: 'neutral' });
+        addKanbanCard(colId, { title, cat: selectedCat, prio: selectedPrio, pomos: 1, pomosDone: 0, subtasks: [], color: 'neutral' });
         toast('Task added ✓', 'success');
       }
       wrap.classList.remove('open');
@@ -3843,6 +3808,7 @@
       const er = $mt('#mtEnergyRange');
       const sr = $mt('#mtStressRange');
       const nt = $mt('#mtNote');
+      const fr = $mt('#mtFocusRange');
       const entry = {
         date:          new Date().toISOString(),
         mood:          r ? Number(r.value) : 5,
@@ -3854,7 +3820,14 @@
         sleep_quality: getSleepValue(),
         energy:        er ? Number(er.value) : 5,
         stress:        sr ? Number(sr.value) : 5,
+        focus:         fr ? Number(fr.value) : null,
         note:          nt ? nt.value : '',
+        ref_win:        ($mt('#mtRefWin')?.value || '').trim(),
+        ref_tomorrow:   ($mt('#mtRefTomorrow')?.value || '').trim(),
+        ref_good:       ($mt('#mtRefGood')?.value || '').trim(),
+        ref_bad:        ($mt('#mtRefBad')?.value || '').trim(),
+        ref_distract:   ($mt('#mtRefDistract')?.value || '').trim(),
+        ref_conclusion: ($mt('#mtRefConclusion')?.value || '').trim(),
       };
       if (db) {
         const { error } = await db.from('mood_entries').insert(entry);
@@ -3868,6 +3841,10 @@
       const insText = $mt('#mtSavedInsightText');
       if (insText) insText.textContent = buildInsightText();
       if (ins) { ins.classList.add('show'); ins.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      // Clear reflection fields
+      ['mtRefWin','mtRefTomorrow','mtRefGood','mtRefBad','mtRefDistract','mtRefConclusion'].forEach(id => {
+        const el = $mt('#'+id); if (el) el.value = '';
+      });
       showMtToast('Запись сохранена ✓');
       if (btn) { btn.disabled=false; btn.textContent='Сохранить чек-ин'; }
     }
@@ -3985,6 +3962,7 @@
                 <div><div class="jnl-metric-val" style="color:${moodColor}">${e.mood}/10</div><div class="jnl-metric-lbl">Настроение</div></div>
                 <div><div class="jnl-metric-val" style="color:var(--success)">${e.energy||'—'}/10</div><div class="jnl-metric-lbl">Энергия</div></div>
                 <div><div class="jnl-metric-val" style="color:var(--warn)">${e.stress||'—'}/10</div><div class="jnl-metric-lbl">Стресс</div></div>
+                ${e.focus?`<div><div class="jnl-metric-val" style="color:#8e7ab5">${e.focus}/10</div><div class="jnl-metric-lbl">Фокус</div></div>`:''}
                 <div><div class="jnl-metric-val" style="font-size:14px;color:var(--muted)">${e.sleep_quality||'—'}</div><div class="jnl-metric-lbl">Сон</div></div>
               </div>
               ${(e.emotions||[]).length?`<div class="jnl-row"><b>Эмоции:</b> ${e.emotions.join(', ')}</div>`:''}
@@ -3992,6 +3970,12 @@
               ${(e.symptoms||[]).length?`<div class="jnl-row"><b>Симптомы:</b> ${e.symptoms.join(', ')}</div>`:''}
               ${e.cycle_day?`<div class="jnl-row"><b>Цикл:</b> день ${e.cycle_day} · ${e.cycle_phase||'—'}</div>`:''}
               ${e.note?`<div class="jnl-note">${e.note}</div>`:''}
+              ${e.ref_win?`<div class="jnl-row" style="margin-top:8px"><b>🏆 Победа:</b> ${e.ref_win}</div>`:''}
+              ${e.ref_good?`<div class="jnl-row"><b>✅ Прошло хорошо:</b> ${e.ref_good}</div>`:''}
+              ${e.ref_bad?`<div class="jnl-row"><b>⚠️ Не сработало:</b> ${e.ref_bad}</div>`:''}
+              ${e.ref_distract?`<div class="jnl-row"><b>📱 Отвлекало:</b> ${e.ref_distract}</div>`:''}
+              ${e.ref_tomorrow?`<div class="jnl-row"><b>🎯 Завтра:</b> ${e.ref_tomorrow}</div>`:''}
+              ${e.ref_conclusion?`<div class="jnl-row"><b>💬 Вывод:</b> ${e.ref_conclusion}</div>`:''}
               <div style="margin-top:10px"><button class="del-btn" onclick="deleteMtEntry('${e.id}')">Удалить запись</button></div>
             </div>
           </div>`;
@@ -4043,6 +4027,8 @@
     if (er) er.addEventListener('input', ()=>{ const v=$mt('#mtEnergyValue'); if(v) v.textContent=er.value; });
     const srr = $mt('#mtStressRange');
     if (srr) srr.addEventListener('input', ()=>{ const v=$mt('#mtStressValue'); if(v) v.textContent=srr.value; });
+    const frr = $mt('#mtFocusRange');
+    if (frr) frr.addEventListener('input', ()=>{ const v=$mt('#mtFocusValue'); if(v) v.textContent=frr.value; });
 
     // Symptoms toggle
     const st = $mt('#mtSymptomsToggle');
@@ -4249,130 +4235,6 @@
     };
   })();
 
-  // ---------- Reflection ----------
-  (function reflection() {
-    const KEY = 'reflectionHistory_v1';
-    let history = [];
-    try { history = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e) {}
-
-    // Slider init
-    const SLIDER_EMOJIS = {
-      refMood:   ['😭','😢','😞','😕','😶','🙂','😊','😄','😁','🤩'],
-      refEnergy: ['🪫','😴','🥱','😑','😐','⚡','💪','🔋','🚀','🔥'],
-      refFocus:  ['😵','🤯','😵‍💫','😑','🤔','🧐','🎯','💡','🧠','✨']
-    };
-
-    function initSlider(id) {
-      const wrap    = document.getElementById(id);
-      const inp     = document.getElementById(id + 'Range');
-      const emojiEl = document.getElementById(id + 'Emoji');
-      const numEl   = document.getElementById(id + 'Num');
-      if (!inp || !wrap) return;
-      const emojis = SLIDER_EMOJIS[id] || [];
-
-      function updateTrack(v) {
-        const pct = (v - 1) / 9 * 100;
-        inp.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--border) ${pct}%)`;
-      }
-      function updateDisplay(v) {
-        if (emojiEl) emojiEl.textContent = emojis[v - 1] || '';
-        if (numEl)   numEl.textContent   = v + '/10';
-        updateTrack(v);
-      }
-
-      // Placeholder state (untouched)
-      if (emojiEl) emojiEl.textContent = '·';
-      if (numEl)   numEl.textContent   = '';
-
-      inp.addEventListener('input', () => {
-        wrap.dataset.touched = '1';
-        updateDisplay(parseInt(inp.value));
-      });
-    }
-
-    ['refMood','refEnergy','refFocus'].forEach(initSlider);
-
-    function getScale(id) {
-      const wrap = document.getElementById(id);
-      const inp  = document.getElementById(id + 'Range');
-      if (!wrap || !inp || wrap.dataset.touched !== '1') return null;
-      return parseInt(inp.value);
-    }
-
-    window.toggleRefEntry = function(i) {
-      const el = document.querySelector('#refHistory .ref-entry[data-ri="'+i+'"]');
-      if (el) el.classList.toggle('open');
-    };
-
-    function renderHistory() {
-      const el = document.getElementById('refHistory');
-      if (!el) return;
-      if (!history.length) { el.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0;">No records yet</div>'; return; }
-      const MOOD_EMJ = ['😭','😢','😞','😕','😶','🙂','😊','😄','😁','🤩'];
-      const EN_EMJ   = ['🪫','😴','🥱','😑','😐','⚡','💪','🔋','🚀','🔥'];
-      const FOC_EMJ  = ['😵','🤯','😵‍💫','😑','🤔','🧐','🎯','💡','🧠','✨'];
-      el.innerHTML = history.slice().reverse().map((e, i) => {
-        const moodScore = e.mood || '—';
-        const moodEmoji = e.mood ? MOOD_EMJ[e.mood - 1] : '·';
-        const moodColor = e.mood >= 7 ? 'var(--accent)' : e.mood >= 5 ? 'var(--warn)' : e.mood ? '#e05252' : 'var(--muted)';
-        const moodBg    = e.mood >= 7 ? 'var(--accent-soft)' : e.mood >= 5 ? '#fff8e8' : e.mood ? '#fee2e2' : 'var(--surface-2)';
-        const enEmoji   = e.energy ? EN_EMJ[e.energy - 1]  : '—';
-        const focEmoji  = e.focus  ? FOC_EMJ[e.focus - 1]  : '—';
-        return `
-          <div class="ref-entry" data-ri="${i}">
-            <div class="ref-entry-hd" onclick="toggleRefEntry(${i})">
-              <div class="ref-score-dot" style="background:${moodBg};color:${moodColor}">${moodEmoji}</div>
-              <div class="ref-entry-date">${e.date}</div>
-              <div class="ref-entry-meta">${moodEmoji} ${e.mood??'—'}/10 &nbsp; ${enEmoji} ${e.energy??'—'}/10 &nbsp; ${focEmoji} ${e.focus??'—'}/10</div>
-              <div class="ref-entry-chev">›</div>
-            </div>
-            <div class="ref-entry-body">
-              ${e.win        ? `<div class="ref-entry-win">🏆 ${escapeHtml(e.win)}</div>` : ''}
-              ${e.tomorrow   ? `<div class="ref-entry-row"><b>🎯 Tomorrow:</b> ${escapeHtml(e.tomorrow)}</div>` : ''}
-              ${e.good       ? `<div class="ref-entry-row"><b>✅ Went well:</b> ${escapeHtml(e.good)}</div>` : ''}
-              ${e.bad        ? `<div class="ref-entry-row"><b>⚠️ Didn't work:</b> ${escapeHtml(e.bad)}</div>` : ''}
-              ${e.distract   ? `<div class="ref-entry-row"><b>📱 Distracted by:</b> ${escapeHtml(e.distract)}</div>` : ''}
-              ${e.conclusion ? `<div class="ref-entry-row"><b>💬 Takeaway:</b> ${escapeHtml(e.conclusion)}</div>` : ''}
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    document.getElementById('saveReflectionBtn')?.addEventListener('click', () => {
-      const entry = {
-        date:       new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long' }),
-        mood:       getScale('refMood'),
-        energy:     getScale('refEnergy'),
-        focus:      getScale('refFocus'),
-        win:        document.getElementById('refWin')?.value.trim(),
-        tomorrow:   document.getElementById('refTomorrow')?.value.trim(),
-        good:       document.getElementById('refGood')?.value.trim(),
-        bad:        document.getElementById('refBad')?.value.trim(),
-        distract:   document.getElementById('refDistract')?.value.trim(),
-        conclusion: document.getElementById('refConclusion')?.value.trim(),
-      };
-      history.push(entry);
-      try { localStorage.setItem(KEY, JSON.stringify(history)); } catch(e) {}
-      renderHistory();
-      // clear
-      ['refWin','refTomorrow','refGood','refBad','refDistract','refConclusion'].forEach(id => {
-        const el = document.getElementById(id); if (el) el.value = '';
-      });
-      ['refMood','refEnergy','refFocus'].forEach(id => {
-        const wrap = document.getElementById(id);
-        const inp  = document.getElementById(id + 'Range');
-        const emojiEl = document.getElementById(id + 'Emoji');
-        const numEl   = document.getElementById(id + 'Num');
-        if (wrap) wrap.dataset.touched = '0';
-        if (inp)  { inp.value = 5; inp.style.background = 'var(--border)'; }
-        if (emojiEl) emojiEl.textContent = '·';
-        if (numEl)   numEl.textContent   = '';
-      });
-      toast('Reflection saved ✓', 'success');
-    });
-
-    renderHistory();
-  })();
 
   // ---------- Finances ----------
   (function finances() {
@@ -4403,10 +4265,8 @@
         const inp = document.querySelector(`.fin-cat-input[data-cat="${c}"]`);
         return s + (parseFloat(inp?.value) || 0);
       }, 0);
-      const dashInc = document.getElementById('finDashIncome');
       const dashExp = document.getElementById('finDashExpenses');
       const dashBal = document.getElementById('finDashBalance');
-      if (dashInc) dashInc.textContent = '€' + income.toLocaleString();
       if (dashExp) dashExp.textContent = '€' + totalExp.toLocaleString();
       if (dashBal) {
         const bal = income - totalExp;
@@ -4547,85 +4407,70 @@
       return events.sort((a,b) => a.dtstart - b.dtstart);
     }
 
-    // ── Render one day ─────────────────────────
+    // ── Render today ───────────────────────────
     function render() {
       const body  = document.getElementById('gcalBody');
       const range = document.getElementById('gcalRange');
-      if (!body || !range) return;
+      if (!body) return;
 
-      const today = new Date(); today.setHours(0,0,0,0);
-      const shown = new Date(today); shown.setDate(shown.getDate() + gcalDayOffset);
-      const isToday = gcalDayOffset === 0;
-      const nowTime = new Date();
+      // Always show today
+      gcalDayOffset = 0;
+      const now   = new Date();
+      const today = new Date(now); today.setHours(0,0,0,0);
 
-      // Nav label: "Today", "Tomorrow", "Yesterday", or "Mon 15 Jun"
-      let label;
-      if      (gcalDayOffset === 0)  label = 'Today';
-      else if (gcalDayOffset === 1)  label = 'Tomorrow';
-      else if (gcalDayOffset === -1) label = 'Yesterday';
-      else label = DAY_NAMES[shown.getDay()] + ' ' + shown.getDate() + ' ' + MON_SHORT[shown.getMonth()];
-      range.textContent = label;
+      // Header badge: "Wed, 24 Jun"
+      if (range) range.textContent = DAY_NAMES[today.getDay()] + ', ' + today.getDate() + ' ' + MON_SHORT[today.getMonth()];
 
-      const key = dateKey(shown);
+      const key = dateKey(today);
       const evs = allEvents.filter(ev => dateKey(ev.dtstart) === key);
 
       const fmtTime = d => {
         if (!d) return '';
-        let h = d.getHours(), m = d.getMinutes();
-        const ampm = h >= 12 ? 'pm' : 'am';
-        h = h % 12 || 12;
-        return h + (m ? ':' + String(m).padStart(2,'0') : '') + ampm;
+        const h = d.getHours(), m = d.getMinutes();
+        return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
       };
 
-      // Big date header
-      let html = '<div style="padding:16px 14px 10px;">';
-      html += '<div style="font-size:36px;font-weight:700;color:' + (isToday ? '#1a73e8' : '#3c4043') + ';line-height:1;">' + shown.getDate() + '</div>';
-      html += '<div style="font-size:13px;font-weight:600;color:#70757a;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;">' +
-        DAY_NAMES[shown.getDay()].toUpperCase() + ', ' + MON_SHORT[shown.getMonth()].toUpperCase() + ' ' + shown.getFullYear() + '</div>';
-      html += '</div>';
-      html += '<div class="gcal-separator" style="margin:0 0 8px;"></div>';
+      let html = '';
 
       if (evs.length === 0) {
-        html += '<div class="gcal-empty" style="padding-top:32px;">No events this day</div>';
+        html = '<div class="gcal-empty" style="padding:32px 14px;"><div style="font-size:28px;margin-bottom:6px;">🗓</div><div>No events today</div></div>';
       } else {
+        let nowLineShown = false;
         evs.forEach((ev, idx) => {
           const timeStr = ev.allDay ? 'All day' : fmtTime(ev.dtstart);
-          // current time indicator
-          if (isToday) {
-            const isFirst = idx === 0 && ev.dtstart >= nowTime;
-            const isPast  = idx > 0 && evs[idx-1].dtstart < nowTime && ev.dtstart >= nowTime;
-            if (isFirst || isPast) {
-              const nowStr = fmtTime(nowTime);
+          // Current-time line
+          if (!nowLineShown) {
+            const isFirst = idx === 0 && ev.dtstart >= now;
+            const isBetween = idx > 0 && evs[idx-1].dtstart < now && ev.dtstart >= now;
+            if (isFirst || isBetween) {
+              nowLineShown = true;
               html += '<div class="gcal-time-line" style="margin:4px 0;">';
-              html += '<div style="font-size:10px;color:#d93025;width:40px;text-align:right;padding-right:6px;">' + nowStr + '</div>';
+              html += '<div style="font-size:10px;color:#d93025;width:44px;text-align:right;padding-right:6px;flex-shrink:0;">' + fmtTime(now) + '</div>';
               html += '<div class="gcal-time-dot"></div><div class="gcal-time-bar"></div>';
               html += '</div>';
             }
           }
-          html += '<div class="gcal-event" style="padding:7px 14px;">';
-          html += '<div class="gcal-event-dot"></div>';
-          html += '<div class="gcal-event-time" style="width:58px;">' + timeStr + '</div>';
-          html += '<div class="gcal-event-name">' + ev.summary + '</div>';
+          const isPast = !ev.allDay && ev.dtstart < now;
+          html += '<div class="gcal-event" style="padding:7px 14px;opacity:' + (isPast ? '0.5' : '1') + ';">';
+          html += '<div class="gcal-event-dot" style="' + (isPast ? 'background:#bdbdbd;' : '') + '"></div>';
+          html += '<div class="gcal-event-time" style="width:44px;font-size:12px;">' + timeStr + '</div>';
+          html += '<div class="gcal-event-name" style="font-size:13px;' + (isPast ? 'text-decoration:line-through;color:#9e9e9e;' : '') + '">' + ev.summary + '</div>';
           html += '</div>';
         });
-        // past-everything indicator
-        if (isToday && evs.every(ev => ev.dtstart < nowTime)) {
+        // If all events are past, show now-line at end
+        if (!nowLineShown && evs.every(ev => ev.dtstart < now)) {
           html += '<div class="gcal-time-line" style="margin:4px 0;">';
-          html += '<div style="font-size:10px;color:#d93025;width:40px;text-align:right;padding-right:6px;">' + fmtTime(nowTime) + '</div>';
+          html += '<div style="font-size:10px;color:#d93025;width:44px;text-align:right;padding-right:6px;flex-shrink:0;">' + fmtTime(now) + '</div>';
           html += '<div class="gcal-time-dot"></div><div class="gcal-time-bar"></div>';
           html += '</div>';
         }
+        html += '<div style="padding:8px 14px;font-size:11px;color:#9e9e9e;">' + evs.length + ' event' + (evs.length !== 1 ? 's' : '') + ' today</div>';
       }
-
-      html += '<div class="gcal-footer" style="margin-top:auto;">';
-      html += '<span>' + evs.length + ' event' + (evs.length !== 1 ? 's' : '') + '</span>';
-      html += '<a href="https://calendar.google.com" target="_blank">Open ↗</a>';
-      html += '</div>';
 
       body.innerHTML = html;
     }
 
-    window.gcalNav = function(dir) { gcalDayOffset += dir; render(); };
+    window.gcalNav = function() {}; // nav removed — always today
 
     // ── Fetch with multi-proxy fallback ───────
     const PROXIES = [
