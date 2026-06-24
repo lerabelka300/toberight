@@ -408,13 +408,14 @@
   .kanban-card.cancelled-card .chip { opacity: .6; }
   .kanban-card.cancelled-card .prio-icon { opacity: .4; }
   .kanban-cards { display: flex; flex-direction: column; gap: 8px; min-height: 60px; flex: 1; overflow-y: auto; overflow-x: hidden; padding-right: 2px; }
-  .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; cursor: grab; box-shadow: var(--shadow); transition: box-shadow .15s, opacity .15s; user-select: none; }
+  .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: grab; box-shadow: var(--shadow); transition: box-shadow .15s, opacity .15s; user-select: none; }
   .kanban-card:active { cursor: grabbing; }
   .kanban-card.dragging { opacity: 0.4; }
   .kanban-card.drag-over { box-shadow: 0 0 0 2px var(--accent); }
   .kanban-col.drop-target { background: var(--accent-soft); border-color: var(--accent); }
   .kanban-card-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 5px; }
   .kanban-card-title { font-weight: 500; font-size: 14px; flex: 1; }
+  .kanban-card-title[contenteditable="true"] { cursor: text; border-radius: 4px; padding: 1px 3px; margin: -1px -3px; background: rgba(26,115,232,0.06); }
   .prio-icon { flex-shrink: 0; display: flex; align-items: center; }
   .kanban-card.done-card .kanban-card-title { text-decoration: line-through; color: var(--muted); }
   /* Done checkbox */
@@ -456,7 +457,16 @@
   .day-col-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
   .kanban-col.col-today { background: #fff8f3; border-color: #fadcce; }
   .kanban-col.col-today .kanban-col-title { color: var(--accent) !important; }
-  .kanban-col.col-backlog { box-shadow: 3px 0 12px rgba(0,0,0,0.08); }
+  .kanban-col.col-backlog { background: #1e1e2e; border-color: #2e2e42; box-shadow: 4px 0 16px rgba(0,0,0,0.18); }
+  .kanban-col.col-backlog .kanban-col-title { color: #a0a0c0; }
+  .kanban-col.col-backlog .kanban-col-count { background: #2e2e42; color: #a0a0c0; }
+  .kanban-col.col-backlog .kanban-add { border-color: #3a3a52; color: #7070a0; }
+  .kanban-col.col-backlog .kanban-add:hover { background: #2e2e42; color: #c0c0e0; }
+  .kanban-col.col-backlog .kanban-card { background: #2a2a3c; border-color: #3a3a52; color: #dcdce8; }
+  .kanban-col.col-backlog .kanban-card-title { color: #dcdce8; }
+  .kanban-col.col-backlog .inline-add-input { background: #2e2e42; color: #dcdce8; border-color: #3a3a52; }
+  .kanban-col.col-backlog .inline-add-wrap { background: #252535; border-color: #3a3a52; }
+  .kanban-col.col-backlog .inline-cat-btn { background: #2e2e42; border-color: #3a3a52; color: #8080a8; }
 
   /* Quick-add */
   .quick-add { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; margin-bottom: 12px; border: 1px dashed var(--border); transition: all .15s; }
@@ -1008,9 +1018,9 @@
             <button class="kanban-filter" data-filter="low">🟢 Low</button>
           </div>
         </div>
-        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -14px;padding:0 14px 4px;align-items:flex-start;">
+        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px 0 -22px;padding:0 0 4px;align-items:flex-start;">
           <!-- Backlog column: fixed, does not scroll -->
-          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:14px;z-index:5;">
+          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:0;z-index:5;border-radius:0 14px 14px 0;">
             <div class="kanban-col-header">
               <span class="kanban-col-title">Backlog</span>
               <span class="kanban-col-count" id="cnt-backlog">0</span>
@@ -1029,7 +1039,7 @@
             <button class="kanban-add" data-col="backlog"><span style="font-size:16px;line-height:1;">+</span> Add</button>
           </div>
           <!-- Day columns: scrollable -->
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding-bottom:4px;" id="kanbanBoard">
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding:0 22px 4px 10px;" id="kanbanBoard">
             <!-- injected by initDayColumns() -->
           </div>
         </div>
@@ -1049,7 +1059,7 @@
         </div>
       </div>
 
-      <div class="card-row" style="align-items:stretch;margin-bottom:18px;">
+      <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px;">
       <div class="card pomodoro" style="margin-bottom:0;">
         <div class="pomo-header">
           <span class="pomo-title">🍅 Pomodoro</span>
@@ -1106,7 +1116,7 @@
         <div class="ts-week-bars" id="tsWeekBars"></div>
         <div id="tsOverdueList" style="margin-top:14px;"></div>
       </div>
-      </div><!-- end pomodoro+stats row -->
+      </div><!-- end pomodoro+stats column -->
 
 <!-- IDEA GARAGE -->
       <div class="card" id="ideaGarageCard">
@@ -2454,9 +2464,54 @@
     });
     card.addEventListener('click', e => {
       if (didDrag) return;
+      if (e.target.closest('.card-done-btn')) return;
       openCardForEdit(card);
     });
+    card.addEventListener('dblclick', e => {
+      if (didDrag) return;
+      if (e.target.closest('.card-done-btn')) return;
+      e.stopPropagation();
+      startInlineEdit(card);
+    });
     card.addEventListener('contextmenu', e => showCardCtxMenu(e, card));
+  }
+
+  function startInlineEdit(card) {
+    const titleEl = card.querySelector('.kanban-card-title');
+    if (!titleEl || titleEl.isContentEditable) return;
+    card.setAttribute('draggable', 'false');
+    titleEl.contentEditable = 'true';
+    titleEl.style.outline = 'none';
+    titleEl.style.borderBottom = '1.5px solid var(--accent)';
+    titleEl.style.cursor = 'text';
+    // Select all text
+    titleEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(titleEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    function commit() {
+      const newTitle = titleEl.textContent.trim();
+      titleEl.contentEditable = 'false';
+      titleEl.style.borderBottom = '';
+      titleEl.style.cursor = '';
+      card.setAttribute('draggable', 'true');
+      if (newTitle) {
+        card.dataset.title = newTitle;
+        saveKanban();
+      } else {
+        // Restore old title if empty
+        titleEl.textContent = card.dataset.title || '';
+      }
+    }
+
+    titleEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
+      if (e.key === 'Escape') { titleEl.textContent = card.dataset.title || ''; titleEl.blur(); }
+    }, { once: true });
+    titleEl.addEventListener('blur', commit, { once: true });
   }
 
   function bindKanbanCol(col) {
