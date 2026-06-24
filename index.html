@@ -407,7 +407,13 @@
   .kanban-card.cancelled-card .kanban-card-title { text-decoration: line-through; color: var(--muted); }
   .kanban-card.cancelled-card .chip { opacity: .6; }
   .kanban-card.cancelled-card .prio-icon { opacity: .4; }
-  .kanban-cards { display: flex; flex-direction: column; gap: 8px; min-height: 60px; flex: 1; overflow-y: auto; overflow-x: hidden; padding-right: 2px; }
+  .kanban-cards { display: flex; flex-direction: column; gap: 8px; min-height: 60px; flex: 1; overflow-y: auto; overflow-x: hidden; padding-right: 2px; padding-bottom: 16px; }
+  /* Stack cards when column has many */
+  .kanban-cards.stacked .kanban-card { margin-bottom: -52px; transition: margin .2s, box-shadow .15s, transform .15s; }
+  .kanban-cards.stacked .kanban-card:last-child { margin-bottom: 0; }
+  .kanban-cards.stacked:hover .kanban-card,
+  .kanban-cards.stacked .kanban-card:hover ~ .kanban-card { margin-bottom: 8px; }
+  .kanban-cards.stacked .kanban-card:hover { z-index: 10; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,.15); transform: translateY(-2px); }
   .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: grab; box-shadow: var(--shadow); transition: box-shadow .15s, opacity .15s; user-select: none; }
   .kanban-card:active { cursor: grabbing; }
   .kanban-card.dragging { opacity: 0.4; }
@@ -457,7 +463,7 @@
   .day-col-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
   .kanban-col.col-today { background: #fff8f3; border-color: #fadcce; }
   .kanban-col.col-today .kanban-col-title { color: var(--accent) !important; }
-  .kanban-col.col-backlog { background: #1e1e2e; border-color: #2e2e42; box-shadow: 4px 0 16px rgba(0,0,0,0.18); }
+  .kanban-col.col-backlog { background: #1e1e2e; border-color: #2e2e42; box-shadow: 4px 0 16px rgba(0,0,0,0.18); max-height: none; align-self: stretch; }
   .kanban-col.col-backlog .kanban-col-title { color: #a0a0c0; }
   .kanban-col.col-backlog .kanban-col-count { background: #2e2e42; color: #a0a0c0; }
   .kanban-col.col-backlog .kanban-add { border-color: #3a3a52; color: #7070a0; }
@@ -612,6 +618,50 @@
   .gcal-footer { padding:10px 14px; font-size:11px; color:#70757a; display:flex; justify-content:space-between; border-top:1px solid #f0ede9; }
   .gcal-footer a { color:#1a73e8; text-decoration:none; font-weight:600; }
   .gcal-empty { padding:20px 14px; text-align:center; font-size:12px; color:#9e9e9e; }
+
+  /* ── Pomodoro v2 ─────────────────────────────────────────────────────── */
+  .pv2-card { padding: 20px 22px; }
+  .pv2-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; gap:12px; }
+  .pv2-title { font-size:16px; font-weight:700; color:var(--text); }
+  .pv2-hint { font-size:12px; color:var(--muted); margin-top:3px; }
+  .pv2-topright { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .pv2-today-lbl { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; }
+  .pv2-pause-btn { padding:4px 12px; border-radius:8px; border:1.5px solid var(--border); background:var(--surface-2); color:var(--text); font-size:12px; font-weight:600; cursor:pointer; }
+  .pv2-pause-btn:hover { background:var(--border); }
+
+  .pv2-body { display:flex; gap:12px; align-items:stretch; }
+
+  /* Active zone */
+  .pv2-active-zone { flex:1; border:2px dashed var(--border); border-radius:14px; padding:14px; min-height:140px; display:flex; flex-direction:column; gap:10px; transition:border-color .2s, background .2s; }
+  .pv2-active-zone.drag-over { border-color:var(--accent); background:var(--accent-soft); }
+  .pv2-drop-target { display:flex; align-items:center; justify-content:center; }
+  .pv2-drop-hint { font-size:12px; color:var(--muted); font-style:italic; }
+  .pv2-drop-hint.hidden { display:none; }
+
+  .pv2-sessions { display:flex; flex-wrap:wrap; gap:10px; }
+
+  /* Single tomato session card */
+  .pv2-session { display:flex; flex-direction:column; align-items:center; gap:4px; width:80px; }
+  .pv2-session-tomato { font-size:40px; line-height:1; position:relative; }
+  .pv2-session.done .pv2-session-tomato::after {
+    content:'✓'; position:absolute; top:-4px; right:-6px;
+    background:#2f8a55; color:#fff; border-radius:50%;
+    width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; line-height:18px; text-align:center;
+  }
+  .pv2-session-time { font-size:11px; color:var(--muted); text-align:center; white-space:nowrap; }
+  .pv2-session-countdown { font-size:15px; font-weight:700; color:var(--accent); text-align:center; }
+  .pv2-session.running .pv2-session-tomato { animation: pv2-pulse 1.5s ease-in-out infinite; }
+  @keyframes pv2-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+  /* Basket */
+  .pv2-basket { width:120px; flex-shrink:0; background:#f0ede9; border-radius:14px; padding:14px 10px 10px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:default; }
+  .pv2-tomatoes { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .pv2-tomato { font-size:32px; line-height:1; cursor:grab; user-select:none; transition:transform .15s, opacity .15s; text-align:center; }
+  .pv2-tomato:hover { transform:scale(1.12); }
+  .pv2-tomato:active { cursor:grabbing; opacity:.6; }
+  .pv2-tomato.dragging { opacity:0.3; }
+  .pv2-basket-lbl { font-size:11px; font-weight:600; color:#9e9e9e; text-align:center; margin-top:2px; }
 
 /* ── MOOD TRACKER (inlined, unified design) ── */
 #mood {
@@ -1018,9 +1068,9 @@
             <button class="kanban-filter" data-filter="low">🟢 Low</button>
           </div>
         </div>
-        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px 0 -22px;padding:0 0 4px;align-items:flex-start;">
+        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px 0 -22px;padding:0 0 4px;align-items:stretch;">
           <!-- Backlog column: fixed, does not scroll -->
-          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:0;z-index:5;border-radius:0 14px 14px 0;">
+          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:0;z-index:5;border-radius:0 14px 14px 0;max-height:none;padding-left:22px;">
             <div class="kanban-col-header">
               <span class="kanban-col-title">Backlog</span>
               <span class="kanban-col-count" id="cnt-backlog">0</span>
@@ -1060,46 +1110,49 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px;">
-      <div class="card pomodoro" style="margin-bottom:0;">
-        <div class="pomo-header">
-          <span class="pomo-title">🍅 Pomodoro</span>
-          <div class="pomodoro-modes">
-            <button class="pomodoro-mode active" data-mode="work" data-mins="25">Work · 25m</button>
-            <button class="pomodoro-mode" data-mode="short" data-mins="5">Break · 5m</button>
-            <button class="pomodoro-mode" data-mode="long" data-mins="15">Long · 15m</button>
+      <!-- POMODORO v2: drag-from-basket -->
+      <div class="card pv2-card" style="margin-bottom:0;">
+        <div class="pv2-header">
+          <div>
+            <div class="pv2-title">Помодоро</div>
+            <div class="pv2-hint">Перетащите помидор из ящика — отсчёт 25 минут стартует сразу</div>
+          </div>
+          <div class="pv2-topright">
+            <span class="pv2-today-lbl">Сегодня: <strong id="pv2TodayCount">0</strong> / 8</span>
+            <button class="pv2-pause-btn" id="pv2PauseBtn" style="display:none;">⏸ Пауза</button>
           </div>
         </div>
-        <!-- Active task panel -->
-        <div class="pomo-focus-block" id="pomoFocusBlock">
-          <span class="pomo-focus-label">In focus</span>
-          <div class="pomo-focus-info" id="pomoFocusInfo" style="display:none">
-            <span class="pomo-focus-task-name" id="pomoFocusTitle">—</span>
-            <div class="pomo-focus-tag-pct">
-              <span class="pomo-focus-tag" id="pomoFocusTag"></span>
-              <span class="pomo-focus-pct" id="pomoFocusPct">🍅 0/0</span>
+        <div class="pv2-body">
+          <!-- Active / completed tomatoes -->
+          <div class="pv2-active-zone" id="pv2ActiveZone">
+            <div class="pv2-drop-target" id="pv2DropTarget">
+              <span class="pv2-drop-hint">← сюда</span>
             </div>
+            <div class="pv2-sessions" id="pv2Sessions"></div>
           </div>
-          <div class="pomo-focus-empty" id="pomoFocusEmpty">
-            <span class="pomo-focus-empty-text">No active task · Select a task to start focus</span>
-            <button class="pomo-focus-select-btn" id="pomoSelectTaskBtn">Select task</button>
-          </div>
-        </div>
-        <div class="pomo-main">
-          <div class="pomodoro-display" id="pomodoroDisplay">25:00</div>
-          <div class="pomodoro-controls">
-            <button class="pomodoro-btn primary" id="pomodoroStartBtn">▶ Start</button>
-            <button class="pomodoro-btn ghost" id="pomodoroResetBtn">↺</button>
-          </div>
-          <div class="pomo-stats-inline" id="pomoStatsInline">
-            <div>Today: <strong id="pomoStatToday">0</strong> 🍅 · <strong id="pomoStatMins">0м</strong> focus</div>
-            <div>Week: <strong id="pomoStatWeek">0</strong> 🍅</div>
-            <div id="pomoDailyGoalRow">Goal: <strong id="pomoDailyGoalPct">0/8</strong> 🍅</div>
+          <!-- Basket -->
+          <div class="pv2-basket" id="pv2Basket">
+            <div class="pv2-tomatoes" id="pv2Tomatoes">
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+            </div>
+            <div class="pv2-basket-lbl">Ящик с помидорами</div>
           </div>
         </div>
-        <div class="pomodoro-bar"><div class="pomodoro-bar-fill" id="pomodoroBarFill" style="width:0%"></div></div>
-        <div class="pomo-analytics" id="pomoAnalytics">
-          <div class="pomo-dots-label">Today</div>
-          <div class="pomo-dots" id="pomoDots"></div>
+        <!-- hidden elements for backward compat -->
+        <div style="display:none">
+          <div id="pomodoroDisplay">25:00</div>
+          <button id="pomodoroStartBtn"></button>
+          <button id="pomodoroResetBtn"></button>
+          <div id="pomodoroBarFill"></div>
+          <div id="pomoStatToday">0</div>
+          <div id="pomoStatMins">0м</div>
+          <div id="pomoStatWeek">0</div>
+          <div id="pomoDailyGoalPct">0/8</div>
+          <div id="pomoDots"></div>
+          <div id="pomoFocusBlock"><div id="pomoFocusInfo" style="display:none"><span id="pomoFocusTitle"></span><span id="pomoFocusTag"></span><span id="pomoFocusPct"></span></div><div id="pomoFocusEmpty"></div></div>
         </div>
       </div>
 
@@ -2311,11 +2364,15 @@
 
   const ALL_COLS = ['backlog','mon','tue','wed','thu','fri','sat','sun'];
 
+  const STACK_THRESHOLD = 4;
   function updateCounts() {
     ALL_COLS.forEach(col => {
-      const cards = document.querySelectorAll(`#col-${col} .kanban-card`).length;
-      const el = document.getElementById(`cnt-${col}`);
+      const colEl  = document.getElementById(`col-${col}`);
+      const cards  = colEl ? colEl.querySelectorAll('.kanban-card').length : 0;
+      const el     = document.getElementById(`cnt-${col}`);
       if (el) el.textContent = cards;
+      // Stack mode when many cards
+      if (colEl) colEl.classList.toggle('stacked', cards > STACK_THRESHOLD);
     });
   }
 
@@ -3595,6 +3652,208 @@
       }
       if (status === 'paused') updateButtons();
     }, 300);
+  })();
+
+  // ── Pomodoro v2: drag-from-basket ──────────────────────────────────────
+  (function pomoV2() {
+    const WORK_SECS  = 25 * 60;
+    const DAILY_GOAL = 8;
+    const LOG_KEY    = () => 'pomoLog_' + todayKey();
+    const CNT_KEY    = () => 'pomoSessions_' + todayKey();
+
+    let running    = false;
+    let paused     = false;
+    let remaining  = 0;
+    let interval   = null;
+    let sessionStart = null; // Date when current session started
+
+    const zone      = document.getElementById('pv2ActiveZone');
+    const sessions  = document.getElementById('pv2Sessions');
+    const dropHint  = document.querySelector('.pv2-drop-hint');
+    const todayEl   = document.getElementById('pv2TodayCount');
+    const pauseBtn  = document.getElementById('pv2PauseBtn');
+    const tomatoEls = document.querySelectorAll('.pv2-tomato');
+
+    function getSessions() {
+      try { return JSON.parse(localStorage.getItem(LOG_KEY()) || '[]'); } catch { return []; }
+    }
+    function getCount() {
+      return parseInt(localStorage.getItem(CNT_KEY()) || '0', 10);
+    }
+    function fmt(s) {
+      return String(Math.floor(s / 60)).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+    }
+    function fmtTime(d) {
+      return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+
+    function updateTodayCount() {
+      if (todayEl) todayEl.textContent = getCount();
+    }
+
+    function renderSessions() {
+      const log = getSessions();
+      const count = getCount();
+      if (!sessions) return;
+      sessions.innerHTML = '';
+      // Completed sessions
+      log.forEach(entry => {
+        const el = document.createElement('div');
+        el.className = 'pv2-session done';
+        const tRange = entry.end
+          ? fmtTime(new Date(entry.start)) + ' – ' + fmtTime(new Date(entry.end))
+          : fmtTime(new Date(entry.start));
+        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${tRange}</div>`;
+        sessions.appendChild(el);
+      });
+      // Running session
+      if (running || paused) {
+        const el = document.createElement('div');
+        el.className = 'pv2-session running';
+        el.id = 'pv2RunningSession';
+        const startStr = sessionStart ? fmtTime(sessionStart) + ' →' : '';
+        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${startStr}</div><div class="pv2-session-countdown" id="pv2Countdown">${fmt(remaining)}</div>`;
+        sessions.appendChild(el);
+      }
+      // Update drop hint
+      if (dropHint) dropHint.classList.toggle('hidden', count > 0 || running || paused);
+    }
+
+    function tick() {
+      remaining--;
+      document.title = '⏱ ' + fmt(remaining) + ' — Personal Dashboard';
+      const cd = document.getElementById('pv2Countdown');
+      if (cd) cd.textContent = fmt(remaining);
+      if (remaining <= 0) {
+        clearInterval(interval); interval = null;
+        onComplete();
+      }
+    }
+
+    function onComplete() {
+      running = false;
+      paused  = false;
+      if (pauseBtn) pauseBtn.style.display = 'none';
+      document.title = 'Personal Dashboard';
+
+      // Save session
+      const log = getSessions();
+      log.push({ start: sessionStart?.toISOString(), end: new Date().toISOString() });
+      localStorage.setItem(LOG_KEY(), JSON.stringify(log));
+      const cnt = getCount() + 1;
+      localStorage.setItem(CNT_KEY(), String(cnt));
+      sessionStart = null;
+
+      // Replenish basket if needed
+      replenishBasket();
+      updateTodayCount();
+      renderSessions();
+
+      // Play sound
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator(); const g = ctx.createGain();
+        osc.frequency.value = 880; g.gain.value = 0.3;
+        osc.connect(g); g.connect(ctx.destination); osc.start();
+        let t = ctx.currentTime;
+        for (let i = 0; i < 3; i++) { g.gain.setValueAtTime(0.3,t); g.gain.setValueAtTime(0,t+.15); t+=.3; }
+        osc.stop(t);
+      } catch(e) {}
+      if (Notification?.permission === 'granted')
+        new Notification('🍅 Помодоро выполнено!', { body: 'Время перерыва!' });
+      toast('Помодоро завершён 🍅', 'success');
+      openModal('pomoCompleteModal');
+    }
+
+    function startTimer() {
+      if (running) return;
+      if (!paused) {
+        remaining = WORK_SECS;
+        sessionStart = new Date();
+      }
+      running = true; paused = false;
+      if (pauseBtn) pauseBtn.style.display = '';
+      if (Notification?.permission === 'default') Notification.requestPermission();
+      renderSessions();
+      interval = setInterval(tick, 1000);
+    }
+
+    function pauseTimer() {
+      if (!running) return;
+      clearInterval(interval); interval = null;
+      running = false; paused = true;
+      pauseBtn.textContent = '▶ Продолжить';
+      const cd = document.getElementById('pv2Countdown');
+      if (cd) cd.textContent = fmt(remaining);
+    }
+
+    function resumeTimer() {
+      if (!paused) return;
+      paused = false;
+      pauseBtn.textContent = '⏸ Пауза';
+      startTimer();
+    }
+
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', () => {
+        if (running) pauseTimer();
+        else if (paused) resumeTimer();
+      });
+    }
+
+    // Drag from basket → drop on zone
+    function replenishBasket() {
+      const tomatoesEl = document.getElementById('pv2Tomatoes');
+      if (!tomatoesEl) return;
+      // Always keep 4 tomatoes
+      while (tomatoesEl.querySelectorAll('.pv2-tomato').length < 4) {
+        const t = document.createElement('div');
+        t.className = 'pv2-tomato';
+        t.draggable = true;
+        t.textContent = '🍅';
+        bindTomato(t);
+        tomatoesEl.appendChild(t);
+      }
+    }
+
+    function bindTomato(el) {
+      el.addEventListener('dragstart', e => {
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', 'tomato');
+      });
+      el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    }
+
+    // Bind existing tomatoes
+    tomatoEls.forEach(bindTomato);
+
+    // Drop zone
+    if (zone) {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', e => {
+        if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over');
+      });
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (e.dataTransfer.getData('text/plain') !== 'tomato') return;
+        if (running) { toast('Таймер уже запущен!'); return; }
+        // Remove one tomato from basket and replenish
+        const draggingEl = document.querySelector('.pv2-tomato.dragging');
+        if (draggingEl) draggingEl.remove();
+        replenishBasket();
+        startTimer();
+      });
+    }
+
+    // Init
+    updateTodayCount();
+    renderSessions();
   })();
 
   // ---------- Time dropdown picker ----------
