@@ -1821,7 +1821,10 @@
   <div class="pomo-float-tomato">🍅</div>
   <div class="pomo-float-body" style="flex:1;">
     <div class="pomo-float-label">Pomodoro running</div>
-    <div class="pomo-float-range" id="pomoFloatRange"></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="pomo-float-range" id="pomoFloatRange"></div>
+      <button id="pomoFloatStop" title="Stop" style="width:22px;height:22px;border-radius:6px;border:none;background:#e8d9c4;color:#a06040;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">⏹</button>
+    </div>
     <div class="pomo-float-time" id="pomoFloatTime">25:00</div>
     <div class="pomo-float-bar"><div class="pomo-float-bar-fill" id="pomoFloatBar" style="width:100%"></div></div>
   </div>
@@ -3963,6 +3966,8 @@
     const floatClose= document.getElementById('pomoFloatClose');
     let floatHidden = false;
     if (floatClose) floatClose.addEventListener('click', () => { floatHidden = true; if (floatEl) floatEl.classList.add('hidden'); });
+    const floatStop = document.getElementById('pomoFloatStop');
+    if (floatStop) floatStop.addEventListener('click', () => { clearInterval(interval); interval = null; running = false; paused = false; remaining = 0; sessionStart = null; if (pauseBtn) pauseBtn.style.display = 'none'; if (floatEl) floatEl.classList.add('hidden'); document.title = 'Halo'; renderSessions(); });
 
     function updateFloat() {
       if (!floatEl) return;
