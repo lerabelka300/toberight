@@ -477,7 +477,10 @@
   .kanban-cards.stacked:hover .kanban-card,
   .kanban-cards.stacked .kanban-card:hover ~ .kanban-card { margin-bottom: 8px; }
   .kanban-cards.stacked .kanban-card:hover { z-index: 10; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,.15); transform: translateY(-2px); }
-  .kanban-card { background: #ffffff; border: none; border-radius: 14px; padding: 11px 14px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06); transition: box-shadow .15s, opacity .15s, transform .1s; user-select: none; font-size: 13px; }
+  .kanban-card { background: #ffffff; border: none; border-radius: 14px; padding: 8px 12px 10px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06); transition: box-shadow .15s, opacity .15s, transform .1s; user-select: none; font-size: 13px; }
+  .kanban-card-header-row { margin-bottom: 3px; align-items: flex-start; }
+  .kanban-card-title { line-height: 1.3; padding-top: 0; margin-top: 0; }
+  .card-done-btn { margin-top: 2px; }
   .kanban-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06); transform: translateY(-1px); }
   .kanban-card:active { cursor: grabbing; }
   .kanban-card.dragging { opacity: 0.4; }
@@ -534,7 +537,7 @@
   .kanban-col.col-backlog .kanban-col-menu-btn { color: #4a6090; }
   .kanban-col.col-backlog .kanban-add { color: #4a6090; }
   .kanban-col.col-backlog .kanban-add:hover { background: rgba(255,255,255,0.4); color: #1a2540; }
-  .kanban-col.col-backlog .kanban-card { background: #fff; border: none; border-radius: 14px; color: var(--text); }
+  .kanban-col.col-backlog .kanban-card { background: #fff; border: none; border-radius: 14px; color: var(--text); box-shadow: 0 1px 4px rgba(60,90,150,0.10), 0 0 0 1.5px rgba(150,180,230,0.5); }
   .kanban-col.col-backlog .kanban-card-title { color: var(--text); }
   .kanban-col.col-backlog .inline-add-input { background: #fff; color: var(--text); border-color: #a0b8d8; }
   .kanban-col.col-backlog .inline-add-wrap { background: transparent; }
@@ -1129,7 +1132,7 @@
   .pv2-active-zone { min-height: 100px; }
   .pv2-sessions { flex-wrap: wrap; gap: 8px; }
   /* Tap to start on mobile (hint) */
-  .pv2-drop-hint::before { content: '👆 Нажми на помидор — '; }
+  .pv2-drop-hint::before { content: '👆 Tap a tomato — '; }
   .pv2-drop-hint { white-space: nowrap; }
 
   /* ══ FLOATING POMODORO WIDGET ══════════════════════ */
@@ -1201,7 +1204,7 @@
       <button class="nav-item active" data-screen="today" data-tip="Dashboard"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><rect x="3" y="4" width="6" height="6" rx="1"/></svg></span><span class="nav-label">Home</span></button>
       <button class="nav-item" data-screen="mood" data-tip="Mood Tracker"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M15 3v5a1 1 0 0 0 1 1h5"/><path d="M8 13h.01"/><path d="M16 13h.01"/><path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/></svg></span><span class="nav-label">Mood</span></button>
       <button class="nav-item" data-screen="finances" data-tip="Finances"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span><span class="nav-label">Finance</span></button>
-      <button class="nav-item" data-screen="habits" data-tip="Трекер привычек"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="m9 12 2 2 4-4"/></svg></span><span class="nav-label">Привычки</span></button>
+      <button class="nav-item" data-screen="habits" data-tip="Habits"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="m9 12 2 2 4-4"/></svg></span><span class="nav-label">Habits</span></button>
     </nav>
   </aside>
 
@@ -1245,7 +1248,7 @@
                 <button class="inline-add-ok">✓ Add</button>
               </div>
             </div>
-            <button class="kanban-add" data-col="backlog"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Добавить карточку</button>
+            <button class="kanban-add" data-col="backlog"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Add card</button>
           </div>
           <!-- Day columns: scrollable -->
           <div style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding:0 22px 4px 10px;align-items:stretch;" id="kanbanBoard">
@@ -1273,12 +1276,12 @@
       <div class="card pv2-card" style="margin-bottom:0;">
         <div class="pv2-header">
           <div>
-            <div class="pv2-title">Помодоро</div>
-            <div class="pv2-hint">Перетащите помидор из ящика — отсчёт 25 минут стартует сразу</div>
+            <div class="pv2-title">Pomodoro</div>
+            <div class="pv2-hint">Drag a tomato to start a 25-minute session</div>
           </div>
           <div class="pv2-topright">
-            <span class="pv2-today-lbl">Сегодня: <strong id="pv2TodayCount">0</strong> / 8</span>
-            <button class="pv2-pause-btn" id="pv2PauseBtn" style="display:none;">⏸ Пауза</button>
+            <span class="pv2-today-lbl">Today: <strong id="pv2TodayCount">0</strong> / 8</span>
+            <button class="pv2-pause-btn" id="pv2PauseBtn" style="display:none;">⏸ Pause</button>
           </div>
         </div>
         <div class="pv2-body">
@@ -1297,7 +1300,7 @@
               <div class="pv2-tomato" draggable="true">🍅</div>
               <div class="pv2-tomato" draggable="true">🍅</div>
             </div>
-            <div class="pv2-basket-lbl">Ящик с помидорами</div>
+            <div class="pv2-basket-lbl">Tomato basket</div>
           </div>
         </div>
         <!-- hidden elements for backward compat -->
@@ -1784,7 +1787,7 @@
       <div class="header-row" style="margin-bottom:20px;">
         <div>
           <h1>Трекер привычек</h1>
-          <p class="subtitle" id="habitWeekLabel" style="margin:0;">Перетащи привычку в нужный день, чтобы отметить выполнение</p>
+          <p class="subtitle" id="habitWeekLabel" style="margin:0;">Drag a habit to the right day to mark it done</p>
         </div>
         <div class="actions" style="align-items:center;gap:8px;">
           <div class="habit-week-nav">
@@ -1792,7 +1795,7 @@
             <span class="habit-week-label" id="habitWeekRange">—</span>
             <button class="btn-ghost btn" id="habitNextWeek" style="padding:7px 12px;">›</button>
           </div>
-          <button class="btn-ghost btn" id="habitThisWeek" style="padding:7px 14px;">Сегодня</button>
+          <button class="btn-ghost btn" id="habitThisWeek" style="padding:7px 14px;">Today</button>
           <button class="btn" id="addHabitBtn" style="font-size:13px;padding:7px 14px;">+ Привычка</button>
         </div>
       </div>
@@ -1817,7 +1820,7 @@
 <div class="pomo-float hidden" id="pomoFloat">
   <div class="pomo-float-tomato">🍅</div>
   <div class="pomo-float-body" style="flex:1;">
-    <div class="pomo-float-label">Идёт помидор</div>
+    <div class="pomo-float-label">Pomodoro running</div>
     <div class="pomo-float-range" id="pomoFloatRange"></div>
     <div class="pomo-float-time" id="pomoFloatTime">25:00</div>
     <div class="pomo-float-bar"><div class="pomo-float-bar-fill" id="pomoFloatBar" style="width:100%"></div></div>
@@ -1827,20 +1830,20 @@
 
 <!-- Kanban card context menu -->
 <div class="kcard-ctx-menu" id="kcardCtxMenu">
-  <div class="kcard-ctx-item" id="kcardCtxDone">✓ Отметить как выполнено</div>
-  <div class="kcard-ctx-item danger" id="kcardCtxDelete">🗑 Удалить карточку</div>
+  <div class="kcard-ctx-item" id="kcardCtxDone">✓ Mark as done</div>
+  <div class="kcard-ctx-item danger" id="kcardCtxDelete">🗑 Delete card</div>
 </div>
 
 <!-- Add Task Modal (hidden/removed) -->
 <div class="modal-backdrop" id="taskModal">
   <div class="modal v3-modal">
     <div class="v3-header">
-      <div><h2 id="taskModalTitle">Новая задача</h2></div>
+      <div><h2 id="taskModalTitle">New task</h2></div>
       <div class="v3-header-actions">
         <div style="position:relative;" id="taskMenuWrap">
           <button class="modal-menu-btn" id="taskMenuBtn" title="Actions">⋯</button>
           <div class="modal-menu-drop" id="taskMenuDrop">
-            <div class="modal-menu-item danger" id="deleteTaskBtn">🗑 Удалить задачу</div>
+            <div class="modal-menu-item danger" id="deleteTaskBtn">🗑 Delete task</div>
           </div>
         </div>
         <button class="modal-menu-btn" data-close="taskModal" style="font-size:18px;">✕</button>
@@ -1853,7 +1856,7 @@
       <div class="v3-section">
         <div class="v3-label-row"><label class="v3-label" for="taskTitle">Название</label></div>
         <div class="voice-input-wrap">
-          <input id="taskTitle" placeholder="Например: оформить визуал кейса" style="min-height:44px;font-size:15px;font-weight:600;">
+          <input id="taskTitle" placeholder="e.g. prepare case visuals" style="min-height:44px;font-size:15px;font-weight:600;">
           <button type="button" id="voiceBtn" class="voice-btn" title="Голосовой ввод">🎤</button>
         </div>
         <div id="voiceStatus" class="voice-status"></div>
@@ -1861,7 +1864,7 @@
 
       <!-- 2. Описание (скрыто) -->
       <div class="v3-section">
-        <button class="v3-text-link" id="descToggleBtn">+ Добавить описание</button>
+        <button class="v3-text-link" id="descToggleBtn">+ Add description</button>
         <div id="descBox" style="margin-top:8px;display:none;">
           <textarea id="taskDesc" rows="3" placeholder="Детали, ссылки, заметки…" style="min-height:80px;"></textarea>
         </div>
@@ -1876,9 +1879,9 @@
             <div class="v3-section-title">Когда сделать</div>
           </div>
           <div class="v3-chips" id="whenChips">
-            <button class="v3-chip active" id="dtToday">Сегодня</button>
-            <button class="v3-chip" id="dtTomorrow">Завтра</button>
-            <button class="v3-chip" id="dtNoDate">Без срока</button>
+            <button class="v3-chip active" id="dtToday">Today</button>
+            <button class="v3-chip" id="dtTomorrow">Tomorrow</button>
+            <button class="v3-chip" id="dtNoDate">No date</button>
             <button class="v3-chip" id="dtCustom">Выбрать дату ▾</button>
           </div>
           <div id="dateFields" style="display:none;margin-top:10px;">
@@ -1918,7 +1921,7 @@
             <button class="pomo-step-btn" id="pomoPlus">+</button>
             <span class="pomo-count-inline">≈ <strong><span id="pomoCount">1</span> 🍅</strong></span>
           </div>
-          <div class="big-task-hint" id="bigTaskHint">💡 Большая задача — разбей на подзадачи.</div>
+          <div class="big-task-hint" id="bigTaskHint">💡 Big task — break it into subtasks.</div>
           <input type="hidden" id="taskPomos" value="1">
         </div>
       </div>
@@ -1959,12 +1962,12 @@
       <!-- 5. Подзадачи -->
       <div class="v3-section">
         <div class="v3-label-row">
-          <div class="v3-section-title">Подзадачи</div>
+          <div class="v3-section-title">Subtasks</div>
         </div>
         <div class="v3-subtasks">
           <div class="subtask-list" id="subtaskList"></div>
-          <div class="subtask-empty" id="subtaskEmpty">Раздели большую задачу на шаги</div>
-          <button class="v3-text-link" id="addSubtaskBtn" style="margin-top:6px;">+ Добавить подзадачу</button>
+          <div class="subtask-empty" id="subtaskEmpty">Break the task into steps</div>
+          <button class="v3-text-link" id="addSubtaskBtn" style="margin-top:6px;">+ Add subtask</button>
         </div>
       </div>
 
@@ -1987,7 +1990,7 @@
     <div class="v3-footer">
       <button class="v3-btn ghost" data-close="taskModal">Отмена</button>
       <button class="v3-btn ghost" id="focusTaskBtn">▶ Фокус</button>
-      <button class="v3-btn primary" id="saveTaskBtn">Создать задачу</button>
+      <button class="v3-btn primary" id="saveTaskBtn">Create task</button>
       <button class="v3-btn primary" id="updateTaskBtn" style="display:none;">Сохранить</button>
     </div>
   </div>
@@ -2117,7 +2120,7 @@
     <div class="v3-header">
       <div>
         <h2 id="habitModalTitle">Новая привычка</h2>
-        <p style="margin:3px 0 0;color:var(--muted);font-size:12px;">Заполни и перетаскивай карточку на нужный день</p>
+        <p style="margin:3px 0 0;color:var(--muted);font-size:12px;">Fill in and drag the card to any day</p>
       </div>
       <div class="v3-header-actions">
         <div style="position:relative;" id="habitMenuWrap" style="display:none;">
@@ -2132,13 +2135,13 @@
     <div class="v3-body">
       <!-- Название -->
       <div class="v3-section">
-        <div class="v3-label-row"><label class="v3-label" for="habitTitle">Название</label></div>
-        <input id="habitTitle" placeholder="Например: утренняя медитация" style="width:100%;min-height:44px;font-size:15px;font-weight:600;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;background:var(--bg);color:var(--text);outline:none;">
+        <div class="v3-label-row"><label class="v3-label" for="habitTitle">Name</label></div>
+        <input id="habitTitle" placeholder="e.g. morning meditation" style="width:100%;min-height:44px;font-size:15px;font-weight:600;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;background:var(--bg);color:var(--text);outline:none;">
       </div>
       <!-- Заметка -->
       <div class="v3-section">
         <div class="v3-label-row"><label class="v3-label" for="habitNote">Заметка <span class="v3-optional">необязательно</span></label></div>
-        <textarea id="habitNote" rows="2" placeholder="Зачем эта привычка, детали…" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;font-size:14px;background:var(--bg);color:var(--text);resize:vertical;outline:none;"></textarea>
+        <textarea id="habitNote" rows="2" placeholder="Why this habit, details…" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;font-size:14px;background:var(--bg);color:var(--text);resize:vertical;outline:none;"></textarea>
       </div>
       <!-- Тег -->
       <div class="v3-section">
@@ -2606,7 +2609,7 @@
   function openNewTaskModal(targetCol) {
     _editingCard = null;
     _targetCol = targetCol || 'backlog';
-    document.getElementById('taskModalTitle').textContent = 'Новая задача';
+    document.getElementById('taskModalTitle').textContent = 'New task';
     document.getElementById('taskTitle').value = '';
     document.getElementById('taskDesc').value  = '';
     document.getElementById('taskDate').value  = '';
@@ -2654,7 +2657,7 @@
     e.stopPropagation();
     _ctxCard = card;
     const isDone = card.dataset.done === '1';
-    _ctxDoneBtn.textContent = isDone ? '↩ Снять отметку' : '✓ Отметить как выполнено';
+    _ctxDoneBtn.textContent = isDone ? '↩ Mark as undone' : '✓ Mark as done';
     _ctxMenu.style.left = Math.min(e.clientX, window.innerWidth - 170) + 'px';
     _ctxMenu.style.top  = Math.min(e.clientY, window.innerHeight - 90) + 'px';
     _ctxMenu.classList.add('open');
@@ -2855,7 +2858,7 @@
     const stBarHtml = stTotal > 0 ? `<div class="subtask-bar"><div class="subtask-bar-fill" style="width:${stTotal?Math.round(stDone/stTotal*100):0}%"></div></div>` : '';
     card.innerHTML = `
       <div class="kanban-card-header-row">
-        <button class="card-done-btn${isDone ? ' is-done' : ''}" title="${isDone ? 'Снять отметку' : 'Отметить как выполнено'}" onclick="event.stopPropagation(); toggleCardDone(this.closest('.kanban-card'))"></button>
+        <button class="card-done-btn${isDone ? ' is-done' : ''}" title="${isDone ? 'Mark as undone' : 'Mark as done'}" onclick="event.stopPropagation(); toggleCardDone(this.closest('.kanban-card'))"></button>
         <div class="kanban-card-title">${escapeHtml(title)}</div>
         ${prioIcon ? `<span class="prio-icon" title="${prioLabel}">${prioIcon}</span>` : ''}
       </div>
@@ -3002,7 +3005,7 @@
       col.style.width = '300px';
       col.style.flexShrink = '0';
       col.dataset.col = key;
-      const colTitle = isToday ? 'Сегодня' : `${name} ${num}`;
+      const colTitle = isToday ? 'Today' : `${name} ${num}`;
       col.innerHTML = `
         <div class="kanban-col-header">
           <div class="kanban-col-header-left">
@@ -3013,16 +3016,16 @@
         </div>
         <div class="kanban-cards" id="col-${key}"></div>
         <div class="inline-add-wrap" id="inline-add-${key}">
-          <input class="inline-add-input" placeholder="Название задачи…">
+          <input class="inline-add-input" placeholder="Task title…">
           <div class="inline-add-row">
             <button class="inline-add-prio-btn active" data-p="med" title="Medium">🟡</button>
             <button class="inline-add-prio-btn" data-p="high" title="High">🔴</button>
             <button class="inline-add-prio-btn" data-p="low" title="Low">🟢</button>
             <button class="inline-add-cancel">✕</button>
-            <button class="inline-add-ok">✓ Добавить</button>
+            <button class="inline-add-ok">✓ Add</button>
           </div>
         </div>
-        <button class="kanban-add" data-col="${key}"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Добавить карточку <span style="margin-left:auto;font-size:14px;opacity:.5;">⊞</span></button>`;
+        <button class="kanban-add" data-col="${key}"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Add card <span style="margin-left:auto;font-size:14px;opacity:.5;">⊞</span></button>`;
       board.appendChild(col);
       bindKanbanCol(col);
     }
@@ -3894,7 +3897,7 @@
           timeLabel = fmtTime(sessionStart) + ' → ' + fmtTime(plannedEnd);
         }
         const pauseLabel = paused ? '▶' : '⏸';
-        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${timeLabel}</div><div class="pv2-session-countdown" id="pv2Countdown">${fmt(remaining)}</div><button class="pv2-card-pause-btn" id="pv2CardPauseBtn" title="${paused ? 'Продолжить' : 'Пауза'}">${pauseLabel}</button>`;
+        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${timeLabel}</div><div class="pv2-session-countdown" id="pv2Countdown">${fmt(remaining)}</div><button class="pv2-card-pause-btn" id="pv2CardPauseBtn" title="${paused ? 'Resume' : 'Pause'}">${pauseLabel}</button>`;
         el.querySelector('#pv2CardPauseBtn')?.addEventListener('click', () => {
           if (running) pauseTimer(); else if (paused) resumeTimer();
         });
@@ -3947,8 +3950,8 @@
         osc.stop(t);
       } catch(e) {}
       if (Notification?.permission === 'granted')
-        new Notification('🍅 Помодоро выполнено!', { body: 'Время перерыва!' });
-      toast('Помодоро завершён 🍅', 'success');
+        new Notification('🍅 Pomodoro done!', { body: 'Time for a break!' });
+      toast('Pomodoro complete 🍅', 'success');
       openModal('pomoCompleteModal');
     }
 
@@ -3993,7 +3996,7 @@
       if (!running) return;
       clearInterval(interval); interval = null;
       running = false; paused = true;
-      pauseBtn.textContent = '▶ Продолжить';
+      pauseBtn.textContent = '▶ Resume';
       const cd = document.getElementById('pv2Countdown');
       if (cd) cd.textContent = fmt(remaining);
     }
@@ -4001,7 +4004,7 @@
     function resumeTimer() {
       if (!paused) return;
       paused = false;
-      pauseBtn.textContent = '⏸ Пауза';
+      pauseBtn.textContent = '⏸ Pause';
       startTimer();
     }
 
@@ -4036,7 +4039,7 @@
       el.addEventListener('dragend', () => el.classList.remove('dragging'));
       // Touch / tap support for mobile
       el.addEventListener('click', () => {
-        if (running) { toast('Таймер уже запущен!'); return; }
+        if (running) { toast('Timer already running!'); return; }
         if (paused)  { resumeTimer(); return; }
         el.remove();
         replenishBasket();
@@ -4061,7 +4064,7 @@
         e.preventDefault();
         zone.classList.remove('drag-over');
         if (e.dataTransfer.getData('text/plain') !== 'tomato') return;
-        if (running) { toast('Таймер уже запущен!'); return; }
+        if (running) { toast('Timer already running!'); return; }
         // Remove one tomato from basket and replenish
         const draggingEl = document.querySelector('.pv2-tomato.dragging');
         if (draggingEl) draggingEl.remove();
@@ -4477,9 +4480,9 @@
         const sorted=[...entries].sort((a,b)=>new Date(b.date)-new Date(a.date));
         je.innerHTML=sorted.map((e,i)=>{
           const d=new Date(e.date);
-          let dlabel=d.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'});
-          if(d.toDateString()===today.toDateString()) dlabel='Сегодня';
-          else if(d.toDateString()===yest.toDateString()) dlabel='Вчера';
+          let dlabel=d.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short'});
+          if(d.toDateString()===today.toDateString()) dlabel='Today';
+          else if(d.toDateString()===yest.toDateString()) dlabel='Yesterday';
           const preview=[...(e.emotions||[]).slice(0,2),...(e.factors||[]).slice(0,2)].join(' · ')||'—';
           const moodColor=e.mood>=7?'var(--accent)':e.mood>=4?'var(--warn)':'#e05252';
           return `
@@ -4950,9 +4953,9 @@
       const now   = new Date();
       const today = new Date(now); today.setHours(0,0,0,0);
 
-      const RU_DAYS = ['вс','пн','вт','ср','чт','пт','сб'];
-      const RU_DAYS_FULL = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
-      if (range) range.textContent = RU_DAYS[today.getDay()] + ', ' + today.getDate() + ' ' + ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][today.getMonth()];
+      const RU_DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const RU_DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      if (range) range.textContent = RU_DAYS[today.getDay()] + ', ' + today.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()];
 
       const key = dateKey(today);
       const evs = allEvents.filter(ev => dateKey(ev.dtstart) === key && !ev.allDay);
@@ -5364,7 +5367,7 @@
         </div>
         <div class="habit-cards" id="hLib"></div>
         ${habits.length === 0
-          ? '<div class="habit-lib-empty">Нет привычек.<br>Нажми «+ Привычка»</div>'
+          ? '<div class="habit-lib-empty">No habits yet.<br>Tap «+ Habit»</div>'
           : ''}
       `;
       grid.appendChild(libCol);
@@ -5391,7 +5394,7 @@
           </div>
           <div class="habit-cards" id="hDay_${key}"></div>
           <div class="habit-day-empty">Перетащи привычку сюда</div>
-          <div class="habit-drop-zone">+ Отметить выполнение</div>
+          <div class="habit-drop-zone">+ Mark done</div>
         `;
 
         // Drop handlers
