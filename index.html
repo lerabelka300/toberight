@@ -212,16 +212,16 @@
   .task.done .task-title { text-decoration: line-through; color: var(--muted); }
   .task-meta { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); font-size: 12px; color: var(--muted); }
-  .chip.career { background: #ecf2ff; color: #3a5fbf; }
-  .chip.portfolio { background: #f4ecff; color: #6b3fbf; }
-  .chip.english { background: #eafaef; color: #2f8a55; }
-  .chip.health { background: #fff1e6; color: #b86b1a; }
-  .chip.money { background: #fff8d6; color: #8a6e10; }
-  .chip.education { background: #e0f7fa; color: #0e7a8a; }
+  .chip.work          { background: #ecf2ff; color: #3a5fbf; }
+  .chip.jobsearch     { background: #fff3e0; color: #e07b39; }
+  .chip.sideproject   { background: #f4ecff; color: #6b3fbf; }
   .chip.entertainment { background: #ffe6f1; color: #b53078; }
-  .chip.friends { background: #e8f0fe; color: #4264b0; }
-  .chip.family { background: #ffe9e2; color: #c44d2e; }
-  .chip.home   { background: #f0ede8; color: #7a6f62; }
+  .chip.learning      { background: #e0f7fa; color: #0e7a8a; }
+  .chip.friends       { background: #e8f0fe; color: #4264b0; }
+  .chip.relationships { background: #ffe8ed; color: #c03060; }
+  .chip.family        { background: #ffe9e2; color: #c44d2e; }
+  .chip.sports        { background: #eafaef; color: #2f8a55; }
+  .chip.hobbies       { background: #f0ede8; color: #7a6f62; }
   .chip.high { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
   .chip.med { background: #fff1d6; color: var(--warn); font-weight: 600; }
   .chip.low { background: var(--surface-2); }
@@ -371,15 +371,16 @@
   .tag-pill { padding: 5px 13px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 2px solid transparent; transition: all .15s; opacity: .7; }
   .tag-pill:hover { opacity: 1; }
   .tag-pill.selected { border-color: currentColor; opacity: 1; font-weight: 600; }
-  .tag-pill.career       { background: #ecf2ff; color: #3a5fbf; }
-  .tag-pill.portfolio    { background: #f4ecff; color: #6b3fbf; }
-  .tag-pill.english      { background: #eafaef; color: #2f8a55; }
-  .tag-pill.health       { background: #fff1e6; color: #b86b1a; }
-  .tag-pill.money        { background: #fff8d6; color: #8a6e10; }
-  .tag-pill.education    { background: #e0f7fa; color: #0e7a8a; }
-  .tag-pill.entertainment{ background: #ffe6f1; color: #b53078; }
-  .tag-pill.friends      { background: #e8f0fe; color: #4264b0; }
-  .tag-pill.family       { background: #ffe9e2; color: #c44d2e; }
+  .tag-pill.work          { background: #ecf2ff; color: #3a5fbf; }
+  .tag-pill.jobsearch     { background: #fff3e0; color: #e07b39; }
+  .tag-pill.sideproject   { background: #f4ecff; color: #6b3fbf; }
+  .tag-pill.entertainment { background: #ffe6f1; color: #b53078; }
+  .tag-pill.learning      { background: #e0f7fa; color: #0e7a8a; }
+  .tag-pill.friends       { background: #e8f0fe; color: #4264b0; }
+  .tag-pill.relationships { background: #ffe8ed; color: #c03060; }
+  .tag-pill.family        { background: #ffe9e2; color: #c44d2e; }
+  .tag-pill.sports        { background: #eafaef; color: #2f8a55; }
+  .tag-pill.hobbies       { background: #f0ede8; color: #7a6f62; }
 
   /* Prio picker */
   .prio-picker { display: flex; gap: 8px; }
@@ -436,16 +437,16 @@
   .time-opt:hover, .time-opt.selected { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
 
   /* Kanban card left-border by category (with rounded left so it fits new card style) */
-  .kanban-card[data-cat="career"]        { border-left: 3px solid #3a5fbf; border-radius: 14px; }
-  .kanban-card[data-cat="portfolio"]     { border-left: 3px solid #6b3fbf; border-radius: 14px; }
-  .kanban-card[data-cat="english"]       { border-left: 3px solid #2f8a55; border-radius: 14px; }
-  .kanban-card[data-cat="health"]        { border-left: 3px solid #b86b1a; border-radius: 14px; }
-  .kanban-card[data-cat="money"]         { border-left: 3px solid #8a6e10; border-radius: 14px; }
-  .kanban-card[data-cat="education"]     { border-left: 3px solid #0e7a8a; border-radius: 14px; }
+  .kanban-card[data-cat="work"]          { border-left: 3px solid #3a5fbf; border-radius: 14px; }
+  .kanban-card[data-cat="jobsearch"]     { border-left: 3px solid #e07b39; border-radius: 14px; }
+  .kanban-card[data-cat="sideproject"]   { border-left: 3px solid #6b3fbf; border-radius: 14px; }
   .kanban-card[data-cat="entertainment"] { border-left: 3px solid #b53078; border-radius: 14px; }
+  .kanban-card[data-cat="learning"]      { border-left: 3px solid #0e7a8a; border-radius: 14px; }
   .kanban-card[data-cat="friends"]       { border-left: 3px solid #4264b0; border-radius: 14px; }
+  .kanban-card[data-cat="relationships"] { border-left: 3px solid #c03060; border-radius: 14px; }
   .kanban-card[data-cat="family"]        { border-left: 3px solid #c44d2e; border-radius: 14px; }
-  .kanban-card[data-cat="home"]          { border-left: 3px solid #a09080; border-radius: 14px; }
+  .kanban-card[data-cat="sports"]        { border-left: 3px solid #2f8a55; border-radius: 14px; }
+  .kanban-card[data-cat="hobbies"]       { border-left: 3px solid #7a6f62; border-radius: 14px; }
 
   /* Task hover actions */
   .task { position: relative; }
@@ -537,7 +538,7 @@
   .kanban-col.col-backlog .kanban-col-menu-btn { color: #4a6090; }
   .kanban-col.col-backlog .kanban-add { color: #4a6090; }
   .kanban-col.col-backlog .kanban-add:hover { background: rgba(255,255,255,0.4); color: #1a2540; }
-  .kanban-col.col-backlog .kanban-card { background: #fff; border: none; border-radius: 14px; color: var(--text); box-shadow: 0 1px 4px rgba(60,90,150,0.10), 0 0 0 1.5px rgba(150,180,230,0.5); }
+  .kanban-col.col-backlog .kanban-card { background: #fff; border: none; border-radius: 14px; color: var(--text); box-shadow: 0 2px 6px rgba(60,90,170,0.15), 0 0 0 1.5px rgba(100,140,210,0.35); }
   .kanban-col.col-backlog .kanban-card-title { color: var(--text); }
   .kanban-col.col-backlog .inline-add-input { background: #fff; color: var(--text); border-color: #a0b8d8; }
   .kanban-col.col-backlog .inline-add-wrap { background: transparent; }
@@ -1936,18 +1937,18 @@
             <div class="v3-section-title">Тег</div>
           </div>
           <div class="tag-picker" id="tagPicker">
-            <span class="tag-pill career selected" data-val="career">Карьера</span>
-            <span class="tag-pill portfolio"       data-val="portfolio">Портфолио</span>
-            <span class="tag-pill english"         data-val="english">Английский</span>
-            <span class="tag-pill health"          data-val="health">Здоровье</span>
-            <span class="tag-pill money"           data-val="money">Деньги</span>
-            <span class="tag-pill education"       data-val="education">Образование</span>
-            <span class="tag-pill entertainment"   data-val="entertainment">Развлечения</span>
-            <span class="tag-pill friends"         data-val="friends">Друзья</span>
-            <span class="tag-pill family"          data-val="family">Семья</span>
-            <span class="tag-pill home"            data-val="home">Дом</span>
+            <span class="tag-pill work selected"    data-val="work">Work</span>
+            <span class="tag-pill jobsearch"       data-val="jobsearch">Job Search</span>
+            <span class="tag-pill sideproject"     data-val="sideproject">Side Project</span>
+            <span class="tag-pill entertainment"   data-val="entertainment">Entertainment</span>
+            <span class="tag-pill learning"        data-val="learning">Learning</span>
+            <span class="tag-pill friends"         data-val="friends">Friends</span>
+            <span class="tag-pill relationships"   data-val="relationships">Relationships</span>
+            <span class="tag-pill family"          data-val="family">Family</span>
+            <span class="tag-pill sports"          data-val="sports">Sports</span>
+            <span class="tag-pill hobbies"         data-val="hobbies">Hobbies</span>
           </div>
-          <input type="hidden" id="taskCategory" value="career">
+          <input type="hidden" id="taskCategory" value="work">
         </div>
         <div>
           <div class="v3-label-row">
@@ -2015,15 +2016,16 @@
     <input id="goalDeadline" type="date">
     <label>Category</label>
     <select id="goalCategory">
-      <option value="career">Career</option>
-      <option value="portfolio">Portfolio</option>
-      <option value="english">English</option>
-      <option value="health">Health</option>
-      <option value="money">Money</option>
-      <option value="education">Education</option>
+      <option value="work">Work</option>
+      <option value="jobsearch">Job Search</option>
+      <option value="sideproject">Side Project</option>
       <option value="entertainment">Entertainment</option>
+      <option value="learning">Learning</option>
       <option value="friends">Friends</option>
+      <option value="relationships">Relationships</option>
       <option value="family">Family</option>
+      <option value="sports">Sports</option>
+      <option value="hobbies">Hobbies</option>
     </select>
     <label>Why is this goal important?</label>
     <textarea id="goalWhy" rows="2" placeholder="..."></textarea>
@@ -2048,18 +2050,18 @@
     <div class="modal-section">
       <div class="modal-section-title">Tag</div>
       <div class="tag-picker" id="ideaTagPicker">
-        <span class="tag-pill career selected"   data-val="career">Career</span>
-        <span class="tag-pill portfolio"          data-val="portfolio">Portfolio</span>
-        <span class="tag-pill english"            data-val="english">English</span>
-        <span class="tag-pill health"             data-val="health">Health</span>
-        <span class="tag-pill money"              data-val="money">Money</span>
-        <span class="tag-pill education"          data-val="education">Education</span>
+        <span class="tag-pill work selected"      data-val="work">Work</span>
+        <span class="tag-pill jobsearch"          data-val="jobsearch">Job Search</span>
+        <span class="tag-pill sideproject"        data-val="sideproject">Side Project</span>
         <span class="tag-pill entertainment"      data-val="entertainment">Entertainment</span>
+        <span class="tag-pill learning"           data-val="learning">Learning</span>
         <span class="tag-pill friends"            data-val="friends">Friends</span>
+        <span class="tag-pill relationships"      data-val="relationships">Relationships</span>
         <span class="tag-pill family"             data-val="family">Family</span>
-        <span class="tag-pill home"               data-val="home">Home</span>
+        <span class="tag-pill sports"             data-val="sports">Sports</span>
+        <span class="tag-pill hobbies"            data-val="hobbies">Hobbies</span>
       </div>
-      <input type="hidden" id="ideaCategory" value="career">
+      <input type="hidden" id="ideaCategory" value="work">
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Priority</div>
@@ -2146,22 +2148,22 @@
         <div class="v3-label-row"><label class="v3-label" for="habitNote">Заметка <span class="v3-optional">необязательно</span></label></div>
         <textarea id="habitNote" rows="2" placeholder="Why this habit, details…" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;font-size:14px;background:var(--bg);color:var(--text);resize:vertical;outline:none;"></textarea>
       </div>
-      <!-- Тег -->
+      <!-- Tag -->
       <div class="v3-section">
-        <div class="v3-label-row"><div class="v3-section-title">Тег</div></div>
+        <div class="v3-label-row"><div class="v3-section-title">Tag</div></div>
         <div class="tag-picker" id="habitTagPicker">
-          <span class="tag-pill health selected"        data-val="health">Здоровье</span>
-          <span class="tag-pill career"                 data-val="career">Карьера</span>
-          <span class="tag-pill portfolio"              data-val="portfolio">Портфолио</span>
-          <span class="tag-pill english"                data-val="english">Английский</span>
-          <span class="tag-pill money"                  data-val="money">Деньги</span>
-          <span class="tag-pill education"              data-val="education">Образование</span>
-          <span class="tag-pill entertainment"          data-val="entertainment">Развлечения</span>
-          <span class="tag-pill friends"                data-val="friends">Друзья</span>
-          <span class="tag-pill family"                 data-val="family">Семья</span>
-          <span class="tag-pill home"                   data-val="home">Дом</span>
+          <span class="tag-pill work selected"          data-val="work">Work</span>
+          <span class="tag-pill jobsearch"              data-val="jobsearch">Job Search</span>
+          <span class="tag-pill sideproject"            data-val="sideproject">Side Project</span>
+          <span class="tag-pill entertainment"          data-val="entertainment">Entertainment</span>
+          <span class="tag-pill learning"               data-val="learning">Learning</span>
+          <span class="tag-pill friends"                data-val="friends">Friends</span>
+          <span class="tag-pill relationships"          data-val="relationships">Relationships</span>
+          <span class="tag-pill family"                 data-val="family">Family</span>
+          <span class="tag-pill sports"                 data-val="sports">Sports</span>
+          <span class="tag-pill hobbies"                data-val="hobbies">Hobbies</span>
         </div>
-        <input type="hidden" id="habitTag" value="health">
+        <input type="hidden" id="habitTag" value="work">
       </div>
       <!-- Цвет -->
       <div class="v3-section">
@@ -2276,7 +2278,7 @@
   });
 
   // ---------- Task creation (shared) ----------
-  const CAT_LABELS = { career: 'Career', portfolio: 'Portfolio', english: 'English', health: 'Health', money: 'Money', education: 'Education', entertainment: 'Entertainment', friends: 'Friends', family: 'Family', home: 'Home' };
+  const CAT_LABELS = { work: 'Work', jobsearch: 'Job Search', sideproject: 'Side Project', entertainment: 'Entertainment', learning: 'Learning', friends: 'Friends', relationships: 'Relationships', family: 'Family', sports: 'Sports', hobbies: 'Hobbies' };
 
   function buildTaskHtml({ title, category, priority, goal }) {
     return `
@@ -2558,7 +2560,7 @@
   function openCardForEdit(card) {
     _editingCard = card;
     const title     = card.dataset.title || card.querySelector('.kanban-card-title')?.textContent || '';
-    const cat       = card.dataset.cat || 'career';
+    const cat       = card.dataset.cat || 'work';
     const prio      = card.dataset.prio || 'med';
     const date      = card.dataset.date || '';
     const desc      = card.dataset.desc || '';
@@ -2619,8 +2621,8 @@
     document.getElementById('taskStartDate').value = '';
     document.getElementById('taskStartTime').value = '';
     document.getElementById('taskEndTime').value   = '';
-    document.querySelectorAll('#tagPicker .tag-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === 'career'));
-    document.getElementById('taskCategory').value = 'career';
+    document.querySelectorAll('#tagPicker .tag-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === 'work'));
+    document.getElementById('taskCategory').value = 'work';
     document.querySelectorAll('#prioPicker .prio-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === 'med'));
     document.getElementById('taskPriority').value = 'med';
     setPomoCount(1);
@@ -2828,7 +2830,7 @@
 
   function renderCardInner(card, _colId) {
     const title    = card.dataset.title || card.querySelector?.('.kanban-card-title')?.textContent || '';
-    const cat      = card.dataset.cat || 'career';
+    const cat      = card.dataset.cat || 'work';
     const prio     = card.dataset.prio || 'med';
     const date     = card.dataset.date || '';
     const time     = card.dataset.time || '';
@@ -2879,7 +2881,7 @@
     if (!col) return;
     const card = document.createElement('div');
     card.dataset.id       = cardId || crypto.randomUUID();
-    card.dataset.cat      = cat || 'career';
+    card.dataset.cat      = cat || 'work';
     card.dataset.prio     = prio || 'med';
     card.dataset.title    = title || '';
     if (date)      card.dataset.date      = date;
@@ -2914,7 +2916,7 @@
         const titleEl = card.querySelector('.kanban-card-title');
         const item = {
           title:       card.dataset.title || (titleEl ? titleEl.textContent : ''),
-          cat:         card.dataset.cat      || 'career',
+          cat:         card.dataset.cat      || 'work',
           prio:        card.dataset.prio     || 'med',
           date:        card.dataset.date     || '',
           time:        card.dataset.time     || '',
@@ -3050,7 +3052,7 @@
     if (!addBtn || !wrap) return;
 
     let selectedPrio = 'med';
-    let selectedCat  = 'career';
+    let selectedCat  = 'work';
 
     // Inject category buttons into the wrap
     if (!wrap.querySelector('.inline-cat-row')) {
@@ -3059,7 +3061,7 @@
       const CATS = Object.entries(CAT_LABELS);
       CATS.forEach(([key, label]) => {
         const btn = document.createElement('button');
-        btn.className = 'inline-cat-btn' + (key === 'career' ? ' active' : '');
+        btn.className = 'inline-cat-btn' + (key === 'work' ? ' active' : '');
         btn.dataset.c = key;
         btn.textContent = label;
         btn.addEventListener('click', () => {
@@ -3385,7 +3387,7 @@
     document.getElementById('ideaModalTitle').textContent = existing ? '✏️ Edit idea' : '💡 New Idea';
     document.getElementById('ideaTitle').value = existing ? existing.title : '';
     document.getElementById('ideaDesc').value  = existing ? (existing.desc || '') : '';
-    const cat  = existing?.cat  || 'career';
+    const cat  = existing?.cat  || 'work';
     const prio = existing?.prio || 'med';
     document.querySelectorAll('#ideaTagPicker .tag-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === cat));
     document.getElementById('ideaCategory').value = cat;
@@ -3545,9 +3547,9 @@
     const focusPct    = document.getElementById('pomoFocusPct');
 
     // ── Helpers ───────────────────────────────────────────────
-    const CAT_RU = { career: 'Career', portfolio: 'Portfolio', english: 'English',
-      health: 'Health', money: 'Money', education: 'Education',
-      entertainment: 'Entertainment', friends: 'Friends', family: 'Family', home: 'Home' };
+    const CAT_RU = { work: 'Work', jobsearch: 'Job Search', sideproject: 'Side Project',
+      entertainment: 'Entertainment', learning: 'Learning', friends: 'Friends',
+      relationships: 'Relationships', family: 'Family', sports: 'Sports', hobbies: 'Hobbies' };
 
     function getActiveCard() {
       if (!activeTaskId) return null;
@@ -5309,9 +5311,9 @@
       orange:'#e07b39', pink:'#b53078', red:'#c03030', neutral:'#c5bdb2'
     };
     const TAG_LABEL = {
-      career:'Карьера', portfolio:'Портфолио', english:'Английский',
-      health:'Здоровье', money:'Деньги', education:'Образование',
-      entertainment:'Развлечения', friends:'Друзья', family:'Семья', home:'Дом'
+      work:'Work', jobsearch:'Job Search', sideproject:'Side Project',
+      entertainment:'Entertainment', learning:'Learning', friends:'Friends',
+      relationships:'Relationships', family:'Family', sports:'Sports', hobbies:'Hobbies'
     };
     const DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 
