@@ -312,6 +312,32 @@
   .deadline-row.dl-future  { color: var(--muted); }
 
   /* Toast */
+  /* Floating pomodoro mini-widget */
+  .pomo-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9997;
+    background: linear-gradient(135deg, #fdf6ee, #fff9f3);
+    border: 1.5px solid #e8d9c4;
+    border-radius: 20px;
+    padding: 14px 20px 14px 10px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+    min-width: 220px;
+    cursor: default;
+    animation: floatIn .3s cubic-bezier(.34,1.56,.64,1);
+    user-select: none;
+  }
+  .pomo-float.hidden { display: none; }
+  @keyframes floatIn { from { transform: translateY(16px) scale(.95); opacity: 0; } to { transform: none; opacity: 1; } }
+  .pomo-float-tomato { font-size: 52px; line-height: 1; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
+  .pomo-float-body { display: flex; flex-direction: column; gap: 2px; }
+  .pomo-float-label { font-size: 11px; font-weight: 800; color: #c47a40; letter-spacing: .1em; text-transform: uppercase; }
+  .pomo-float-range { font-size: 12px; color: #9e8060; font-weight: 500; }
+  .pomo-float-time { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .pomo-float-bar { height: 3px; background: #e8d9c4; border-radius: 99px; margin-top: 6px; overflow: hidden; width: 100%; }
+  .pomo-float-bar-fill { height: 100%; background: linear-gradient(90deg, #e8673a, #f5a263); border-radius: 99px; transition: width 1s linear; }
+  .pomo-float-close { position: absolute; top: 8px; right: 10px; font-size: 14px; color: #c4b09a; cursor: pointer; background: none; border: none; padding: 0; line-height: 1; }
+  .pomo-float-close:hover { color: var(--text); }
+
   .toast-host { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
   .toast { background: var(--text); color: white; padding: 12px 16px; border-radius: 12px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: slideIn .25s ease; max-width: 340px; }
   .toast.success { background: var(--success); }
@@ -681,16 +707,23 @@
   .pv2-sessions { display:flex; flex-wrap:wrap; gap:10px; }
 
   /* Single tomato session card */
-  .pv2-session { display:flex; flex-direction:column; align-items:center; gap:4px; width:80px; }
-  .pv2-session-tomato { font-size:40px; line-height:1; position:relative; }
-  .pv2-session.done .pv2-session-tomato::after {
-    content:'✓'; position:absolute; top:-4px; right:-6px;
-    background:#2f8a55; color:#fff; border-radius:50%;
-    width:18px; height:18px; display:flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; line-height:18px; text-align:center;
+  .pv2-session {
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    width:90px; flex-shrink:0;
+    background:#fff; border:1.5px solid var(--border); border-radius:14px;
+    padding:10px 8px 9px; position:relative;
   }
-  .pv2-session-time { font-size:11px; color:var(--muted); text-align:center; white-space:nowrap; }
-  .pv2-session-countdown { font-size:15px; font-weight:700; color:var(--accent); text-align:center; }
+  .pv2-session-tomato { font-size:46px; line-height:1; position:relative; display:block; }
+  .pv2-session.done .pv2-session-tomato::after {
+    content:'✓'; position:absolute; top:-5px; right:-9px;
+    background:#2f8a55; color:#fff; border-radius:50%;
+    width:20px; height:20px; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:800; line-height:20px; text-align:center;
+    border:2px solid #fff;
+  }
+  .pv2-session-time { font-size:11px; color:var(--muted); text-align:center; white-space:nowrap; line-height:1.3; }
+  .pv2-session-countdown { font-size:16px; font-weight:700; color:#d93025; text-align:center; letter-spacing:-.01em; }
+  .pv2-session.running { border-color:#d93025; border-width:2px; }
   .pv2-session.running .pv2-session-tomato { animation: pv2-pulse 1.5s ease-in-out infinite; }
   @keyframes pv2-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
 
@@ -1712,6 +1745,18 @@
 
 <!-- Toast host -->
 <div class="toast-host" id="toastHost"></div>
+
+<!-- Floating pomodoro widget -->
+<div class="pomo-float hidden" id="pomoFloat">
+  <div class="pomo-float-tomato">🍅</div>
+  <div class="pomo-float-body" style="flex:1;">
+    <div class="pomo-float-label">Идёт помидор</div>
+    <div class="pomo-float-range" id="pomoFloatRange"></div>
+    <div class="pomo-float-time" id="pomoFloatTime">25:00</div>
+    <div class="pomo-float-bar"><div class="pomo-float-bar-fill" id="pomoFloatBar" style="width:100%"></div></div>
+  </div>
+  <button class="pomo-float-close" id="pomoFloatClose" title="Скрыть">✕</button>
+</div>
 
 <!-- Kanban card context menu -->
 <div class="kcard-ctx-menu" id="kcardCtxMenu">
@@ -3766,7 +3811,7 @@
         const el = document.createElement('div');
         el.className = 'pv2-session done';
         const tRange = entry.end
-          ? fmtTime(new Date(entry.start)) + ' – ' + fmtTime(new Date(entry.end))
+          ? fmtTime(new Date(entry.start)) + ' → ' + fmtTime(new Date(entry.end))
           : fmtTime(new Date(entry.start));
         el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${tRange}</div>`;
         sessions.appendChild(el);
@@ -3776,8 +3821,12 @@
         const el = document.createElement('div');
         el.className = 'pv2-session running';
         el.id = 'pv2RunningSession';
-        const startStr = sessionStart ? fmtTime(sessionStart) + ' →' : '';
-        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${startStr}</div><div class="pv2-session-countdown" id="pv2Countdown">${fmt(remaining)}</div>`;
+        let timeLabel = '';
+        if (sessionStart) {
+          const plannedEnd = new Date(sessionStart.getTime() + WORK_SECS * 1000);
+          timeLabel = fmtTime(sessionStart) + ' → ' + fmtTime(plannedEnd);
+        }
+        el.innerHTML = `<div class="pv2-session-tomato">🍅</div><div class="pv2-session-time">${timeLabel}</div><div class="pv2-session-countdown" id="pv2Countdown">${fmt(remaining)}</div>`;
         sessions.appendChild(el);
       }
       // Update drop hint
@@ -3789,6 +3838,7 @@
       document.title = '⏱ ' + fmt(remaining) + ' — Personal Dashboard';
       const cd = document.getElementById('pv2Countdown');
       if (cd) cd.textContent = fmt(remaining);
+      updateFloat();
       if (remaining <= 0) {
         clearInterval(interval); interval = null;
         onComplete();
@@ -3799,6 +3849,7 @@
       running = false;
       paused  = false;
       if (pauseBtn) pauseBtn.style.display = 'none';
+      if (floatEl) floatEl.classList.add('hidden');
       document.title = 'Personal Dashboard';
 
       // Save session
@@ -3830,16 +3881,40 @@
       openModal('pomoCompleteModal');
     }
 
+    // ── Floating widget helpers ───────────────
+    const floatEl   = document.getElementById('pomoFloat');
+    const floatTime = document.getElementById('pomoFloatTime');
+    const floatRange= document.getElementById('pomoFloatRange');
+    const floatBar  = document.getElementById('pomoFloatBar');
+    const floatClose= document.getElementById('pomoFloatClose');
+    let floatHidden = false;
+    if (floatClose) floatClose.addEventListener('click', () => { floatHidden = true; if (floatEl) floatEl.classList.add('hidden'); });
+
+    function updateFloat() {
+      if (!floatEl) return;
+      if (!running && !paused) { floatEl.classList.add('hidden'); return; }
+      if (floatHidden) return;
+      floatEl.classList.remove('hidden');
+      if (floatTime) floatTime.textContent = fmt(remaining);
+      if (floatBar)  floatBar.style.width  = (remaining / WORK_SECS * 100).toFixed(1) + '%';
+      if (floatRange && sessionStart) {
+        const plannedEnd = new Date(sessionStart.getTime() + WORK_SECS * 1000);
+        floatRange.textContent = fmtTime(sessionStart) + ' → ' + fmtTime(plannedEnd);
+      }
+    }
+
     function startTimer() {
       if (running) return;
       if (!paused) {
         remaining = WORK_SECS;
         sessionStart = new Date();
+        floatHidden = false; // reset hide flag on new session
       }
       running = true; paused = false;
       if (pauseBtn) pauseBtn.style.display = '';
       if (Notification?.permission === 'default') Notification.requestPermission();
       renderSessions();
+      updateFloat();
       interval = setInterval(tick, 1000);
     }
 
