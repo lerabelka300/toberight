@@ -9,24 +9,58 @@
 <script src="supabase-config.js"></script>
 <style>
   :root {
-    --bg: #faf8f5;
+    --bg: #ffffff;
     --surface: #ffffff;
-    --surface-2: #f4f1ec;
-    --text: #1f1d1a;
-    --muted: #7a7368;
-    --accent: #ff6b4a;
-    --accent-soft: #ffe7e0;
-    --success: #4caf80;
-    --success-soft: #e0f4ea;
-    --warn: #e8a93b;
-    --border: #ece7df;
-    --shadow: 0 1px 2px rgba(20,15,10,0.04), 0 8px 24px rgba(20,15,10,0.04);
+    --surface-2: #fbfbfa;
+    --text: #37352f;
+    --muted: #787774;
+    --accent: #2383e2;
+    --accent-soft: #e8f1fb;
+    --success: #0f7b6c;
+    --success-soft: #d3ede7;
+    --warn: #dfab01;
+    --border: #e3e2e0;
+    --shadow: 0 1px 2px rgba(55,53,47,0.06);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased; font-size: 15px; line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5;
     height: 100%; overflow: hidden; }
+
+  /* ── NOTION DESIGN OVERRIDES ── */
+  /* Flat cards — no shadow, subtle border, tight radius */
+  .card { border-radius: 12px !important; box-shadow: none !important; border: 1px solid var(--border) !important; }
+  /* Kanban — new light style, no overrides needed */
+  .kanban-col.col-today { background: #e8f0fe !important; border: none !important; }
+  /* Nav active: no box-shadow, just subtle bg fill */
+  .nav-item.active { background: rgba(55,53,47,0.08) !important; box-shadow: none !important; color: var(--text) !important; }
+  .nav-item:hover { background: rgba(55,53,47,0.06) !important; }
+  /* Sidebar */
+  .sidebar { background: var(--surface-2) !important; }
+  /* Buttons */
+  .btn, button.primary, .btn-primary, [class*="primary-btn"] { border-radius: 4px !important; }
+  /* Notion-style headings: lighter weight */
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: 16px; font-weight: 600; }
+  h3 { font-size: 14px; font-weight: 600; }
+  /* Inputs */
+  input, textarea, select { border-radius: 4px !important; font-size: 14px; }
+  /* Tags / badges */
+  .badge, .streak, .date-pill, [class*="pill"] { border-radius: 4px !important; }
+  /* Kanban column header title: Notion-style uppercase muted */
+  .kanban-col-title { font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.08em !important; }
+  /* Notion-style hover on rows */
+  .factor-row:hover, .history-item:hover, .summary-item:hover { background: rgba(55,53,47,0.04); border-radius: 4px; }
+  /* Subtle today header */
+  .lera-header { border-bottom: 1px solid var(--border) !important; background: var(--surface) !important; }
+  /* Kanban add button */
+  .kanban-add { border-radius: 4px !important; }
+  /* Filter bar */
+  .kanban-filter { border-radius: 4px !important; }
+  .kanban-filter.active { background: rgba(55,53,47,0.08) !important; color: var(--text) !important; }
+  /* Sidebar footer */
+  .sidebar-footer { border-radius: 4px !important; box-shadow: none !important; background: transparent !important; border: 1px solid var(--border) !important; }
   a { color: inherit; }
   button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
@@ -67,11 +101,11 @@
   .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
   .card-row.three { grid-template-columns: repeat(3, 1fr); }
 
-  .hero { background: linear-gradient(135deg, #fff6f2, #fef0ea); border: 1px solid #fadcce; padding: 14px 22px; }
+  .hero { background: var(--surface-2); border: 1px solid var(--border); padding: 14px 22px; }
   .hero-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
   .greet { font-size: 18px; font-weight: 600; margin: 0; }
   .date { color: var(--muted); font-size: 12px; }
-  .streak { background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; box-shadow: var(--shadow); white-space: nowrap; }
+  .streak { background: var(--surface-2); border-radius: 4px; padding: 4px 10px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); white-space: nowrap; }
   .streak .flame { color: var(--accent); margin-right: 4px; }
 
   /* Lera Base header */
@@ -82,9 +116,9 @@
   /* Today screen layout */
   #today { display: none; flex-direction: column; overflow: hidden; padding: 0; }
   #today.active { display: flex; }
-  .today-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 18px 28px 24px; display: flex; flex-direction: column; gap: 0; }
-  .progress-line { background: #fff; border-radius: 999px; height: 8px; overflow: hidden; margin: 10px 0 6px; }
-  .progress-fill { background: linear-gradient(90deg, var(--accent), #ffa68e); height: 100%; border-radius: 999px; transition: width .4s ease; }
+  .today-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 28px 24px; display: flex; flex-direction: column; gap: 0; }
+  .progress-line { background: var(--border); border-radius: 2px; height: 4px; overflow: hidden; margin: 10px 0 6px; }
+  .progress-fill { background: var(--accent); height: 100%; border-radius: 2px; transition: width .4s ease; }
   .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
 
 
@@ -235,8 +269,8 @@
   .ref-day-meta { color: var(--muted); font-size: 13px; }
 
 
-  .btn { background: var(--accent); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
-  .btn:hover { background: #e5573a; }
+  .btn { background: var(--accent); color: white; padding: 8px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; }
+  .btn:hover { filter: brightness(.92); }
   .btn-ghost { background: var(--surface-2); color: var(--text); }
   .btn-ghost:hover { background: #e8e2d6; }
 
@@ -375,17 +409,17 @@
   .time-opt { padding: 10px 14px; font-size: 14px; cursor: pointer; color: var(--text); }
   .time-opt:hover, .time-opt.selected { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
 
-  /* Kanban card left-border by category */
-  .kanban-card[data-cat="career"]        { border-left: 3px solid #3a5fbf; }
-  .kanban-card[data-cat="portfolio"]     { border-left: 3px solid #6b3fbf; }
-  .kanban-card[data-cat="english"]       { border-left: 3px solid #2f8a55; }
-  .kanban-card[data-cat="health"]        { border-left: 3px solid #b86b1a; }
-  .kanban-card[data-cat="money"]         { border-left: 3px solid #8a6e10; }
-  .kanban-card[data-cat="education"]     { border-left: 3px solid #0e7a8a; }
-  .kanban-card[data-cat="entertainment"] { border-left: 3px solid #b53078; }
-  .kanban-card[data-cat="friends"]       { border-left: 3px solid #4264b0; }
-  .kanban-card[data-cat="family"]        { border-left: 3px solid #c44d2e; }
-  .kanban-card[data-cat="home"]          { border-left: 3px solid #a09080; }
+  /* Kanban card left-border by category (with rounded left so it fits new card style) */
+  .kanban-card[data-cat="career"]        { border-left: 3px solid #3a5fbf; border-radius: 14px; }
+  .kanban-card[data-cat="portfolio"]     { border-left: 3px solid #6b3fbf; border-radius: 14px; }
+  .kanban-card[data-cat="english"]       { border-left: 3px solid #2f8a55; border-radius: 14px; }
+  .kanban-card[data-cat="health"]        { border-left: 3px solid #b86b1a; border-radius: 14px; }
+  .kanban-card[data-cat="money"]         { border-left: 3px solid #8a6e10; border-radius: 14px; }
+  .kanban-card[data-cat="education"]     { border-left: 3px solid #0e7a8a; border-radius: 14px; }
+  .kanban-card[data-cat="entertainment"] { border-left: 3px solid #b53078; border-radius: 14px; }
+  .kanban-card[data-cat="friends"]       { border-left: 3px solid #4264b0; border-radius: 14px; }
+  .kanban-card[data-cat="family"]        { border-left: 3px solid #c44d2e; border-radius: 14px; }
+  .kanban-card[data-cat="home"]          { border-left: 3px solid #a09080; border-radius: 14px; }
 
   /* Task hover actions */
   .task { position: relative; }
@@ -396,10 +430,13 @@
 
   /* Kanban */
   .kanban { display: flex; gap: 10px; margin-bottom: 18px; min-width: max-content; align-items: flex-start; }
-  .kanban-col { background: var(--surface-2); border-radius: 14px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; max-height: calc(100vh - 190px); }
-  .kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .kanban-col-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-  .kanban-col-count { background: var(--surface); border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .kanban-col { background: #f2f2f7; border-radius: 18px; padding: 16px 14px; border: none; display: flex; flex-direction: column; height: 100%; }
+  .kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 6px; }
+  .kanban-col-header-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  .kanban-col-title { font-weight: 700; font-size: 16px; color: var(--text); text-transform: none; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kanban-col-count { font-size: 15px; font-weight: 600; color: #9b9b9b; background: none; padding: 0; border-radius: 0; flex-shrink: 0; }
+  .kanban-col-menu-btn { width: 28px; height: 28px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: 0; }
+  .kanban-col-menu-btn:hover { background: rgba(0,0,0,0.06); }
   .kanban-col.col-inprogress .kanban-col-title { color: var(--warn); }
   .kanban-col.col-done .kanban-col-title { color: var(--success); }
   .kanban-col.col-cancelled .kanban-col-title { color: var(--muted); }
@@ -414,7 +451,8 @@
   .kanban-cards.stacked:hover .kanban-card,
   .kanban-cards.stacked .kanban-card:hover ~ .kanban-card { margin-bottom: 8px; }
   .kanban-cards.stacked .kanban-card:hover { z-index: 10; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,.15); transform: translateY(-2px); }
-  .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: grab; box-shadow: var(--shadow); transition: box-shadow .15s, opacity .15s; user-select: none; }
+  .kanban-card { background: #ffffff; border: none; border-radius: 14px; padding: 11px 14px; cursor: grab; box-shadow: none; transition: box-shadow .15s, opacity .15s, transform .1s; user-select: none; font-size: 13px; }
+  .kanban-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.09); }
   .kanban-card:active { cursor: grabbing; }
   .kanban-card.dragging { opacity: 0.4; }
   .kanban-card.drag-over { box-shadow: 0 0 0 2px var(--accent); }
@@ -427,7 +465,7 @@
   /* Done checkbox */
   .card-done-btn { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #cbc3b5; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s, background .15s, border-color .15s; margin-top: 1px; }
   .kanban-card:hover .card-done-btn { opacity: 1; }
-  .card-done-btn.is-done { opacity: 1 !important; background: var(--success); border-color: var(--success); }
+  .card-done-btn.is-done { background: var(--success); border-color: var(--success); }
   .card-done-btn.is-done::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; line-height: 1; }
   /* Context menu */
   .kcard-ctx-menu { position: fixed; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,.15); padding: 6px 0; z-index: 9999; min-width: 150px; display: none; }
@@ -440,18 +478,18 @@
   .inline-cat-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
   .inline-cat-btn { font-size: 11px; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); cursor: pointer; transition: all .12s; }
   .inline-cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  .kanban-add { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 10px; border-radius: 8px; border: 1px dashed var(--border); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; width: 100%; text-align: left; transition: all .15s; }
-  .kanban-add:hover { background: var(--surface); color: var(--text); }
+  .kanban-add { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 8px 6px; border-radius: 10px; border: none; background: transparent; color: var(--muted); font-size: 14px; cursor: pointer; width: 100%; text-align: left; transition: all .12s; }
+  .kanban-add:hover { background: rgba(0,0,0,0.05); color: var(--text); }
 
   /* Priority filter bar */
-  .kanban-filter { padding: 5px 12px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--surface-2); font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; }
-  .kanban-filter:hover { border-color: var(--accent); color: var(--accent); }
-  .kanban-filter.active { background: var(--text); color: #fff; border-color: var(--text); }
+  .kanban-filter { padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .12s; }
+  .kanban-filter:hover { background: rgba(55,53,47,0.06); color: var(--text); }
+  .kanban-filter.active { background: rgba(55,53,47,0.08); color: var(--text); border-color: rgba(55,53,47,0.2); font-weight: 600; }
 
   /* Inline task add in column */
   .inline-add-wrap { margin-top: 10px; display: none; }
   .inline-add-wrap.open { display: block; }
-  .inline-add-input { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--accent); font: inherit; font-size: 13px; background: var(--surface); color: var(--text); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .inline-add-input { width: 100%; padding: 6px 10px; border-radius: 4px; border: 1.5px solid var(--accent); font: inherit; font-size: 13px; background: var(--surface); color: var(--text); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
   .inline-add-row { display: flex; align-items: center; gap: 6px; margin-top: 7px; }
   .inline-add-prio-btn { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; opacity: .5; transition: .12s; }
   .inline-add-prio-btn.active { opacity: 1; border-color: var(--accent); background: var(--accent-soft); }
@@ -461,18 +499,20 @@
   /* Day column header */
   .day-col-num { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
   .day-col-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-  .kanban-col.col-today { background: #fff8f3; border-color: #fadcce; }
+  .kanban-col.col-today { background: #e8f0fe; }
   .kanban-col.col-today .kanban-col-title { color: var(--accent) !important; }
-  .kanban-col.col-backlog { background: #1e1e2e; border-color: #2e2e42; box-shadow: 4px 0 16px rgba(0,0,0,0.18); max-height: none; align-self: stretch; }
-  .kanban-col.col-backlog .kanban-col-title { color: #a0a0c0; }
-  .kanban-col.col-backlog .kanban-col-count { background: #2e2e42; color: #a0a0c0; }
-  .kanban-col.col-backlog .kanban-add { border-color: #3a3a52; color: #7070a0; }
-  .kanban-col.col-backlog .kanban-add:hover { background: #2e2e42; color: #c0c0e0; }
-  .kanban-col.col-backlog .kanban-card { background: #2a2a3c; border-color: #3a3a52; color: #dcdce8; }
-  .kanban-col.col-backlog .kanban-card-title { color: #dcdce8; }
-  .kanban-col.col-backlog .inline-add-input { background: #2e2e42; color: #dcdce8; border-color: #3a3a52; }
-  .kanban-col.col-backlog .inline-add-wrap { background: #252535; border-color: #3a3a52; }
-  .kanban-col.col-backlog .inline-cat-btn { background: #2e2e42; border-color: #3a3a52; color: #8080a8; }
+  /* Backlog — Trello Inbox style */
+  .kanban-col.col-backlog { background: #d8e5f5; border: none; box-shadow: none; max-height: none; align-self: stretch; }
+  .kanban-col.col-backlog .kanban-col-title { color: #1a2540; font-size: 16px; }
+  .kanban-col.col-backlog .kanban-col-count { color: #4a6090; }
+  .kanban-col.col-backlog .kanban-col-menu-btn { color: #4a6090; }
+  .kanban-col.col-backlog .kanban-add { color: #4a6090; }
+  .kanban-col.col-backlog .kanban-add:hover { background: rgba(255,255,255,0.4); color: #1a2540; }
+  .kanban-col.col-backlog .kanban-card { background: #fff; border: none; border-radius: 14px; color: var(--text); }
+  .kanban-col.col-backlog .kanban-card-title { color: var(--text); }
+  .kanban-col.col-backlog .inline-add-input { background: #fff; color: var(--text); border-color: #a0b8d8; }
+  .kanban-col.col-backlog .inline-add-wrap { background: transparent; }
+  .kanban-col.col-backlog .inline-cat-btn { background: rgba(255,255,255,0.5); border-color: #a0b8d8; color: #4a6090; }
 
   /* Quick-add */
   .quick-add { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; margin-bottom: 12px; border: 1px dashed var(--border); transition: all .15s; }
@@ -489,7 +529,7 @@
   .pomo-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .pomo-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
   .pomodoro-modes { display: flex; gap: 4px; flex: 1; }
-  .pomodoro-mode { padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .15s; border: 1px solid transparent; white-space: nowrap; }
+  .pomodoro-mode { padding: 3px 10px; border-radius: 4px; background: var(--surface-2); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .12s; border: 1px solid transparent; white-space: nowrap; }
   .pomodoro-mode:hover { background: var(--border); }
   .pomodoro-mode.active { background: var(--accent); color: #fff; }
   .pomo-main { display: flex; align-items: center; gap: 14px; }
@@ -952,87 +992,103 @@
   .nav-item::after { display: none !important; }
   .nav-item.active { background: var(--accent-soft); color: var(--accent); box-shadow: none; }
 
-  /* ── Main: add bottom padding for tab bar ── */
-  .main { padding: 16px 14px calc(76px + env(safe-area-inset-bottom)); }
+  /* ── Main layout: 8px side padding ── */
+  .main { padding: 0; }
+  .screen:not(#today).active { padding: 12px 8px calc(76px + env(safe-area-inset-bottom)) !important; }
+  .today-body { padding: 0 8px calc(76px + env(safe-area-inset-bottom)) !important; }
 
-  /* ── Cards & grids ── */
+  /* ── Cards ── */
+  .card { padding: 12px 10px !important; margin-bottom: 10px !important; }
+  .card.hero { padding: 12px 10px !important; }
   .card-row,
-  .card-row.three { grid-template-columns: 1fr; gap: 12px; }
+  .card-row.three { grid-template-columns: 1fr; gap: 10px; }
 
   /* ── Header row ── */
-  .header-row { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+  .header-row { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
   .header-row .actions { width: 100%; }
   .header-row .actions .btn { width: 100%; justify-content: center; }
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 15px !important; }
 
-  /* ── Hero card ── */
-  .hero-top { flex-direction: column; gap: 10px; }
-  .card.hero { padding: 18px 16px; }
+  /* ── Hero ── */
+  .hero-top { flex-direction: column; gap: 8px; }
 
-  /* ── Kanban: horizontal scroll ── */
+  /* ── Kanban: full-width scroll, each col ~88vw ── */
   .kanban {
     overflow-x: auto; -webkit-overflow-scrolling: touch;
     padding-bottom: 8px;
     scroll-snap-type: x mandatory;
-    gap: 10px;
+    gap: 8px;
   }
-  .kanban-col { scroll-snap-align: start; }
+  .kanban-col { scroll-snap-align: start; width: 88vw !important; }
+  .kanban-col.col-backlog {
+    width: 88vw !important;
+    padding-left: 10px !important;
+    position: relative !important; /* убираем sticky на мобилке */
+  }
 
   /* ── Modals: slide up from bottom ── */
   .modal-backdrop { align-items: flex-end; padding: 0; }
   .modal {
-    border-radius: 20px 20px 0 0 !important;
+    border-radius: 16px 16px 0 0 !important;
     max-width: 100% !important;
     width: 100% !important;
     max-height: 92vh;
-    padding: 20px 18px 28px;
+    padding: 18px 12px calc(24px + env(safe-area-inset-bottom)) !important;
   }
   .v3-modal {
-    border-radius: 20px 20px 0 0 !important;
+    border-radius: 16px 16px 0 0 !important;
     max-width: 100% !important;
     width: 100% !important;
     max-height: 92vh !important;
   }
 
   /* ── Toast: above tab bar ── */
-  .toast-host { bottom: 72px; right: 12px; left: 12px; }
+  .toast-host { bottom: 72px; right: 8px; left: 8px; }
   .toast { width: 100%; }
+
+  /* ── Lera header ── */
+  .lera-header { padding: 10px 8px !important; }
 
   /* ── Filter bar ── */
   .filter-bar { gap: 6px; }
+  #kanbanFilterBar { flex-wrap: wrap; gap: 4px; }
 
   /* ── Pomodoro ── */
   .pomodoro-modes { flex-wrap: wrap; gap: 4px; }
-  .pomodoro-display { font-size: 52px !important; }
+  .pomodoro-display { font-size: 48px !important; }
+  .pv2-card { padding: 12px 8px !important; }
 
-  /* ── Task stats 2-col ── */
+  /* ── Task stats ── */
   .ts-row { flex-direction: column; }
 
   /* ── Bar chart ── */
   .bar-chart { gap: 6px; }
 
-  /* ── Finances section ── */
+  /* ── Finances ── */
   #finances .card-row { grid-template-columns: 1fr; }
 
   /* ── Mood tracker ── */
-  #mood .mt-app { padding: 16px 14px 48px; }
+  #mood .mt-app { padding: 8px 8px calc(76px + env(safe-area-inset-bottom)) !important; }
   #mood .wide,
-  #mood .results-grid { grid-template-columns: 1fr; }
+  #mood .results-grid,
+  #mood .jnl-charts-grid { grid-template-columns: 1fr; }
+  #mood .split { grid-template-columns: 1fr !important; }
 
-  /* ── Reflection ── */
-  #reflection .ref-ratings-row { grid-template-columns: 1fr; gap: 14px; }
-  #reflection .card-row,
-  .card-row { grid-template-columns: 1fr; }
+  /* ── Calendar ── */
+  .calendar { gap: 3px; }
+  .cal-day { font-size: 9px; border-radius: 3px; }
 
-  /* ── Activity calendar ── */
-  .calendar { gap: 4px; }
-  .cal-day { font-size: 10px; border-radius: 4px; }
-
-  /* ── Overflow fixes ── */
+  /* ── Overflow ── */
   .screen { overflow-x: hidden; }
   img, svg { max-width: 100%; }
 
-  /* ── Google Calendar column ── */
-  .gcal-col { min-height: 300px !important; }
+  /* ── Google Calendar ── */
+  .gcal-col { min-height: 200px !important; }
+
+  /* ── Weekly board container ── */
+  #today .card:first-child { padding: 10px 8px !important; }
+  #kanbanFilterBar button { font-size: 11px; padding: 3px 8px; }
 }
 </style>
 </head>
@@ -1058,7 +1114,7 @@
         <span class="lera-logo">lera <span>base</span></span>
       </div>
       <div class="today-body">
-      <div class="card" style="padding-bottom: 18px;">
+      <div class="card" style="padding-bottom:18px; height:calc(100vh - 46px); flex-shrink:0; display:flex; flex-direction:column; margin-bottom:18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
           <h2 style="margin:0;">Weekly Board</h2>
           <div style="display:flex;gap:6px;flex-wrap:wrap;" id="kanbanFilterBar">
@@ -1068,12 +1124,15 @@
             <button class="kanban-filter" data-filter="low">🟢 Low</button>
           </div>
         </div>
-        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px 0 -22px;padding:0 0 4px;align-items:stretch;">
+        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px;padding:0 0 4px;align-items:stretch;flex:1;min-height:0;">
           <!-- Backlog column: fixed, does not scroll -->
-          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:220px;position:sticky;left:0;z-index:5;border-radius:0 14px 14px 0;max-height:none;padding-left:22px;">
+          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:300px;position:sticky;left:0;z-index:5;border-radius:0 18px 18px 0;max-height:none;padding-left:22px;">
             <div class="kanban-col-header">
-              <span class="kanban-col-title">Backlog</span>
+              <div class="kanban-col-header-left">
+                <span class="kanban-col-title">Backlog</span>
+              </div>
               <span class="kanban-col-count" id="cnt-backlog">0</span>
+              <button class="kanban-col-menu-btn" title="Меню">···</button>
             </div>
             <div class="kanban-cards" id="col-backlog"></div>
             <div class="inline-add-wrap" id="inline-add-backlog">
@@ -1086,10 +1145,10 @@
                 <button class="inline-add-ok">✓ Add</button>
               </div>
             </div>
-            <button class="kanban-add" data-col="backlog"><span style="font-size:16px;line-height:1;">+</span> Add</button>
+            <button class="kanban-add" data-col="backlog"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Добавить карточку</button>
           </div>
           <!-- Day columns: scrollable -->
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding:0 22px 4px 10px;" id="kanbanBoard">
+          <div style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding:0 22px 4px 10px;align-items:stretch;" id="kanbanBoard">
             <!-- injected by initDayColumns() -->
           </div>
         </div>
@@ -1104,7 +1163,7 @@
           <button onclick="gcalLoad()" title="Refresh" style="border:none;background:none;cursor:pointer;color:#70757a;font-size:14px;padding:2px 4px;line-height:1;" title="Refresh">↺</button>
           <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:#1a73e8;text-decoration:none;font-weight:600;white-space:nowrap;">Open ↗</a>
         </div>
-        <div id="gcalBody" style="overflow-y:auto;max-height:300px;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">
+        <div id="gcalBody" style="overflow-y:auto;max-height:460px;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">
           <div style="padding:24px;text-align:center;color:#9e9e9e;font-size:13px;">⏳ Loading…</div>
         </div>
       </div>
@@ -1661,7 +1720,7 @@
 </div>
 
 <!-- Add Task Modal (hidden/removed) -->
-<div class="modal-backdrop" id="taskModal" style="display:none!important;">
+<div class="modal-backdrop" id="taskModal">
   <div class="modal v3-modal">
     <div class="v3-header">
       <div><h2 id="taskModalTitle">Новая задача</h2></div>
@@ -2831,31 +2890,37 @@
       col.style.width = '300px';
       col.style.flexShrink = '0';
       col.dataset.col = key;
+      const colTitle = isToday ? 'Сегодня' : `${name} ${num}`;
       col.innerHTML = `
         <div class="kanban-col-header">
-          <div>
-            <div class="day-col-num">${num}</div>
-            <div class="day-col-name">${name}</div>
+          <div class="kanban-col-header-left">
+            <span class="kanban-col-title">${colTitle}</span>
           </div>
           <span class="kanban-col-count" id="cnt-${key}">0</span>
+          <button class="kanban-col-menu-btn" title="Меню">···</button>
         </div>
         <div class="kanban-cards" id="col-${key}"></div>
         <div class="inline-add-wrap" id="inline-add-${key}">
-          <input class="inline-add-input" placeholder="Task title…">
+          <input class="inline-add-input" placeholder="Название задачи…">
           <div class="inline-add-row">
             <button class="inline-add-prio-btn active" data-p="med" title="Medium">🟡</button>
             <button class="inline-add-prio-btn" data-p="high" title="High">🔴</button>
             <button class="inline-add-prio-btn" data-p="low" title="Low">🟢</button>
             <button class="inline-add-cancel">✕</button>
-            <button class="inline-add-ok">✓ Add</button>
+            <button class="inline-add-ok">✓ Добавить</button>
           </div>
         </div>
-        <button class="kanban-add" data-col="${key}"><span style="font-size:16px;line-height:1;">+</span></button>`;
+        <button class="kanban-add" data-col="${key}"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Добавить карточку <span style="margin-left:auto;font-size:14px;opacity:.5;">⊞</span></button>`;
       board.appendChild(col);
       bindKanbanCol(col);
     }
   }
   initDayColumns();
+  // Scroll so today's column is the first visible (right after Backlog)
+  requestAnimationFrame(() => {
+    const todayCol = document.querySelector('#kanbanBoard .col-today');
+    if (todayCol) document.getElementById('kanbanBoard').scrollLeft = todayCol.offsetLeft;
+  });
 
   // ── Inline add logic ───────────────────────────────────────────────────
   let _targetCol = 'backlog';
@@ -4721,65 +4786,99 @@
       return events.sort((a,b) => a.dtstart - b.dtstart);
     }
 
-    // ── Render today ───────────────────────────
+    // ── Render today — vertical timeline ──────
     function render() {
       const body  = document.getElementById('gcalBody');
       const range = document.getElementById('gcalRange');
       if (!body) return;
 
-      // Always show today
       gcalDayOffset = 0;
       const now   = new Date();
       const today = new Date(now); today.setHours(0,0,0,0);
 
-      // Header badge: "Wed, 24 Jun"
-      if (range) range.textContent = DAY_NAMES[today.getDay()] + ', ' + today.getDate() + ' ' + MON_SHORT[today.getMonth()];
+      const RU_DAYS = ['вс','пн','вт','ср','чт','пт','сб'];
+      const RU_DAYS_FULL = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+      if (range) range.textContent = RU_DAYS[today.getDay()] + ', ' + today.getDate() + ' ' + ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][today.getMonth()];
 
       const key = dateKey(today);
-      const evs = allEvents.filter(ev => dateKey(ev.dtstart) === key);
+      const evs = allEvents.filter(ev => dateKey(ev.dtstart) === key && !ev.allDay);
+      const allDayEvs = allEvents.filter(ev => dateKey(ev.dtstart) === key && ev.allDay);
 
-      const fmtTime = d => {
-        if (!d) return '';
-        const h = d.getHours(), m = d.getMinutes();
-        return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
-      };
+      // Timeline config: show 6:00–23:00
+      const HOUR_START = 6, HOUR_END = 23;
+      const HOUR_HEIGHT = 56; // px per hour
+      const totalH = (HOUR_END - HOUR_START) * HOUR_HEIGHT;
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const nowTop = Math.max(0, Math.min(totalH, (nowMinutes - HOUR_START * 60) / 60 * HOUR_HEIGHT));
 
-      let html = '';
+      // Event colors palette
+      const COLORS = ['#7c4dff','#1a73e8','#0f9d58','#e67c00','#d93025','#039be5','#8e24aa'];
+      const colorFor = (i) => COLORS[i % COLORS.length];
 
-      if (evs.length === 0) {
-        html = '<div class="gcal-empty" style="padding:32px 14px;"><div style="font-size:28px;margin-bottom:6px;">🗓</div><div>No events today</div></div>';
-      } else {
-        let nowLineShown = false;
-        evs.forEach((ev, idx) => {
-          const timeStr = ev.allDay ? 'All day' : fmtTime(ev.dtstart);
-          // Current-time line
-          if (!nowLineShown) {
-            const isFirst = idx === 0 && ev.dtstart >= now;
-            const isBetween = idx > 0 && evs[idx-1].dtstart < now && ev.dtstart >= now;
-            if (isFirst || isBetween) {
-              nowLineShown = true;
-              html += '<div class="gcal-time-line" style="margin:4px 0;">';
-              html += '<div style="font-size:10px;color:#d93025;width:44px;text-align:right;padding-right:6px;flex-shrink:0;">' + fmtTime(now) + '</div>';
-              html += '<div class="gcal-time-dot"></div><div class="gcal-time-bar"></div>';
-              html += '</div>';
-            }
-          }
-          const isPast = !ev.allDay && ev.dtstart < now;
-          html += '<div class="gcal-event" style="padding:7px 14px;opacity:' + (isPast ? '0.5' : '1') + ';">';
-          html += '<div class="gcal-event-dot" style="' + (isPast ? 'background:#bdbdbd;' : '') + '"></div>';
-          html += '<div class="gcal-event-time" style="width:44px;font-size:12px;">' + timeStr + '</div>';
-          html += '<div class="gcal-event-name" style="font-size:13px;' + (isPast ? 'text-decoration:line-through;color:#9e9e9e;' : '') + '">' + ev.summary + '</div>';
-          html += '</div>';
+      let html = `<div style="position:relative;overflow:hidden;">`;
+
+      // Day header inside body
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px 8px;border-bottom:1px solid #f0ede9;">
+        <span style="font-size:13px;font-weight:600;color:#70757a;text-transform:capitalize;">${RU_DAYS_FULL[today.getDay()]}</span>
+        <span style="width:32px;height:32px;border-radius:50%;background:#6c63ff;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;">${today.getDate()}</span>
+        <span style="font-size:11px;color:#aaa;margin-left:auto;">GMT+3</span>
+      </div>`;
+
+      if (allDayEvs.length > 0) {
+        html += `<div style="padding:6px 16px 4px;display:flex;gap:6px;flex-wrap:wrap;">`;
+        allDayEvs.forEach(ev => {
+          html += `<span style="background:#e8f0fe;color:#1a73e8;font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;">${ev.summary}</span>`;
         });
-        // If all events are past, show now-line at end
-        if (!nowLineShown && evs.every(ev => ev.dtstart < now)) {
-          html += '<div class="gcal-time-line" style="margin:4px 0;">';
-          html += '<div style="font-size:10px;color:#d93025;width:44px;text-align:right;padding-right:6px;flex-shrink:0;">' + fmtTime(now) + '</div>';
-          html += '<div class="gcal-time-dot"></div><div class="gcal-time-bar"></div>';
-          html += '</div>';
-        }
-        html += '<div style="padding:8px 14px;font-size:11px;color:#9e9e9e;">' + evs.length + ' event' + (evs.length !== 1 ? 's' : '') + ' today</div>';
+        html += `</div>`;
       }
+
+      // Timeline grid
+      html += `<div style="display:flex;padding:0 8px 12px;">`;
+      // Left: hour labels
+      html += `<div style="width:44px;flex-shrink:0;position:relative;height:${totalH}px;margin-top:4px;">`;
+      for (let h = HOUR_START; h <= HOUR_END; h++) {
+        const top = (h - HOUR_START) * HOUR_HEIGHT;
+        if (h < HOUR_END) {
+          html += `<div style="position:absolute;top:${top}px;right:6px;font-size:11px;color:#9e9e9e;white-space:nowrap;transform:translateY(-50%);">${h}</div>`;
+        }
+      }
+      html += `</div>`;
+
+      // Right: events area
+      html += `<div style="flex:1;position:relative;height:${totalH}px;">`;
+      // Hour lines
+      for (let h = HOUR_START; h <= HOUR_END; h++) {
+        const top = (h - HOUR_START) * HOUR_HEIGHT;
+        html += `<div style="position:absolute;top:${top}px;left:0;right:0;height:1px;background:#f0ede9;"></div>`;
+      }
+
+      // Now line
+      if (nowMinutes >= HOUR_START * 60 && nowMinutes <= HOUR_END * 60) {
+        html += `<div style="position:absolute;top:${nowTop}px;left:0;right:0;display:flex;align-items:center;z-index:3;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#d93025;flex-shrink:0;margin-left:-5px;"></div>
+          <div style="flex:1;height:2px;background:#d93025;"></div>
+        </div>`;
+      }
+
+      // Event blocks
+      evs.forEach((ev, i) => {
+        if (!ev.dtend) return;
+        const startMin = ev.dtstart.getHours() * 60 + ev.dtstart.getMinutes();
+        const endMin   = ev.dtend.getHours()   * 60 + ev.dtend.getMinutes();
+        const top    = (startMin - HOUR_START * 60) / 60 * HOUR_HEIGHT;
+        const height = Math.max(20, (endMin - startMin) / 60 * HOUR_HEIGHT - 2);
+        const isPast = ev.dtend < now;
+        const color  = colorFor(i);
+        const startStr = String(ev.dtstart.getHours()).padStart(2,'0') + ':' + String(ev.dtstart.getMinutes()).padStart(2,'0');
+        const endStr   = String(ev.dtend.getHours()).padStart(2,'0')   + ':' + String(ev.dtend.getMinutes()).padStart(2,'0');
+
+        html += `<div style="position:absolute;top:${top}px;left:4px;right:4px;height:${height}px;background:${color};border-radius:6px;padding:3px 8px;overflow:hidden;opacity:${isPast ? 0.45 : 1};z-index:2;cursor:pointer;" title="${ev.summary} · ${startStr}–${endStr}">
+          <div style="font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ev.summary}</div>
+          ${height > 30 ? `<div style="font-size:11px;color:rgba(255,255,255,0.85);">${startStr}–${endStr}</div>` : ''}
+        </div>`;
+      });
+
+      html += `</div></div></div>`;
 
       body.innerHTML = html;
     }
