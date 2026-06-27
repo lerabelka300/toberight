@@ -314,7 +314,7 @@
   /* Toast */
   /* Floating pomodoro mini-widget */
   .pomo-float {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9997;
+    position: fixed; bottom: 28px; left: 28px; z-index: 9997;
     background: linear-gradient(160deg, #fdf6ee, #fff9f3);
     border: 2px solid #e8c9aa;
     border-radius: 20px;
@@ -807,13 +807,17 @@
 #mood .mt-chip.negative.selected { background:#fee2e2; border-color:#f87171; color:#991b1b; }
 
 /* Metrics grid */
-#mood .split { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-#mood .metric-card { border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--surface-2); }
+#mood .split { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:stretch; }
+#mood .metric-card { border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--surface-2); display:flex; flex-direction:column; }
 #mood .mt-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; font-weight:600; }
 #mood .segmented { display:flex; gap:4px; background:var(--border); border-radius:8px; padding:3px; }
 #mood .segmented button { flex:1; border:0; border-radius:6px; background:transparent; padding:7px 6px; font:inherit; font-size:13px; color:var(--muted); cursor:pointer; transition:.12s; }
 #mood .segmented button.active { background:var(--surface); color:var(--text); font-weight:600; box-shadow:0 1px 3px rgba(20,15,10,.08); }
 #mood .metric-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
+#mood .mt-counter { display:flex; align-items:center; gap:10px; margin:8px 0 4px; }
+#mood .mt-counter-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:18px; font-weight:600; color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; transition:.12s; }
+#mood .mt-counter-btn:hover { border-color:var(--accent); color:var(--accent); }
+#mood .mt-counter-val { font-size:26px; font-weight:700; color:var(--text); min-width:28px; text-align:center; letter-spacing:-.02em; }
 #mood .metric-value { font-weight:700; font-size:18px; color:var(--accent); }
 #mood .metric-slider { width:100%; margin-top:8px; }
 #mood .metric-slider input[type="range"] { margin:0; }
@@ -1325,7 +1329,6 @@
           <h1>Mood Tracker</h1>
           <p class="mt-subtitle">Ежедневный чек-ин настроения, факторов и цикла</p>
         </div>
-        <span class="date-pill" id="mtTodayDate"></span>
       </div>
 
       <nav class="mt-tabs">
@@ -1450,24 +1453,32 @@
                   <div class="range-labels"><span>низкий</span><span>высокий</span></div>
                 </div>
               </div>
-              <div class="metric-card" style="grid-column:1/-1;">
+              <div class="metric-card">
                 <div class="mt-label">Цикл</div>
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-                  <div>
-                    <div class="cycle-main" id="mtCycleMainLabel">—</div>
-                    <div class="cycle-sub" id="mtCycleSubLabel">Укажи дату ниже</div>
-                  </div>
-                  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                    <div style="display:flex;flex-direction:column;gap:3px;">
-                      <label style="font-size:11px;color:var(--muted);font-weight:600;">Первый день менструации</label>
-                      <input type="date" id="mtLastPeriod" style="border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;background:var(--surface-2);color:var(--text);" />
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:3px;">
-                      <label style="font-size:11px;color:var(--muted);font-weight:600;">Длина цикла (дней)</label>
-                      <input type="number" id="mtCycleLength" value="28" min="20" max="40" style="border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;background:var(--surface-2);color:var(--text);width:80px;" />
-                    </div>
-                  </div>
+                <div class="cycle-main" id="mtCycleMainLabel">—</div>
+                <div class="cycle-sub" id="mtCycleSubLabel">Укажи дату</div>
+                <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px;">
+                  <input type="date" id="mtLastPeriod" style="border:1px solid var(--border);border-radius:7px;padding:4px 7px;font:inherit;font-size:12px;background:var(--surface-2);color:var(--text);width:100%;" />
+                  <input type="number" id="mtCycleLength" value="28" min="20" max="40" style="border:1px solid var(--border);border-radius:7px;padding:4px 7px;font:inherit;font-size:12px;background:var(--surface-2);color:var(--text);width:100%;" placeholder="Длина цикла (дней)" />
                 </div>
+              </div>
+              <div class="metric-card">
+                <div class="mt-label">☕ Кофе</div>
+                <div class="mt-counter">
+                  <button class="mt-counter-btn" data-target="mtCoffeeVal" data-delta="-1">−</button>
+                  <span class="mt-counter-val" id="mtCoffeeVal">0</span>
+                  <button class="mt-counter-btn" data-target="mtCoffeeVal" data-delta="1">+</button>
+                </div>
+                <div class="cycle-sub">чашек сегодня</div>
+              </div>
+              <div class="metric-card">
+                <div class="mt-label">🍽 Еда</div>
+                <div class="mt-counter">
+                  <button class="mt-counter-btn" data-target="mtMealsVal" data-delta="-1">−</button>
+                  <span class="mt-counter-val" id="mtMealsVal">0</span>
+                  <button class="mt-counter-btn" data-target="mtMealsVal" data-delta="1">+</button>
+                </div>
+                <div class="cycle-sub">раз поела</div>
               </div>
             </div>
             <div style="margin-top:14px;">
@@ -4370,6 +4381,8 @@
         energy:        er ? Number(er.value) : 5,
         stress:        sr ? Number(sr.value) : 5,
         focus:         fr ? Number(fr.value) : null,
+        coffee:        Number($mt('#mtCoffeeVal')?.textContent || 0),
+        meals:         Number($mt('#mtMealsVal')?.textContent || 0),
         note:          nt ? nt.value : '',
         ref_win:        ($mt('#mtRefWin')?.value || '').trim(),
         ref_tomorrow:   ($mt('#mtRefTomorrow')?.value || '').trim(),
@@ -4597,6 +4610,16 @@
     if (cl) cl.addEventListener('input', updateCycleUI);
 
     // Save
+    // Counter buttons (coffee & meals)
+    $$mt('.mt-counter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const el = $mt('#' + btn.dataset.target);
+        if (!el) return;
+        const val = Math.max(0, Number(el.textContent) + Number(btn.dataset.delta));
+        el.textContent = val;
+      });
+    });
+
     const sb = $mt('#mtSaveBtn');
     if (sb) sb.addEventListener('click', saveEntry);
 
