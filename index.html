@@ -315,27 +315,45 @@
   /* Floating pomodoro mini-widget */
   .pomo-float {
     position: fixed; bottom: 28px; right: 28px; z-index: 9997;
-    background: linear-gradient(135deg, #fdf6ee, #fff9f3);
-    border: 1.5px solid #e8d9c4;
+    background: linear-gradient(160deg, #fdf6ee, #fff9f3);
+    border: 2px solid #e8c9aa;
     border-radius: 20px;
-    padding: 14px 20px 14px 10px;
-    display: flex; align-items: center; gap: 12px;
+    padding: 16px 14px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.14);
-    min-width: 220px;
+    width: 148px; height: 148px;
     cursor: default;
     animation: floatIn .3s cubic-bezier(.34,1.56,.64,1);
     user-select: none;
   }
   .pomo-float.hidden { display: none; }
   @keyframes floatIn { from { transform: translateY(16px) scale(.95); opacity: 0; } to { transform: none; opacity: 1; } }
-  .pomo-float-tomato { font-size: 52px; line-height: 1; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
-  .pomo-float-body { display: flex; flex-direction: column; gap: 2px; }
-  .pomo-float-label { font-size: 11px; font-weight: 800; color: #c47a40; letter-spacing: .1em; text-transform: uppercase; }
-  .pomo-float-range { font-size: 12px; color: #9e8060; font-weight: 500; }
-  .pomo-float-time { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .pomo-float-bar { height: 3px; background: #e8d9c4; border-radius: 99px; margin-top: 6px; overflow: hidden; width: 100%; }
+  .pomo-float-tomato { font-size: 48px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
+  .pomo-float-body { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 100%; }
+  .pomo-float-label { display: none; }
+  .pomo-float-range { font-size: 11px; color: #9e8060; font-weight: 500; text-align: center; }
+  .pomo-float-time { font-size: 22px; font-weight: 800; color: #e8673a; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.2; text-align: center; }
+  .pomo-float-bar { height: 3px; background: #e8d9c4; border-radius: 99px; margin-top: 4px; overflow: hidden; width: 100%; }
   .pomo-float-bar-fill { height: 100%; background: linear-gradient(90deg, #e8673a, #f5a263); border-radius: 99px; transition: width 1s linear; }
-  .pomo-float-close { position: absolute; top: 8px; right: 10px; font-size: 14px; color: #c4b09a; cursor: pointer; background: none; border: none; padding: 0; line-height: 1; }
+  .pomo-float-close { position: absolute; top: 6px; right: 8px; font-size: 12px; color: #c4b09a; cursor: pointer; background: none; border: none; padding: 0; line-height: 1; }
+  /* Stop button — hidden by default, shown on hover */
+  .pomo-float-stop-overlay {
+    position: absolute; inset: 0; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(253,246,238,.88);
+    opacity: 0; pointer-events: none;
+    transition: opacity .18s ease;
+  }
+  .pomo-float:hover .pomo-float-stop-overlay { opacity: 1; pointer-events: auto; }
+  .pomo-float-stop-btn {
+    width: 48px; height: 48px; border-radius: 14px;
+    border: none; background: #e8673a; color: #fff;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(232,103,58,.35);
+    transition: background .15s;
+  }
+  .pomo-float-stop-btn:hover { background: #c94e22; }
   .pomo-float-close:hover { color: var(--text); }
 
   .toast-host { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
@@ -951,89 +969,6 @@
 /* ═══════════════════════════════════════════════
    MOBILE RESPONSIVE  ≤ 640px
 ═══════════════════════════════════════════════ */
-/* ── HABIT TRACKER ───────────────────────────────────── */
-#habits { }
-.habit-grid {
-  display: grid;
-  grid-template-columns: 210px repeat(7, 1fr);
-  gap: 10px;
-  min-width: 900px;
-}
-.habit-grid-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.habit-col {
-  background: var(--surface-2);
-  border-radius: 14px;
-  padding: 14px;
-  min-height: 280px;
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-}
-.habit-col-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.habit-day-info { display: flex; flex-direction: column; gap: 2px; }
-.habit-col-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-.habit-col-day-num { font-size: 11px; color: var(--muted); }
-.habit-col-count { background: var(--surface); border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 600; color: var(--muted); flex-shrink: 0; }
-.habit-col.habit-today { background: #f0f8f4; border-color: #b8dfc8; }
-.habit-col.habit-today .habit-col-title { color: var(--success); }
-.habit-col.habit-today .habit-col-count { background: #d0f0e0; color: #1e7a4a; }
-.habit-col.habit-lib { background: var(--surface); border: 1.5px dashed var(--border); }
-.habit-col.habit-lib .habit-col-title { color: var(--text); }
-.habit-cards { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 48px; }
-.habit-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: grab;
-  box-shadow: var(--shadow);
-  user-select: none;
-  position: relative;
-  transition: box-shadow .15s, opacity .15s;
-}
-.habit-card:active { cursor: grabbing; }
-.habit-card.dragging { opacity: 0.35; }
-.habit-col.drop-active { background: var(--accent-soft) !important; border-color: var(--accent) !important; border-style: solid !important; }
-.habit-card-title { font-weight: 500; font-size: 13.5px; flex: 1; }
-.habit-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 5px; }
-.habit-card-note { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
-.habit-card.done-card { border-left-color: var(--success); }
-.habit-remove-btn {
-  opacity: 0; background: none; border: none; cursor: pointer;
-  color: var(--muted); font-size: 14px; padding: 0 2px; line-height: 1;
-  flex-shrink: 0; transition: opacity .15s, color .15s;
-}
-.habit-card:hover .habit-remove-btn { opacity: 1; }
-.habit-remove-btn:hover { color: #c03030; }
-.habit-done-icon { color: var(--success); font-size: 13px; flex-shrink: 0; }
-.habit-drop-zone {
-  margin-top: auto;
-  padding: 10px 6px;
-  border: 1.5px dashed var(--border);
-  border-radius: 8px;
-  text-align: center;
-  font-size: 11px;
-  color: var(--muted);
-  opacity: 0;
-  transition: opacity .2s;
-  pointer-events: none;
-}
-.habit-col:not(.habit-lib).drop-active .habit-drop-zone { opacity: 1; }
-.habit-lib-empty { padding: 16px 8px; text-align: center; color: var(--muted); font-size: 12px; font-style: italic; }
-.habit-day-empty { padding: 12px 6px; text-align: center; color: var(--muted); font-size: 11px; font-style: italic; display: none; }
-.habit-cards:empty + .habit-day-empty { display: block; }
-/* Edit button on lib cards */
-.habit-edit-btn {
-  display: none; font-size: 11px; padding: 3px 8px; border-radius: 6px;
-  background: var(--surface-2); color: var(--muted); border: none; cursor: pointer;
-  margin-top: 6px;
-}
-.habit-card.is-lib:hover .habit-edit-btn { display: inline-block; }
-/* Week label */
-.habit-week-nav { display: flex; align-items: center; gap: 8px; }
-.habit-week-label { font-size: 13px; color: var(--muted); font-weight: 500; min-width: 180px; text-align: center; }
-
 @media (max-width: 640px) {
 
   /* ══ LAYOUT ════════════════════════════════════════ */
@@ -1234,7 +1169,6 @@
       <button class="nav-item active" data-screen="today" data-tip="Dashboard"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><rect x="3" y="4" width="6" height="6" rx="1"/></svg></span><span class="nav-label">Home</span></button>
       <button class="nav-item" data-screen="mood" data-tip="Mood Tracker"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M15 3v5a1 1 0 0 0 1 1h5"/><path d="M8 13h.01"/><path d="M16 13h.01"/><path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/></svg></span><span class="nav-label">Mood</span></button>
       <button class="nav-item" data-screen="finances" data-tip="Finances"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span><span class="nav-label">Finance</span></button>
-      <button class="nav-item" data-screen="habits" data-tip="Habits"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="m9 12 2 2 4-4"/></svg></span><span class="nav-label">Habits</span></button>
     </nav>
   </aside>
 
@@ -1397,7 +1331,6 @@
       <nav class="mt-tabs">
         <button class="mt-tab active" data-mt-screen="mtCheckin">Чек-ин</button>
         <button class="mt-tab" data-mt-screen="mtJournal">История</button>
-        <button class="mt-tab" data-mt-screen="mtCycle">Цикл</button>
         <button class="mt-tab" data-mt-screen="mtParts">Части</button>
       </nav>
 
@@ -1517,11 +1450,23 @@
                   <div class="range-labels"><span>низкий</span><span>высокий</span></div>
                 </div>
               </div>
-              <div class="metric-card">
+              <div class="metric-card" style="grid-column:1/-1;">
                 <div class="mt-label">Цикл</div>
-                <div>
-                  <div class="cycle-main" id="mtCycleMainLabel">—</div>
-                  <div class="cycle-sub" id="mtCycleSubLabel">Укажи данные на вкладке Цикл</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                  <div>
+                    <div class="cycle-main" id="mtCycleMainLabel">—</div>
+                    <div class="cycle-sub" id="mtCycleSubLabel">Укажи дату ниже</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                      <label style="font-size:11px;color:var(--muted);font-weight:600;">Первый день менструации</label>
+                      <input type="date" id="mtLastPeriod" style="border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;background:var(--surface-2);color:var(--text);" />
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                      <label style="font-size:11px;color:var(--muted);font-weight:600;">Длина цикла (дней)</label>
+                      <input type="number" id="mtCycleLength" value="28" min="20" max="40" style="border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;background:var(--surface-2);color:var(--text);width:80px;" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1621,34 +1566,6 @@
       </section>
 
       <!-- CYCLE -->
-      <section class="mt-screen" id="mtCycle">
-        <div class="mt-card">
-          <h2 class="mt-section-title">Настройка цикла</h2>
-          <div class="mt-field">
-            <label>Первый день последней менструации</label>
-            <input type="date" id="mtLastPeriod" />
-          </div>
-          <div class="mt-field">
-            <label>Средняя длина цикла (дней)</label>
-            <input type="number" id="mtCycleLength" value="28" min="20" max="40" />
-          </div>
-        </div>
-        <div class="mt-card">
-          <h2 class="mt-section-title">Текущая фаза</h2>
-          <div class="mood-big" id="mtCycleBigDay">—</div>
-          <div id="mtCycleBigPhase" style="color:var(--mt-muted);font-weight:700;">Укажи дату начала последней менструации</div>
-          <div class="bar-progress"><span id="mtCycleProgress" style="width:0%"></span></div>
-          <p class="phase-desc" id="mtCycleDescription">Здесь будет мягкое описание фазы цикла и возможной связи с настроением.</p>
-        </div>
-        <div class="mt-card">
-          <h2 class="mt-section-title">Фазы цикла</h2>
-          <div class="summary-item"><span>Дни 1–5</span><strong>Менструальная</strong></div>
-          <div class="summary-item"><span>Дни 6–13</span><strong>Фолликулярная</strong></div>
-          <div class="summary-item"><span>Дни 14–16</span><strong>Овуляция</strong></div>
-          <div class="summary-item"><span>Дни 17–28</span><strong>Лютеиновая</strong></div>
-        </div>
-      </section>
-
       <!-- ЧАСТИ -->
       <section class="mt-screen" id="mtParts">
         <div class="parts-grid">
@@ -1962,29 +1879,6 @@
     </div>
 
 
-    <!-- HABIT TRACKER -->
-    <section class="screen" id="habits">
-      <div class="header-row" style="margin-bottom:20px;">
-        <div>
-          <h1>Трекер привычек</h1>
-          <p class="subtitle" id="habitWeekLabel" style="margin:0;">Drag a habit to the right day to mark it done</p>
-        </div>
-        <div class="actions" style="align-items:center;gap:8px;">
-          <div class="habit-week-nav">
-            <button class="btn-ghost btn" id="habitPrevWeek" style="padding:7px 12px;">‹</button>
-            <span class="habit-week-label" id="habitWeekRange">—</span>
-            <button class="btn-ghost btn" id="habitNextWeek" style="padding:7px 12px;">›</button>
-          </div>
-          <button class="btn-ghost btn" id="habitThisWeek" style="padding:7px 14px;">Today</button>
-          <button class="btn" id="addHabitBtn" style="font-size:13px;padding:7px 14px;">+ Привычка</button>
-        </div>
-      </div>
-      <div class="habit-grid-wrap">
-        <div class="habit-grid" id="habitGrid"></div>
-      </div>
-    </section>
-
-  </main>
 </div>
 
 <!-- Floating help button -->
@@ -1997,18 +1891,18 @@
 <div class="toast-host" id="toastHost"></div>
 
 <!-- Floating pomodoro widget -->
-<div class="pomo-float hidden" id="pomoFloat">
+<div class="pomo-float hidden" id="pomoFloat" style="position:relative;">
   <div class="pomo-float-tomato">🍅</div>
-  <div class="pomo-float-body" style="flex:1;">
-    <div class="pomo-float-label">Pomodoro running</div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="pomo-float-range" id="pomoFloatRange"></div>
-      <button id="pomoFloatStop" title="Stop" style="width:22px;height:22px;border-radius:6px;border:none;background:#e8d9c4;color:#a06040;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">⏹</button>
-    </div>
+  <div class="pomo-float-body">
+    <div class="pomo-float-range" id="pomoFloatRange"></div>
     <div class="pomo-float-time" id="pomoFloatTime">25:00</div>
     <div class="pomo-float-bar"><div class="pomo-float-bar-fill" id="pomoFloatBar" style="width:100%"></div></div>
   </div>
   <button class="pomo-float-close" id="pomoFloatClose" title="Скрыть">✕</button>
+  <!-- Stop overlay on hover -->
+  <div class="pomo-float-stop-overlay">
+    <button class="pomo-float-stop-btn" id="pomoFloatStop" title="Stop">⏹</button>
+  </div>
 </div>
 
 <!-- Kanban card context menu -->
@@ -2299,74 +2193,6 @@
 </div>
 
 <!-- Habit Modal -->
-<div class="modal-backdrop" id="habitModal">
-  <div class="modal v3-modal">
-    <div class="v3-header">
-      <div>
-        <h2 id="habitModalTitle">Новая привычка</h2>
-        <p style="margin:3px 0 0;color:var(--muted);font-size:12px;">Fill in and drag the card to any day</p>
-      </div>
-      <div class="v3-header-actions">
-        <div style="position:relative;" id="habitMenuWrap" style="display:none;">
-          <button class="modal-menu-btn" id="habitMenuBtn" title="Действия">⋯</button>
-          <div class="modal-menu-drop" id="habitMenuDrop">
-            <div class="modal-menu-item danger" id="deleteHabitBtn">🗑 Удалить привычку</div>
-          </div>
-        </div>
-        <button class="modal-menu-btn" data-close="habitModal" style="font-size:18px;">✕</button>
-      </div>
-    </div>
-    <div class="v3-body">
-      <!-- Название -->
-      <div class="v3-section">
-        <div class="v3-label-row"><label class="v3-label" for="habitTitle">Name</label></div>
-        <input id="habitTitle" placeholder="e.g. morning meditation" style="width:100%;min-height:44px;font-size:15px;font-weight:600;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;background:var(--bg);color:var(--text);outline:none;">
-      </div>
-      <!-- Заметка -->
-      <div class="v3-section">
-        <div class="v3-label-row"><label class="v3-label" for="habitNote">Заметка <span class="v3-optional">необязательно</span></label></div>
-        <textarea id="habitNote" rows="2" placeholder="Why this habit, details…" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font:inherit;font-size:14px;background:var(--bg);color:var(--text);resize:vertical;outline:none;"></textarea>
-      </div>
-      <!-- Tag -->
-      <div class="v3-section">
-        <div class="v3-label-row"><div class="v3-section-title">Tag</div></div>
-        <div class="tag-picker" id="habitTagPicker">
-          <span class="tag-pill work selected"          data-val="work">Work</span>
-          <span class="tag-pill jobsearch"              data-val="jobsearch">Job Search</span>
-          <span class="tag-pill sideproject"            data-val="sideproject">Side Project</span>
-          <span class="tag-pill entertainment"          data-val="entertainment">Entertainment</span>
-          <span class="tag-pill learning"               data-val="learning">Learning</span>
-          <span class="tag-pill friends"                data-val="friends">Friends</span>
-          <span class="tag-pill relationships"          data-val="relationships">Relationships</span>
-          <span class="tag-pill family"                 data-val="family">Family</span>
-          <span class="tag-pill sports"                 data-val="sports">Sports</span>
-          <span class="tag-pill hobbies"                data-val="hobbies">Hobbies</span>
-        </div>
-        <input type="hidden" id="habitTag" value="work">
-      </div>
-      <!-- Цвет -->
-      <div class="v3-section">
-        <div class="v3-label-row"><div class="v3-section-title">Цвет карточки</div></div>
-        <div class="color-picker" id="habitColorPicker">
-          <div class="color-dot selected" data-color="green"></div>
-          <div class="color-dot" data-color="blue"></div>
-          <div class="color-dot" data-color="purple"></div>
-          <div class="color-dot" data-color="orange"></div>
-          <div class="color-dot" data-color="pink"></div>
-          <div class="color-dot" data-color="red"></div>
-          <div class="color-dot" data-color="neutral"></div>
-        </div>
-        <input type="hidden" id="habitColor" value="green">
-      </div>
-    </div>
-    <div class="v3-footer">
-      <button class="v3-btn ghost" data-close="habitModal">Отмена</button>
-      <button class="v3-btn primary" id="saveHabitBtn">Создать привычку</button>
-      <button class="v3-btn primary" id="updateHabitBtn" style="display:none;">Сохранить</button>
-    </div>
-  </div>
-</div>
-
 <script>
   // ---------- Toast ----------
   function toast(msg, type) {
@@ -4482,7 +4308,7 @@
     function updateCycleUI() {
       const { day, phase, cycleLength } = calculateCycle();
       const ml = $mt('#mtCycleMainLabel'); if (ml) ml.textContent = day ? `${day} день` : '—';
-      const sl = $mt('#mtCycleSubLabel'); if (sl) sl.textContent = day ? phase : 'Укажи данные на вкладке Цикл';
+      const sl = $mt('#mtCycleSubLabel'); if (sl) sl.textContent = day ? phase : 'Укажи дату ниже';
       const bd = $mt('#mtCycleBigDay'); if (bd) bd.textContent = day ? `День ${day}` : '—';
       const bp = $mt('#mtCycleBigPhase'); if (bp) bp.textContent = phase !== '—' ? phase : 'Укажи дату начала последней менструации';
       const desc = $mt('#mtCycleDescription'); if (desc) desc.textContent = getCycleDescription(phase);
@@ -5566,326 +5392,6 @@
     // Also update status card when screen shown
     document.addEventListener('click', e => {
       if (e.target.closest('[data-screen="tg-settings"]')) setTimeout(updateTgStatusCard, 60);
-    });
-  })();
-
-  // ── HABIT TRACKER ────────────────────────────────────────────
-  (function() {
-    const COLOR_HEX = {
-      blue:'#3a7bd5', purple:'#8e7ab5', green:'#2f8a55',
-      orange:'#e07b39', pink:'#b53078', red:'#c03030', neutral:'#c5bdb2'
-    };
-    const TAG_LABEL = {
-      work:'Work', jobsearch:'Job Search', sideproject:'Side Project',
-      entertainment:'Entertainment', learning:'Learning', friends:'Friends',
-      relationships:'Relationships', family:'Family', sports:'Sports', hobbies:'Hobbies'
-    };
-    const DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-
-    // ── Storage ──
-    function getHabits()   { try { return JSON.parse(localStorage.getItem('habits_v1')||'[]'); } catch(e){ return []; } }
-    function saveHabits(a) { localStorage.setItem('habits_v1', JSON.stringify(a)); }
-    function getLogs()     { try { return JSON.parse(localStorage.getItem('habitLogs_v1')||'{}'); } catch(e){ return {}; } }
-    function saveLogs(o)   { localStorage.setItem('habitLogs_v1', JSON.stringify(o)); }
-
-    // ── Week helpers ──
-    let weekOffset = 0;
-
-    function getWeekDays(offset) {
-      const today = new Date();
-      const dow = today.getDay(); // 0=Sun
-      const monday = new Date(today);
-      monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1) + offset * 7);
-      monday.setHours(0,0,0,0);
-      return Array.from({length:7}, (_,i) => {
-        const d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        return d;
-      });
-    }
-
-    function dKey(date) { return date.toISOString().slice(0,10); }
-    function isToday(date) { return dKey(date) === dKey(new Date()); }
-
-    // ── Drag state ──
-    let dragId = null, dragFrom = null, dragFromDayKey = null;
-
-    // ── Render ──
-    function render() {
-      const grid = document.getElementById('habitGrid');
-      if (!grid) return;
-      const habits = getHabits();
-      const logs   = getLogs();
-      const days   = getWeekDays(weekOffset);
-
-      // Week label
-      const rangeEl = document.getElementById('habitWeekRange');
-      if (rangeEl) {
-        const fmt = d => d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
-        rangeEl.textContent = fmt(days[0]) + ' — ' + fmt(days[6]);
-      }
-
-      grid.innerHTML = '';
-
-      // ── Library column ──────────────────────────────────────
-      const libCol = document.createElement('div');
-      libCol.className = 'habit-col habit-lib';
-      libCol.innerHTML = `
-        <div class="habit-col-header">
-          <div class="habit-day-info">
-            <span class="habit-col-title">Все привычки</span>
-          </div>
-          <span class="habit-col-count">${habits.length}</span>
-        </div>
-        <div class="habit-cards" id="hLib"></div>
-        ${habits.length === 0
-          ? '<div class="habit-lib-empty">No habits yet.<br>Tap «+ Habit»</div>'
-          : ''}
-      `;
-      grid.appendChild(libCol);
-
-      const libCards = libCol.querySelector('#hLib');
-      habits.forEach(h => libCards.appendChild(makeCard(h, 'lib', null)));
-
-      // ── Day columns ─────────────────────────────────────────
-      days.forEach((day, idx) => {
-        const key  = dKey(day);
-        const done = (logs[key] || []).map(id => habits.find(h => h.id === id)).filter(Boolean);
-        const today = isToday(day);
-
-        const col = document.createElement('div');
-        col.className = 'habit-col' + (today ? ' habit-today' : '');
-        col.dataset.dayKey = key;
-        col.innerHTML = `
-          <div class="habit-col-header">
-            <div class="habit-day-info">
-              <span class="habit-col-title">${DAYS[idx]}</span>
-              <span class="habit-col-day-num">${day.getDate()} ${day.toLocaleDateString('ru-RU',{month:'short'})}</span>
-            </div>
-            <span class="habit-col-count" id="hCnt_${key}">${done.length}</span>
-          </div>
-          <div class="habit-cards" id="hDay_${key}"></div>
-          <div class="habit-day-empty">Перетащи привычку сюда</div>
-          <div class="habit-drop-zone">+ Mark done</div>
-        `;
-
-        // Drop handlers
-        col.addEventListener('dragover', e => {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = 'copy';
-          col.classList.add('drop-active');
-        });
-        col.addEventListener('dragleave', e => {
-          if (!col.contains(e.relatedTarget)) col.classList.remove('drop-active');
-        });
-        col.addEventListener('drop', e => {
-          e.preventDefault();
-          col.classList.remove('drop-active');
-          if (!dragId) return;
-          const ls = getLogs();
-          // Remove from source day if moving between days
-          if (dragFrom === 'day' && dragFromDayKey && dragFromDayKey !== key) {
-            ls[dragFromDayKey] = (ls[dragFromDayKey]||[]).filter(id => id !== dragId);
-            if (!ls[dragFromDayKey].length) delete ls[dragFromDayKey];
-          }
-          // Add to this day (no duplicates)
-          if (!(ls[key]||[]).includes(dragId)) {
-            ls[key] = [...(ls[key]||[]), dragId];
-          }
-          saveLogs(ls);
-          render();
-        });
-
-        grid.appendChild(col);
-
-        const dayCards = col.querySelector(`#hDay_${key}`);
-        done.forEach(h => dayCards.appendChild(makeCard(h, 'day', key)));
-      });
-    }
-
-    function makeCard(habit, source, dayKey) {
-      const card = document.createElement('div');
-      card.className = 'habit-card' + (source === 'day' ? ' done-card' : ' is-lib');
-      card.draggable = true;
-      card.dataset.habitId = habit.id;
-      card.style.borderLeftColor = COLOR_HEX[habit.color] || COLOR_HEX.green;
-
-      const tag = habit.tag || 'health';
-      const removeBtn = source === 'day'
-        ? `<button class="habit-remove-btn" data-remove="${dayKey}" data-id="${habit.id}" title="Убрать">✕</button>`
-        : '';
-      const doneIcon = source === 'day' ? `<span class="habit-done-icon">✓</span>` : '';
-      const editBtn = source === 'lib'
-        ? `<button class="habit-edit-btn" data-edit="${habit.id}">Изменить</button>`
-        : '';
-
-      card.innerHTML = `
-        <div class="habit-card-head">
-          <div class="habit-card-title">${habit.title}</div>
-          ${doneIcon}${removeBtn}
-        </div>
-        <div><span class="chip ${tag}">${TAG_LABEL[tag]||tag}</span></div>
-        ${habit.note ? `<div class="habit-card-note">${habit.note}</div>` : ''}
-        ${editBtn}
-      `;
-
-      // Edit button click (lib)
-      card.querySelector('.habit-edit-btn')?.addEventListener('click', e => {
-        e.stopPropagation();
-        openModal(habit.id);
-      });
-
-      // Remove button click (day)
-      card.querySelector('.habit-remove-btn')?.addEventListener('click', e => {
-        e.stopPropagation();
-        const ls = getLogs();
-        ls[dayKey] = (ls[dayKey]||[]).filter(id => id !== habit.id);
-        if (!ls[dayKey].length) delete ls[dayKey];
-        saveLogs(ls);
-        render();
-      });
-
-      // Drag
-      card.addEventListener('dragstart', e => {
-        dragId = habit.id;
-        dragFrom = source;
-        dragFromDayKey = dayKey;
-        card.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'copy';
-        e.dataTransfer.setData('text/plain', habit.id);
-      });
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging');
-        dragId = null; dragFrom = null; dragFromDayKey = null;
-      });
-
-      return card;
-    }
-
-    // ── Modal ────────────────────────────────────────────────
-    let editId = null;
-
-    function openModal(id) {
-      editId = id || null;
-      const habits = getHabits();
-      const h = id ? habits.find(x => x.id === id) : null;
-
-      document.getElementById('habitModalTitle').textContent = h ? 'Редактировать привычку' : 'Новая привычка';
-      document.getElementById('habitTitle').value  = h ? h.title : '';
-      document.getElementById('habitNote').value   = h ? (h.note||'') : '';
-      setTag(h ? (h.tag||'health') : 'health');
-      setColor(h ? (h.color||'green') : 'green');
-
-      document.getElementById('saveHabitBtn').style.display   = h ? 'none' : '';
-      document.getElementById('updateHabitBtn').style.display  = h ? '' : 'none';
-      const mw = document.getElementById('habitMenuWrap');
-      if (mw) mw.style.display = h ? 'flex' : 'none';
-      document.getElementById('habitMenuDrop')?.classList.remove('show');
-
-      document.getElementById('habitModal').classList.add('show');
-      setTimeout(() => document.getElementById('habitTitle').focus(), 100);
-    }
-
-    function closeHabitModal() {
-      document.getElementById('habitModal').classList.remove('show');
-      editId = null;
-    }
-
-    function setTag(val) {
-      document.getElementById('habitTag').value = val;
-      document.querySelectorAll('#habitTagPicker .tag-pill').forEach(p =>
-        p.classList.toggle('selected', p.dataset.val === val));
-    }
-
-    function setColor(val) {
-      document.getElementById('habitColor').value = val;
-      document.querySelectorAll('#habitColorPicker .color-dot').forEach(d =>
-        d.classList.toggle('selected', d.dataset.color === val));
-    }
-
-    function saveHabit() {
-      const title = document.getElementById('habitTitle').value.trim();
-      if (!title) { document.getElementById('habitTitle').focus(); return; }
-      const habits = getHabits();
-      habits.push({
-        id:    'h_' + Date.now(),
-        title,
-        note:  document.getElementById('habitNote').value.trim(),
-        tag:   document.getElementById('habitTag').value || 'health',
-        color: document.getElementById('habitColor').value || 'green',
-      });
-      saveHabits(habits);
-      closeHabitModal();
-      render();
-      toast('Привычка создана ✓', 'success');
-    }
-
-    function updateHabit() {
-      if (!editId) return;
-      const title = document.getElementById('habitTitle').value.trim();
-      if (!title) return;
-      const habits = getHabits();
-      const idx = habits.findIndex(h => h.id === editId);
-      if (idx === -1) return;
-      habits[idx] = { ...habits[idx], title,
-        note:  document.getElementById('habitNote').value.trim(),
-        tag:   document.getElementById('habitTag').value || 'health',
-        color: document.getElementById('habitColor').value || 'green',
-      };
-      saveHabits(habits);
-      closeHabitModal();
-      render();
-      toast('Привычка обновлена ✓');
-    }
-
-    function deleteHabit() {
-      if (!editId) return;
-      const id = editId;
-      saveHabits(getHabits().filter(h => h.id !== id));
-      const ls = getLogs();
-      Object.keys(ls).forEach(day => {
-        ls[day] = ls[day].filter(x => x !== id);
-        if (!ls[day].length) delete ls[day];
-      });
-      saveLogs(ls);
-      closeHabitModal();
-      render();
-      toast('Привычка удалена');
-    }
-
-    // ── Init ─────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('addHabitBtn')?.addEventListener('click', () => openModal(null));
-      document.getElementById('habitPrevWeek')?.addEventListener('click', () => { weekOffset--; render(); });
-      document.getElementById('habitThisWeek')?.addEventListener('click', () => { weekOffset = 0; render(); });
-      document.getElementById('habitNextWeek')?.addEventListener('click', () => { weekOffset++; render(); });
-
-      document.getElementById('saveHabitBtn')?.addEventListener('click', saveHabit);
-      document.getElementById('updateHabitBtn')?.addEventListener('click', updateHabit);
-      document.getElementById('deleteHabitBtn')?.addEventListener('click', deleteHabit);
-
-      document.getElementById('habitTagPicker')?.addEventListener('click', e => {
-        const p = e.target.closest('.tag-pill');
-        if (p) setTag(p.dataset.val);
-      });
-      document.getElementById('habitColorPicker')?.addEventListener('click', e => {
-        const d = e.target.closest('.color-dot');
-        if (d) setColor(d.dataset.color);
-      });
-      document.getElementById('habitMenuBtn')?.addEventListener('click', () => {
-        document.getElementById('habitMenuDrop').classList.toggle('show');
-      });
-      // Close modal on backdrop click
-      document.getElementById('habitModal')?.addEventListener('click', e => {
-        if (e.target === document.getElementById('habitModal')) closeHabitModal();
-      });
-      // Close habit modal via data-close buttons (already handled globally, but add explicit)
-      document.querySelectorAll('[data-close="habitModal"]').forEach(b =>
-        b.addEventListener('click', closeHabitModal));
-
-      // Render when switching to habits tab
-      document.querySelector('.nav-item[data-screen="habits"]')?.addEventListener('click', () =>
-        setTimeout(render, 30));
     });
   })();
 
