@@ -3015,7 +3015,8 @@
       col.style.width = '300px';
       col.style.flexShrink = '0';
       col.dataset.col = key;
-      const colTitle = isToday ? 'Today' : `${name} ${num}`;
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const colTitle = isToday ? `Today · ${dayNames[d.getDay()]} ${num}` : `${name} ${num}`;
       col.innerHTML = `
         <div class="kanban-col-header">
           <div class="kanban-col-header-left">
