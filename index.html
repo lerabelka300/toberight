@@ -871,6 +871,35 @@
 #mood .mood-big { font-size:42px; font-weight:700; letter-spacing:-0.02em; color:var(--accent); margin:8px 0 2px; }
 #mood .phase-desc { color:var(--muted); font-size:14px; line-height:1.6; margin-top:6px; }
 
+/* ── ЧАСТИ ── */
+#mood .parts-grid { display:flex; flex-direction:column; gap:14px; max-width:680px; }
+#mood .part-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow); }
+#mood .part-header { display:flex; justify-content:space-between; align-items:center; }
+#mood .part-header-left { display:flex; gap:12px; align-items:center; }
+#mood .part-img-wrap { width:72px; height:88px; border-radius:14px; overflow:hidden; flex-shrink:0; background:var(--surface-2); display:flex; align-items:center; justify-content:center; }
+#mood .part-img-wrap img { width:100%; height:100%; object-fit:contain; object-position:center bottom; }
+#mood .part-name { font-size:16px; font-weight:700; margin-bottom:2px; }
+#mood .part-desc { color:var(--muted); font-size:13px; line-height:1.4; }
+#mood .toggle-wrap { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+#mood .toggle-label { font-size:12px; font-weight:600; color:var(--muted); min-width:24px; text-align:right; }
+#mood .mt-toggle { position:relative; width:44px; height:26px; }
+#mood .mt-toggle input { opacity:0; width:0; height:0; }
+#mood .mt-toggle-slider { position:absolute; inset:0; border-radius:999px; background:var(--border); cursor:pointer; transition:.2s; }
+#mood .mt-toggle-slider::before { content:''; position:absolute; width:20px; height:20px; border-radius:50%; left:3px; top:3px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.2); transition:.2s; }
+#mood .mt-toggle input:checked + .mt-toggle-slider { background:var(--accent); }
+#mood .mt-toggle input:checked + .mt-toggle-slider::before { transform:translateX(18px); }
+#mood .part-details { display:none; margin-top:16px; border-top:1px solid var(--border); padding-top:16px; }
+#mood .part-details.show { display:block; }
+#mood .part-emotions-label { font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px; }
+#mood .part-note { width:100%; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font:inherit; font-size:13px; color:var(--text); background:var(--surface-2); resize:vertical; min-height:60px; margin-top:12px; }
+#mood .part-note::placeholder { color:var(--muted); }
+#mood .ph-item { background:var(--surface-2); border-radius:12px; padding:14px; margin-bottom:10px; }
+#mood .ph-date { font-weight:600; font-size:13px; margin-bottom:8px; color:var(--text); }
+#mood .ph-row { display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; margin-bottom:4px; }
+#mood .ph-part { font-weight:600; font-size:13px; }
+#mood .ph-emotions { color:var(--muted); font-size:12px; }
+#mood .ph-note { font-size:12px; color:var(--muted); font-style:italic; margin-top:4px; }
+
 /* Cycle / field inputs */
 #mood .mt-field { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
 #mood .mt-field label { font-size:13px; color:var(--muted); font-weight:500; }
@@ -1369,6 +1398,7 @@
         <button class="mt-tab active" data-mt-screen="mtCheckin">Чек-ин</button>
         <button class="mt-tab" data-mt-screen="mtJournal">История</button>
         <button class="mt-tab" data-mt-screen="mtCycle">Цикл</button>
+        <button class="mt-tab" data-mt-screen="mtParts">Части</button>
       </nav>
 
       <!-- CHECK-IN -->
@@ -1616,6 +1646,155 @@
           <div class="summary-item"><span>Дни 6–13</span><strong>Фолликулярная</strong></div>
           <div class="summary-item"><span>Дни 14–16</span><strong>Овуляция</strong></div>
           <div class="summary-item"><span>Дни 17–28</span><strong>Лютеиновая</strong></div>
+        </div>
+      </section>
+
+      <!-- ЧАСТИ -->
+      <section class="mt-screen" id="mtParts">
+        <div class="parts-grid">
+
+          <!-- Валерия -->
+          <div class="part-card">
+            <div class="part-header">
+              <div class="part-header-left">
+                <div class="part-img-wrap"><img src="взрослый.png" alt="Валерия" /></div>
+                <div>
+                  <div class="part-name">Валерия</div>
+                  <div class="part-desc">Взрослая часть — спокойная, решает проблемы, заботится о себе</div>
+                </div>
+              </div>
+              <div class="toggle-wrap">
+                <span class="toggle-label" id="mtValLabel">нет</span>
+                <label class="mt-toggle">
+                  <input type="checkbox" id="mtValToggle" />
+                  <span class="mt-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="part-details" id="mtValDetails">
+              <div class="part-emotions-label">Что чувствовала?</div>
+              <div class="chip-group" id="mtValEmotions">
+                <button class="mt-chip">😌 Спокойствие</button>
+                <button class="mt-chip">🔮 Ясность</button>
+                <button class="mt-chip">💪 Уверенность</button>
+                <button class="mt-chip">🌿 Забота о себе</button>
+                <button class="mt-chip">🎯 Решительность</button>
+                <button class="mt-chip">🤝 Поддержка себя</button>
+              </div>
+              <textarea class="part-note" id="mtValNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+            </div>
+          </div>
+
+          <!-- Лера -->
+          <div class="part-card">
+            <div class="part-header">
+              <div class="part-header-left">
+                <div class="part-img-wrap"><img src="ребенок.png" alt="Лера" /></div>
+                <div>
+                  <div class="part-name">Лера</div>
+                  <div class="part-desc">Маленькая часть — грусть, одиночество, нуждается в заботе</div>
+                </div>
+              </div>
+              <div class="toggle-wrap">
+                <span class="toggle-label" id="mtLeraLabel">нет</span>
+                <label class="mt-toggle">
+                  <input type="checkbox" id="mtLeraToggle" />
+                  <span class="mt-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="part-details" id="mtLeraDetails">
+              <div class="part-emotions-label">Что чувствовала?</div>
+              <div class="chip-group" id="mtLeraEmotions">
+                <button class="mt-chip">😢 Грусть</button>
+                <button class="mt-chip">🫥 Одиночество</button>
+                <button class="mt-chip">😨 Страх</button>
+                <button class="mt-chip">😶 Растерянность</button>
+                <button class="mt-chip">🥺 Обида</button>
+                <button class="mt-chip">🤗 Желание поддержки</button>
+                <button class="mt-chip">😔 Беспомощность</button>
+              </div>
+              <textarea class="part-note" id="mtLeraNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+            </div>
+          </div>
+
+          <!-- Подросток -->
+          <div class="part-card">
+            <div class="part-header">
+              <div class="part-header-left">
+                <div class="part-img-wrap"><img src="подросток.png" alt="Подросток" /></div>
+                <div>
+                  <div class="part-name">Подросток</div>
+                  <div class="part-desc">Бунтует, злится, отстаивает себя — иногда слишком резко</div>
+                </div>
+              </div>
+              <div class="toggle-wrap">
+                <span class="toggle-label" id="mtTeenLabel">нет</span>
+                <label class="mt-toggle">
+                  <input type="checkbox" id="mtTeenToggle" />
+                  <span class="mt-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="part-details" id="mtTeenDetails">
+              <div class="part-emotions-label">Что чувствовала?</div>
+              <div class="chip-group" id="mtTeenEmotions">
+                <button class="mt-chip">😤 Злость</button>
+                <button class="mt-chip">🙄 Протест</button>
+                <button class="mt-chip">😡 Бунт</button>
+                <button class="mt-chip">😒 Обида на мир</button>
+                <button class="mt-chip">🔥 Агрессия</button>
+                <button class="mt-chip">😤 Несправедливость</button>
+                <button class="mt-chip">💢 Раздражение</button>
+              </div>
+              <textarea class="part-note" id="mtTeenNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+            </div>
+          </div>
+
+          <!-- Критик -->
+          <div class="part-card">
+            <div class="part-header">
+              <div class="part-header-left">
+                <div class="part-img-wrap"><img src="критик.png" alt="Критик" /></div>
+                <div>
+                  <div class="part-name">Критик</div>
+                  <div class="part-desc">Самокритика, осуждение, стыд — внутренний голос, который давит</div>
+                </div>
+              </div>
+              <div class="toggle-wrap">
+                <span class="toggle-label" id="mtCriticLabel">нет</span>
+                <label class="mt-toggle">
+                  <input type="checkbox" id="mtCriticToggle" />
+                  <span class="mt-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="part-details" id="mtCriticDetails">
+              <div class="part-emotions-label">Что чувствовала?</div>
+              <div class="chip-group" id="mtCriticEmotions">
+                <button class="mt-chip">😳 Стыд</button>
+                <button class="mt-chip">😠 Злость на себя</button>
+                <button class="mt-chip">😞 Разочарование в себе</button>
+                <button class="mt-chip">😬 Тревога</button>
+                <button class="mt-chip">🙄 Осуждение</button>
+                <button class="mt-chip">😔 Вина</button>
+              </div>
+              <textarea class="part-note" id="mtCriticNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+            </div>
+          </div>
+
+          <button class="mt-primary-btn" id="mtSavePartsBtn">Сохранить</button>
+
+          <div class="saved-insight" id="mtPartsSavedInsight">
+            <div class="saved-title">✓ Сохранено</div>
+            <p id="mtPartsSavedText"></p>
+          </div>
+
+          <div class="mt-card" style="margin-top:4px;">
+            <h2 class="mt-section-title">История</h2>
+            <div id="mtPartsHistory"><div class="empty-state">Пока нет записей</div></div>
+          </div>
+
         </div>
       </section>
 
@@ -4545,6 +4724,7 @@
         const sc = $mt('#'+tab.dataset.mtScreen);
         if (sc) sc.classList.add('active');
         if (tab.dataset.mtScreen==='mtJournal') renderMtJournal();
+        if (tab.dataset.mtScreen==='mtParts') renderMtPartsHistory();
       });
     });
 
@@ -4592,6 +4772,91 @@
     // Save
     const sb = $mt('#mtSaveBtn');
     if (sb) sb.addEventListener('click', saveEntry);
+
+    // ── ЧАСТИ ─────────────────────────────────────────────────
+    const MT_PARTS_CONFIG = [
+      { id:'val',    toggleId:'mtValToggle',    labelId:'mtValLabel',    detailsId:'mtValDetails',    emotionsId:'mtValEmotions',    noteId:'mtValNote' },
+      { id:'lera',   toggleId:'mtLeraToggle',   labelId:'mtLeraLabel',   detailsId:'mtLeraDetails',   emotionsId:'mtLeraEmotions',   noteId:'mtLeraNote' },
+      { id:'teen',   toggleId:'mtTeenToggle',   labelId:'mtTeenLabel',   detailsId:'mtTeenDetails',   emotionsId:'mtTeenEmotions',   noteId:'mtTeenNote' },
+      { id:'critic', toggleId:'mtCriticToggle', labelId:'mtCriticLabel', detailsId:'mtCriticDetails', emotionsId:'mtCriticEmotions', noteId:'mtCriticNote' },
+    ];
+
+    MT_PARTS_CONFIG.forEach(({ toggleId, labelId, detailsId, emotionsId }) => {
+      const toggle  = $mt('#' + toggleId);
+      const label   = $mt('#' + labelId);
+      const details = $mt('#' + detailsId);
+      if (!toggle) return;
+      toggle.addEventListener('change', () => {
+        const on = toggle.checked;
+        label.textContent = on ? 'да' : 'нет';
+        details.classList.toggle('show', on);
+      });
+      $$mt('#' + emotionsId + ' .mt-chip').forEach(chip =>
+        chip.addEventListener('click', () => chip.classList.toggle('selected'))
+      );
+    });
+
+    function getMtPartsData() {
+      return MT_PARTS_CONFIG.reduce((acc, { id, toggleId, emotionsId, noteId }) => {
+        acc[id] = {
+          active:   ($mt('#' + toggleId) || {}).checked || false,
+          emotions: [...($$mt('#' + emotionsId + ' .mt-chip.selected') || [])].map(c => c.textContent.trim()),
+          note:     ($mt('#' + noteId) || { value:'' }).value.trim(),
+        };
+        return acc;
+      }, {});
+    }
+
+    function buildMtPartsInsight(data) {
+      const names = { val:'Валерия', lera:'Лера', teen:'Подросток', critic:'Критик' };
+      const active = Object.entries(data).filter(([,v]) => v.active);
+      if (!active.length) return 'Сегодня ни одна часть не была активна — это тоже важное наблюдение.';
+      const parts = active.map(([k,v]) => v.emotions.length ? `${names[k]} (${v.emotions.slice(0,2).join(', ')})` : names[k]);
+      return `Сегодня была активна: ${parts.join(', ')}.`;
+    }
+
+    function saveMtPartsEntry() {
+      const btn = $mt('#mtSavePartsBtn');
+      if (!btn) return;
+      btn.disabled = true; btn.textContent = 'Сохраняю...';
+      const entry = { id: crypto.randomUUID(), date: new Date().toISOString(), parts: getMtPartsData() };
+      const entries = JSON.parse(localStorage.getItem('partsEntries') || '[]');
+      const today = new Date().toDateString();
+      const idx = entries.findIndex(e => new Date(e.date).toDateString() === today);
+      if (idx >= 0) entries[idx] = entry; else entries.unshift(entry);
+      localStorage.setItem('partsEntries', JSON.stringify(entries));
+      const ins = $mt('#mtPartsSavedInsight');
+      if (ins) { $mt('#mtPartsSavedText').textContent = buildMtPartsInsight(entry.parts); ins.classList.add('show'); ins.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+      renderMtPartsHistory();
+      btn.disabled = false; btn.textContent = 'Сохранить';
+    }
+
+    function renderMtPartsHistory() {
+      const el = $mt('#mtPartsHistory');
+      if (!el) return;
+      const entries = JSON.parse(localStorage.getItem('partsEntries') || '[]');
+      if (!entries.length) { el.innerHTML = '<div class="empty-state">Пока нет записей</div>'; return; }
+      const names = { val:'🌿 Валерия', lera:'🌸 Лера', teen:'⚡ Подросток', critic:'👁 Критик' };
+      el.innerHTML = entries.slice(0,10).map(e => {
+        const d = new Date(e.date);
+        const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+        let label = d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+        if (d.toDateString()===today.toDateString()) label='Сегодня';
+        else if (d.toDateString()===yesterday.toDateString()) label='Вчера';
+        const active = Object.entries(e.parts||{}).filter(([,v])=>v.active);
+        if (!active.length) return `<div class="ph-item"><div class="ph-date">${label}</div><div class="ph-emotions">Ни одна часть не была активна</div></div>`;
+        const rows = active.map(([k,v]) => {
+          const em = v.emotions.length ? `<span class="ph-emotions"> — ${v.emotions.join(', ')}</span>` : '';
+          const note = v.note ? `<div class="ph-note">"${v.note}"</div>` : '';
+          return `<div class="ph-row"><span class="ph-part">${names[k]}</span>${em}</div>${note}`;
+        }).join('');
+        return `<div class="ph-item"><div class="ph-date">${label}</div>${rows}</div>`;
+      }).join('');
+    }
+
+    const spb = $mt('#mtSavePartsBtn');
+    if (spb) spb.addEventListener('click', saveMtPartsEntry);
+    // ──────────────────────────────────────────────────────────
 
     // Init
     updateMood();
