@@ -202,6 +202,65 @@
     .field label { font-size: 13px; color: var(--muted); font-weight: 700; }
     .field input { border: 1px solid var(--line); border-radius: 14px; padding: 11px 14px; font: inherit; background: #fff; color: var(--text); }
 
+    /* ── PARTS (Мои части) ── */
+    .parts-grid { display: flex; flex-direction: column; gap: 16px; max-width: 680px; margin: 0 auto; }
+    .part-card { background: rgba(255,255,255,.92); border: 1px solid var(--line); border-radius: 30px; padding: 24px; box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+    .part-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .part-name { font-size: 20px; font-weight: 900; letter-spacing: -.03em; }
+    .part-desc { color: var(--muted); font-size: 14px; font-weight: 700; margin-bottom: 0; }
+
+    /* Toggle switch */
+    .toggle-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .toggle-label { font-size: 13px; font-weight: 800; color: var(--muted); }
+    .toggle { position: relative; width: 48px; height: 28px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; border-radius: 999px;
+      background: #E0DAE8; cursor: pointer;
+      transition: .2s ease;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 22px; height: 22px; border-radius: 50%;
+      left: 3px; top: 3px;
+      background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18);
+      transition: .2s ease;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--primary); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* Part details (shown when toggled on) */
+    .part-details { display: none; margin-top: 18px; border-top: 1px solid var(--line); padding-top: 18px; }
+    .part-details.show { display: block; }
+    .part-emotions-label { font-size: 13px; font-weight: 800; color: var(--muted); margin-bottom: 10px; letter-spacing: .03em; text-transform: uppercase; }
+    .part-note { width: 100%; border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; font: inherit; color: var(--text); background: #fff; font-size: 14px; resize: vertical; min-height: 72px; margin-top: 14px; }
+    .part-note::placeholder { color: #aaa3ae; }
+
+    /* Part image */
+    .part-img-wrap { width: 90px; height: 110px; border-radius: 20px; overflow: hidden; flex-shrink: 0; background: #F0ECE8; display: flex; align-items: center; justify-content: center; }
+    .part-img-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
+    .part-img-placeholder { font-size: 28px; }
+    .part-header-left { display: flex; gap: 14px; align-items: center; }
+
+    /* Part colours */
+    .part-card.valeriya .toggle input:checked + .toggle-slider { background: #5E97D0; }
+    .part-card.valeriya .part-name { color: #3A6A9A; }
+    .part-card.lera .toggle input:checked + .toggle-slider { background: #C87EB8; }
+    .part-card.lera .part-name { color: #8A4A7E; }
+    .part-card.teen .toggle input:checked + .toggle-slider { background: #D0A035; }
+    .part-card.teen .part-name { color: #8A6010; }
+    .part-card.critic .toggle input:checked + .toggle-slider { background: #D07B5A; }
+    .part-card.critic .part-name { color: #9A4A2A; }
+
+    /* Parts history */
+    .parts-history { max-width: 680px; margin: 0 auto; }
+    .ph-item { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px; margin-bottom: 12px; }
+    .ph-date { font-weight: 900; font-size: 15px; margin-bottom: 10px; }
+    .ph-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; align-items: baseline; }
+    .ph-part { font-weight: 800; font-size: 14px; }
+    .ph-emotions { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .ph-note { margin-top: 8px; font-size: 14px; color: var(--muted); font-style: italic; }
+
     @media(max-width:760px) {
       .topbar { display: block; }
       .date-pill { display: inline-flex; margin-top: 14px; }
@@ -237,6 +296,7 @@
     <button class="tab" data-screen="results">Results</button>
     <button class="tab" data-screen="history">History</button>
     <button class="tab" data-screen="cycle">Cycle</button>
+    <button class="tab" data-screen="parts">Части</button>
   </nav>
 
   <!-- ── CHECK-IN ── -->
@@ -434,6 +494,165 @@
     <div class="card">
       <h2 class="section-title">Entry history</h2>
       <div id="historyList"><div class="empty-state">Loading...</div></div>
+    </div>
+  </section>
+
+  <!-- ── PARTS (Мои части) ── -->
+  <section class="screen" id="parts">
+
+    <div class="parts-grid">
+
+      <!-- Валерия -->
+      <div class="part-card valeriya">
+        <div class="part-header">
+          <div class="part-header-left">
+            <div class="part-img-wrap" id="valImgWrap">
+              <img src="взрослый.png" alt="Валерия" />
+            </div>
+            <div>
+              <div class="part-name">Валерия</div>
+              <div class="part-desc">Взрослая часть — спокойная, решает проблемы, заботится о себе</div>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label" id="valLabel">нет</span>
+            <label class="toggle">
+              <input type="checkbox" id="valToggle" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="part-details" id="valDetails">
+          <div class="part-emotions-label">Что чувствовала?</div>
+          <div class="chip-group" id="valEmotions">
+            <button class="chip">😌 Спокойствие</button>
+            <button class="chip">🔮 Ясность</button>
+            <button class="chip">💪 Уверенность</button>
+            <button class="chip">🌿 Забота о себе</button>
+            <button class="chip">🎯 Решительность</button>
+            <button class="chip">🤝 Поддержка себя</button>
+          </div>
+          <textarea class="part-note" id="valNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+        </div>
+      </div>
+
+      <!-- Лера -->
+      <div class="part-card lera">
+        <div class="part-header">
+          <div class="part-header-left">
+            <div class="part-img-wrap" id="leraImgWrap">
+              <img src="ребенок.png" alt="Лера" />
+            </div>
+            <div>
+              <div class="part-name">Лера</div>
+              <div class="part-desc">Маленькая часть — грусть, одиночество, нуждается в заботе</div>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label" id="leraLabel">нет</span>
+            <label class="toggle">
+              <input type="checkbox" id="leraToggle" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="part-details" id="leraDetails">
+          <div class="part-emotions-label">Что чувствовала?</div>
+          <div class="chip-group" id="leraEmotions">
+            <button class="chip">😢 Грусть</button>
+            <button class="chip">🫥 Одиночество</button>
+            <button class="chip">😨 Страх</button>
+            <button class="chip">😶 Растерянность</button>
+            <button class="chip">🥺 Обида</button>
+            <button class="chip">🤗 Желание поддержки</button>
+            <button class="chip">😔 Беспомощность</button>
+          </div>
+          <textarea class="part-note" id="leraNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+        </div>
+      </div>
+
+      <!-- Подросток -->
+      <div class="part-card teen">
+        <div class="part-header">
+          <div class="part-header-left">
+            <div class="part-img-wrap" id="teenImgWrap">
+              <img src="подросток.png" alt="Подросток" />
+            </div>
+            <div>
+              <div class="part-name">Подросток</div>
+              <div class="part-desc">Бунтует, злится, отстаивает себя — иногда слишком резко</div>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label" id="teenLabel">нет</span>
+            <label class="toggle">
+              <input type="checkbox" id="teenToggle" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="part-details" id="teenDetails">
+          <div class="part-emotions-label">Что чувствовала?</div>
+          <div class="chip-group" id="teenEmotions">
+            <button class="chip">😤 Злость</button>
+            <button class="chip">🙄 Протест</button>
+            <button class="chip">😡 Бунт</button>
+            <button class="chip">😒 Обида на мир</button>
+            <button class="chip">🔥 Агрессия</button>
+            <button class="chip">😤 Несправедливость</button>
+            <button class="chip">💢 Раздражение</button>
+          </div>
+          <textarea class="part-note" id="teenNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+        </div>
+      </div>
+
+      <!-- Критик -->
+      <div class="part-card critic">
+        <div class="part-header">
+          <div class="part-header-left">
+            <div class="part-img-wrap" id="criticImgWrap">
+              <img src="критик.png" alt="Критик" />
+            </div>
+            <div>
+              <div class="part-name">Критик</div>
+              <div class="part-desc">Самокритика, осуждение, стыд — внутренний голос, который давит</div>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label" id="criticLabel">нет</span>
+            <label class="toggle">
+              <input type="checkbox" id="criticToggle" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="part-details" id="criticDetails">
+          <div class="part-emotions-label">Что чувствовала?</div>
+          <div class="chip-group" id="criticEmotions">
+            <button class="chip">😳 Стыд</button>
+            <button class="chip">😠 Злость на себя</button>
+            <button class="chip">😞 Разочарование в себе</button>
+            <button class="chip">😬 Тревога</button>
+            <button class="chip">🙄 Осуждение</button>
+            <button class="chip">😔 Вина</button>
+          </div>
+          <textarea class="part-note" id="criticNote" placeholder="Что происходило? Как это проявлялось?"></textarea>
+        </div>
+      </div>
+
+      <button class="primary" id="savePartsBtn">Сохранить</button>
+
+      <div class="saved-insight" id="partsSavedInsight" style="display:none;">
+        <div class="saved-title">✓ Сохранено</div>
+        <p id="partsSavedText"></p>
+      </div>
+
+      <!-- История -->
+      <div class="card" style="margin-top:8px;">
+        <h2 class="section-title">История</h2>
+        <div id="partsHistory"><div class="empty-state">Пока нет записей</div></div>
+      </div>
+
     </div>
   </section>
 
@@ -781,6 +1000,7 @@
       const screen = tab.dataset.screen;
       if (screen === 'results') renderResults();
       if (screen === 'history') renderHistory();
+      if (screen === 'parts') renderPartsHistory();
     });
   });
 
@@ -851,6 +1071,125 @@
       }
     });
   })();
+
+  // ── PARTS (Мои части) ──────────────────────────────────────
+
+  const PARTS_CONFIG = [
+    { id: 'val',    toggleId: 'valToggle',    labelId: 'valLabel',    detailsId: 'valDetails',    emotionsId: 'valEmotions',    noteId: 'valNote' },
+    { id: 'lera',   toggleId: 'leraToggle',   labelId: 'leraLabel',   detailsId: 'leraDetails',   emotionsId: 'leraEmotions',   noteId: 'leraNote' },
+    { id: 'teen',   toggleId: 'teenToggle',   labelId: 'teenLabel',   detailsId: 'teenDetails',   emotionsId: 'teenEmotions',   noteId: 'teenNote' },
+    { id: 'critic', toggleId: 'criticToggle', labelId: 'criticLabel', detailsId: 'criticDetails', emotionsId: 'criticEmotions', noteId: 'criticNote' },
+  ];
+
+  PARTS_CONFIG.forEach(({ toggleId, labelId, detailsId, emotionsId }) => {
+    const toggle = $('#' + toggleId);
+    const label  = $('#' + labelId);
+    const details = $('#' + detailsId);
+
+    toggle.addEventListener('change', () => {
+      const on = toggle.checked;
+      label.textContent = on ? 'да' : 'нет';
+      details.classList.toggle('show', on);
+    });
+
+    // chip toggles for this part
+    $$('#' + emotionsId + ' .chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('selected'));
+    });
+  });
+
+  function getPartsData() {
+    return PARTS_CONFIG.reduce((acc, { id, toggleId, emotionsId, noteId }) => {
+      acc[id] = {
+        active: $('#' + toggleId).checked,
+        emotions: [...$$('#' + emotionsId + ' .chip.selected')].map(c => c.textContent.trim()),
+        note: $('#' + noteId).value.trim(),
+      };
+      return acc;
+    }, {});
+  }
+
+  function resetPartsForm() {
+    PARTS_CONFIG.forEach(({ toggleId, labelId, detailsId, emotionsId, noteId }) => {
+      $('#' + toggleId).checked = false;
+      $('#' + labelId).textContent = 'нет';
+      $('#' + detailsId).classList.remove('show');
+      $$('#' + emotionsId + ' .chip').forEach(c => c.classList.remove('selected'));
+      $('#' + noteId).value = '';
+    });
+  }
+
+  function buildPartsInsight(data) {
+    const active = Object.entries(data).filter(([, v]) => v.active);
+    if (!active.length) return 'Сегодня ни одна часть не была активна — это тоже важное наблюдение.';
+    const names = { val: 'Валерия', lera: 'Лера', teen: 'Подросток', critic: 'Критик' };
+    const parts = active.map(([k, v]) => {
+      const name = names[k];
+      return v.emotions.length ? `${name} (${v.emotions.slice(0,2).join(', ')})` : name;
+    });
+    return `Сегодня была активна: ${parts.join(', ')}. Наблюдение сохранено.`;
+  }
+
+  function getPartsEntries() {
+    return JSON.parse(localStorage.getItem('partsEntries') || '[]');
+  }
+
+  function savePartsEntry() {
+    const btn = $('#savePartsBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняю...';
+
+    const entry = {
+      id:   crypto.randomUUID(),
+      date: new Date().toISOString(),
+      parts: getPartsData(),
+    };
+
+    const entries = getPartsEntries();
+    // replace today's entry if exists
+    const today = new Date().toDateString();
+    const idx = entries.findIndex(e => new Date(e.date).toDateString() === today);
+    if (idx >= 0) entries[idx] = entry; else entries.unshift(entry);
+    localStorage.setItem('partsEntries', JSON.stringify(entries));
+
+    const insight = $('#partsSavedInsight');
+    $('#partsSavedText').textContent = buildPartsInsight(entry.parts);
+    insight.style.display = 'block';
+    insight.classList.add('show');
+    insight.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    showToast('Сохранено ✓');
+    renderPartsHistory();
+    btn.disabled = false; btn.textContent = 'Сохранить';
+  }
+
+  function renderPartsHistory() {
+    const entries = getPartsEntries();
+    const el = $('#partsHistory');
+    if (!entries.length) { el.innerHTML = '<div class="empty-state">Пока нет записей</div>'; return; }
+
+    const names = { val: '🌿 Валерия', lera: '🌸 Лера', teen: '⚡ Подросток', critic: '🔥 Критик' };
+
+    el.innerHTML = entries.slice(0, 10).map(e => {
+      const d = new Date(e.date);
+      const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+      let label = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+      if (d.toDateString() === today.toDateString()) label = 'Сегодня';
+      else if (d.toDateString() === yesterday.toDateString()) label = 'Вчера';
+
+      const activeParts = Object.entries(e.parts || {}).filter(([, v]) => v.active);
+      if (!activeParts.length) return `<div class="ph-item"><div class="ph-date">${label}</div><div class="ph-emotions">Ни одна часть не была активна</div></div>`;
+
+      const rows = activeParts.map(([k, v]) => {
+        const em = v.emotions.length ? `<span class="ph-emotions"> — ${v.emotions.join(', ')}</span>` : '';
+        const note = v.note ? `<div class="ph-note">"${v.note}"</div>` : '';
+        return `<div class="ph-row"><span class="ph-part">${names[k]}</span>${em}</div>${note}`;
+      }).join('');
+
+      return `<div class="ph-item"><div class="ph-date">${label}</div>${rows}</div>`;
+    }).join('');
+  }
+
+  $('#savePartsBtn').addEventListener('click', savePartsEntry);
 
   // ── INIT ──
   updateMood();
