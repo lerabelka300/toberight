@@ -65,6 +65,10 @@
   button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
   .app { display: grid; grid-template-columns: 64px 1fr; height: 100vh; overflow: hidden; }
+  .main { padding-right: 276px; }
+  /* Today screen has its own 3-col layout, no need for calendar padding */
+  #today.active ~ .cal-panel, .main:has(#today.active) { /* noop — see below */ }
+  .main:has(#today.active) { padding-right: 0; }
 
   /* SIDEBAR */
   .sidebar { background: var(--surface-2); border-right: 1px solid var(--border); padding: 16px 10px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -117,6 +121,206 @@
   #today { display: none; flex-direction: column; overflow: hidden; padding: 0; }
   #today.active { display: flex; }
   .today-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 28px 24px; display: flex; flex-direction: column; gap: 0; }
+
+  /* ── 3-column Today layout ── */
+  .today-3col {
+    display: grid;
+    grid-template-columns: 280px 340px 1fr;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .t3-inbox, .t3-cal, .t3-board {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+  }
+  .t3-board { border-right: none; }
+  .t3-col-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .t3-col-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .t3-col-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px;
+  }
+  /* Inbox column */
+  .t3-inbox .col-backlog {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .t3-inbox .kanban-cards { flex: 1; }
+  /* Board scrollable columns */
+  .t3-board .kanban-col {
+    min-width: 220px;
+    max-width: 240px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+  /* ── Idea Garage panel (bottom of board column) ── */
+  .t3-idea-panel {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 0 16px 16px;
+  }
+  .t3-idea-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0 10px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 2;
+  }
+  .idea-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--surface-2);
+    border-radius: 20px;
+    padding: 2px 7px;
+  }
+  .t3-idea-add-btn {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: none;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .t3-idea-add-btn:hover { background: #d2e7fb; }
+
+  /* Grid */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  /* Individual idea card */
+  .idea-card {
+    background: var(--surface);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s;
+    position: relative;
+  }
+  .idea-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.09);
+    border-color: #ddd2c6;
+  }
+  .idea-card-band {
+    height: 4px;
+    border-radius: 0;
+  }
+  /* Category band colors */
+  .idea-card-band.work        { background: linear-gradient(90deg, #3a7bd5, #6aa3f5); }
+  .idea-card-band.jobsearch   { background: linear-gradient(90deg, #e07b39, #f5a96a); }
+  .idea-card-band.sideproject { background: linear-gradient(90deg, #7c4dff, #b39dfa); }
+  .idea-card-band.entertainment { background: linear-gradient(90deg, #e91e8c, #f48cb6); }
+  .idea-card-band.learning    { background: linear-gradient(90deg, #0f9d58, #52c78a); }
+  .idea-card-band.friends     { background: linear-gradient(90deg, #ff9800, #ffcc02); }
+  .idea-card-band.relationships { background: linear-gradient(90deg, #e53935, #ef9a9a); }
+  .idea-card-band.family      { background: linear-gradient(90deg, #c44d2e, #f0a07a); }
+  .idea-card-band.sports      { background: linear-gradient(90deg, #2f8a55, #6cd99e); }
+  .idea-card-band.hobbies     { background: linear-gradient(90deg, #7a6f62, #bdb3a8); }
+  .idea-card-band.default     { background: linear-gradient(90deg, #d0bfae, #e8ddd4); }
+
+  .idea-card-body { padding: 12px 14px 11px; }
+  .idea-card-emoji { font-size: 22px; line-height: 1; margin-bottom: 8px; display: block; }
+  .idea-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .idea-card-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 9px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .idea-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .idea-chip {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+  .idea-complexity-dots {
+    display: flex;
+    gap: 3px;
+    margin-left: auto;
+  }
+  .idea-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .idea-dot.filled { background: var(--accent); }
+
+  /* Empty state */
+  .idea-empty-state {
+    text-align: center;
+    padding: 24px 16px 16px;
+    color: var(--muted);
+  }
+  .idea-empty-icon { font-size: 28px; margin-bottom: 8px; opacity: .5; }
+  .idea-empty-text { font-size: 12px; font-style: italic; line-height: 1.4; max-width: 200px; margin: 0 auto; }
   .progress-line { background: var(--border); border-radius: 2px; height: 4px; overflow: hidden; margin: 10px 0 6px; }
   .progress-fill { background: var(--accent); height: 100%; border-radius: 2px; transition: width .4s ease; }
   .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
@@ -355,6 +559,35 @@
   }
   .pomo-float-stop-btn:hover { background: #c94e22; }
   .pomo-float-close:hover { color: var(--text); }
+
+  /* ── RIGHT CALENDAR PANEL ── */
+  .cal-panel {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 264px; z-index: 100;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 20px 16px;
+    overflow-y: auto;
+  }
+  .cal-panel-title { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+  .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .cal-month-label { font-size: 15px; font-weight: 700; color: var(--text); }
+  .cal-nav-btn { border: none; background: none; color: var(--muted); cursor: pointer; font-size: 18px; padding: 2px 6px; border-radius: 6px; line-height: 1; }
+  .cal-nav-btn:hover { background: var(--surface-2); color: var(--text); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .cal-dow { font-size: 10px; font-weight: 700; color: var(--muted); text-align: center; padding: 4px 0; text-transform: uppercase; letter-spacing: .04em; }
+  .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--text); border-radius: 8px; cursor: pointer; transition: .12s; }
+  .cal-day:hover { background: var(--surface-2); }
+  .cal-day.other-month { color: var(--muted); opacity: .4; }
+  .cal-day.today { background: var(--accent); color: #fff; font-weight: 700; }
+  .cal-day.today:hover { background: var(--accent); opacity: .9; }
+  .cal-divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .cal-events-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .cal-event { padding: 8px 10px; border-radius: 10px; background: var(--surface-2); margin-bottom: 7px; border-left: 3px solid var(--accent); }
+  .cal-event-time { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .cal-event-name { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 1px; }
+  .cal-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 20px 0; }
 
   .toast-host { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
   .toast { background: var(--text); color: white; padding: 12px 16px; border-radius: 12px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: slideIn .25s ease; max-width: 340px; }
@@ -1181,141 +1414,100 @@
 
     <!-- TODAY -->
     <section class="screen active" id="today">
-      <div class="lera-header">
-        <span class="lera-logo">Halo</span>
-      </div>
-      <div class="today-body">
-      <div class="card" style="padding-bottom:18px; height:calc(100vh - 46px); flex-shrink:0; display:flex; flex-direction:column; margin-bottom:18px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-          <h2 style="margin:0;">Weekly Board</h2>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="kanbanFilterBar">
-            <button class="kanban-filter active" data-filter="all">All</button>
-            <button class="kanban-filter" data-filter="high">🔴 High</button>
-            <button class="kanban-filter" data-filter="med">🟡 Medium</button>
-            <button class="kanban-filter" data-filter="low">🟢 Low</button>
+      <!-- 3-column layout -->
+      <div class="today-3col">
+
+        <!-- ① INBOX / BACKLOG -->
+        <div class="t3-inbox">
+          <div class="t3-col-head">
+            <span class="t3-col-title">Inbox</span>
+            <div style="display:flex;gap:6px;" id="kanbanFilterBar">
+              <button class="kanban-filter active" data-filter="all" title="All">·</button>
+              <button class="kanban-filter" data-filter="high" title="High">🔴</button>
+              <button class="kanban-filter" data-filter="med" title="Med">🟡</button>
+              <button class="kanban-filter" data-filter="low" title="Low">🟢</button>
+            </div>
+            <span class="kanban-col-count" id="cnt-backlog" style="margin-left:auto;">0</span>
+          </div>
+          <div class="t3-col-body">
+            <div class="kanban-col col-backlog" data-col="backlog" style="background:transparent;border:none;box-shadow:none;padding:0;border-radius:0;height:100%;">
+              <div class="kanban-cards" id="col-backlog"></div>
+              <div class="inline-add-wrap" id="inline-add-backlog">
+                <input class="inline-add-input" placeholder="Task title…">
+                <div class="inline-add-row">
+                  <button class="inline-add-prio-btn active" data-p="med">🟡</button>
+                  <button class="inline-add-prio-btn" data-p="high">🔴</button>
+                  <button class="inline-add-prio-btn" data-p="low">🟢</button>
+                  <button class="inline-add-cancel">✕</button>
+                  <button class="inline-add-ok">✓</button>
+                </div>
+              </div>
+              <button class="kanban-add" data-col="backlog" style="margin-top:auto;"><span style="font-size:18px;font-weight:300;">+</span> Add card</button>
+            </div>
           </div>
         </div>
-        <div style="display:flex;gap:10px;overflow:hidden;margin:0 -22px;padding:0 0 4px;align-items:stretch;flex:1;min-height:0;">
-          <!-- Backlog column: fixed, does not scroll -->
-          <div class="kanban-col col-backlog" data-col="backlog" style="flex-shrink:0;width:300px;position:sticky;left:0;z-index:5;border-radius:0 18px 18px 0;max-height:none;padding-left:22px;">
-            <div class="kanban-col-header">
-              <div class="kanban-col-header-left">
-                <span class="kanban-col-title">Backlog</span>
-              </div>
-              <span class="kanban-col-count" id="cnt-backlog">0</span>
-              <button class="kanban-col-menu-btn" title="Меню">···</button>
-            </div>
-            <div class="kanban-cards" id="col-backlog"></div>
-            <div class="inline-add-wrap" id="inline-add-backlog">
-              <input class="inline-add-input" placeholder="Task title…">
-              <div class="inline-add-row">
-                <button class="inline-add-prio-btn active" data-p="med" title="Medium">🟡</button>
-                <button class="inline-add-prio-btn" data-p="high" title="High">🔴</button>
-                <button class="inline-add-prio-btn" data-p="low" title="Low">🟢</button>
-                <button class="inline-add-cancel">✕</button>
-                <button class="inline-add-ok">✓ Add</button>
-              </div>
-            </div>
-            <button class="kanban-add" data-col="backlog"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Add card</button>
+
+        <!-- ② TODAY CALENDAR -->
+        <div class="t3-cal">
+          <div class="t3-col-head">
+            <span class="t3-col-title" id="t3CalTitle">—</span>
+            <button onclick="gcalLoad()" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:15px;padding:2px 4px;line-height:1;margin-left:auto;" title="Обновить">↺</button>
+            <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:600;">Open ↗</a>
           </div>
-          <!-- Day columns: scrollable -->
-          <div style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;flex:1;display:flex;gap:10px;padding:0 22px 4px 10px;align-items:stretch;" id="kanbanBoard">
+          <div class="t3-col-body" id="gcalBody">
+            <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">⏳ Loading…</div>
+          </div>
+          <!-- hidden compat -->
+          <div id="gcalRange" style="display:none;"></div>
+        </div>
+
+        <!-- ③ BOARD (scrollable columns) -->
+        <div class="t3-board" style="display:flex;flex-direction:column;">
+          <!-- Day columns -->
+          <div class="t3-col-head" style="flex-shrink:0;">
+            <span class="t3-col-title">Доска</span>
+          </div>
+          <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;gap:10px;padding:8px 16px 12px;align-items:stretch;min-height:0;" id="kanbanBoard">
             <!-- injected by initDayColumns() -->
           </div>
-        </div>
-      </div>
 
-      <!-- Calendar: today's schedule -->
-      <div class="card" id="calendarCard" style="padding:0;overflow:hidden;margin-bottom:18px;">
-        <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 11px;border-bottom:1px solid var(--border);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <strong style="font-size:12px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:.06em;">Today's Schedule</strong>
-          <div id="gcalRange" style="margin-left:auto;font-size:11px;font-weight:600;color:#70757a;background:#f1f3f4;border-radius:20px;padding:3px 10px;"></div>
-          <button onclick="gcalLoad()" title="Refresh" style="border:none;background:none;cursor:pointer;color:#70757a;font-size:14px;padding:2px 4px;line-height:1;" title="Refresh">↺</button>
-          <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:#1a73e8;text-decoration:none;font-weight:600;white-space:nowrap;">Open ↗</a>
-        </div>
-        <div id="gcalBody" style="overflow-y:auto;max-height:460px;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">
-          <div style="padding:24px;text-align:center;color:#9e9e9e;font-size:13px;">⏳ Loading…</div>
-        </div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px;">
-      <!-- POMODORO v2: drag-from-basket -->
-      <div class="card pv2-card" style="margin-bottom:0;">
-        <div class="pv2-header">
-          <div>
-            <div class="pv2-title">Pomodoro</div>
-            <div class="pv2-hint">Drag a tomato to start a 25-minute session</div>
-          </div>
-          <div class="pv2-topright">
-            <span class="pv2-today-lbl">Today: <strong id="pv2TodayCount">0</strong> / 8</span>
-            <button class="pv2-pause-btn" id="pv2PauseBtn" style="display:none;">⏸ Pause</button>
-          </div>
-        </div>
-        <div class="pv2-body">
-          <!-- Active / completed tomatoes -->
-          <div class="pv2-active-zone" id="pv2ActiveZone">
-            <div class="pv2-drop-target" id="pv2DropTarget">
-              <span class="pv2-drop-hint">← сюда</span>
+          <!-- Idea Garage panel -->
+          <div class="t3-idea-panel">
+            <div class="t3-idea-head">
+              <span class="t3-col-title">💡 Идеи</span>
+              <span class="idea-count" id="ideaCount">0</span>
+              <button class="t3-idea-add-btn" id="addIdeaBtn">+ Добавить</button>
             </div>
-            <div class="pv2-sessions" id="pv2Sessions"></div>
-          </div>
-          <!-- Basket -->
-          <div class="pv2-basket" id="pv2Basket">
-            <div class="pv2-tomatoes" id="pv2Tomatoes">
-              <div class="pv2-tomato" draggable="true">🍅</div>
-              <div class="pv2-tomato" draggable="true">🍅</div>
-              <div class="pv2-tomato" draggable="true">🍅</div>
-              <div class="pv2-tomato" draggable="true">🍅</div>
+            <div class="idea-grid" id="ideaList"></div>
+            <div class="idea-empty-state" id="ideaEmpty">
+              <div class="idea-empty-icon">💡</div>
+              <div class="idea-empty-text">Место для идей, которые ещё не стали задачами</div>
             </div>
-            <div class="pv2-basket-lbl">Tomato basket</div>
           </div>
         </div>
-        <!-- hidden elements for backward compat -->
-        <div style="display:none">
-          <div id="pomodoroDisplay">25:00</div>
-          <button id="pomodoroStartBtn"></button>
-          <button id="pomodoroResetBtn"></button>
-          <div id="pomodoroBarFill"></div>
-          <div id="pomoStatToday">0</div>
-          <div id="pomoStatMins">0м</div>
-          <div id="pomoStatWeek">0</div>
-          <div id="pomoDailyGoalPct">0/8</div>
-          <div id="pomoDots"></div>
-          <div id="pomoFocusBlock"><div id="pomoFocusInfo" style="display:none"><span id="pomoFocusTitle"></span><span id="pomoFocusTag"></span><span id="pomoFocusPct"></span></div><div id="pomoFocusEmpty"></div></div>
-        </div>
+
       </div>
 
-<!-- TASK STATS -->
-      <div class="card" id="taskStatsCard" style="margin-bottom:0;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <h2 style="margin:0">Task Statistics</h2>
-          <div style="display:flex;gap:6px;">
-            <span class="task-stat-chip" id="tsDone" style="background:var(--success-soft);color:#1e5c3a">✓ 0 completed</span>
-            <span class="task-stat-chip" id="tsOverdue" style="background:#fee2e2;color:#dc2626">⚠ 0 overdue</span>
-          </div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Completed by day of week</div>
-        <div class="ts-week-bars" id="tsWeekBars"></div>
-        <div id="tsOverdueList" style="margin-top:14px;"></div>
+      <!-- hidden elements for backward compat (pomodoro etc) -->
+      <div style="display:none">
+        <div id="pomodoroDisplay">25:00</div>
+        <button id="pomodoroStartBtn"></button>
+        <button id="pomodoroResetBtn"></button>
+        <div id="pomodoroBarFill"></div>
+        <div id="pomoStatToday">0</div>
+        <div id="pomoStatMins">0м</div>
+        <div id="pomoStatWeek">0</div>
+        <div id="pomoDailyGoalPct">0/8</div>
+        <div id="pomoDots"></div>
+        <div id="pomoFocusBlock"><div id="pomoFocusInfo" style="display:none"><span id="pomoFocusTitle"></span><span id="pomoFocusTag"></span><span id="pomoFocusPct"></span></div><div id="pomoFocusEmpty"></div></div>
+        <div id="pv2TodayCount">0</div>
+        <button id="pv2PauseBtn"></button>
+        <div id="pv2ActiveZone"><div id="pv2DropTarget"><span class="pv2-drop-hint"></span></div><div id="pv2Sessions"></div></div>
+        <div id="pv2Basket"><div id="pv2Tomatoes"><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div></div></div>
+        <div id="taskStatsCard"><div id="tsWeekBars"></div><span id="tsDone"></span><span id="tsOverdue"></span><div id="tsOverdueList"></div></div>
+        <!-- ideaGarageCard moved to t3-board panel above -->
+        <div id="calendarCard"></div>
       </div>
-      </div><!-- end pomodoro+stats column -->
-
-<!-- IDEA GARAGE -->
-      <div class="card" id="ideaGarageCard">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <div>
-            <h2 style="margin:0;">💡 Idea Garage</h2>
-            <p style="color:var(--muted);font-size:13px;margin:4px 0 0;">A place for ideas that haven't become tasks yet</p>
-          </div>
-          <button class="btn" id="addIdeaBtn" style="font-size:13px; padding:7px 14px;">+ Idea</button>
-        </div>
-        <div id="ideaList" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
-        <div id="ideaEmpty" style="text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;font-style:italic;">
-          No ideas yet. Add your first — even if it seems impossible 🚀
-        </div>
-      </div>
-      </div><!-- end today-body -->
     </section>
 
     <!-- GOALS -->
@@ -1892,6 +2084,20 @@
 
 </div>
 
+<!-- ── RIGHT CALENDAR PANEL ── -->
+<aside class="cal-panel" id="calPanel">
+  <div class="cal-panel-title">Календарь</div>
+  <div class="cal-month-nav">
+    <button class="cal-nav-btn" id="calPrev">‹</button>
+    <span class="cal-month-label" id="calMonthLabel">—</span>
+    <button class="cal-nav-btn" id="calNext">›</button>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+  <div class="cal-divider"></div>
+  <div class="cal-events-title">Сегодня</div>
+  <div id="calEventsList"><div class="cal-empty">Нет событий</div></div>
+</aside>
+
 <!-- Floating help button -->
 <button class="help-fab" title="Помощь">?</button>
 
@@ -2057,6 +2263,20 @@
           <div class="subtask-empty" id="subtaskEmpty">Break the task into steps</div>
           <button class="v3-text-link" id="addSubtaskBtn" style="margin-top:6px;">+ Add subtask</button>
         </div>
+      </div>
+
+      <!-- 6. Повтор -->
+      <div class="v3-section">
+        <div class="v3-label-row">
+          <div class="v3-section-title">🔁 Повтор</div>
+        </div>
+        <div class="v3-chips" id="recurChips">
+          <button class="v3-chip active" data-recur="">Нет</button>
+          <button class="v3-chip" data-recur="daily">Каждый день</button>
+          <button class="v3-chip" data-recur="weekly">Каждую неделю</button>
+          <button class="v3-chip" data-recur="monthly">Каждый месяц</button>
+        </div>
+        <input type="hidden" id="taskRecur" value="">
       </div>
 
       <!-- Скрытые поля (нужны для JS) -->
@@ -2616,6 +2836,11 @@
     // Subtasks
     renderSubtaskList(subtasks);
 
+    // Recur
+    const recur = card.dataset.recur || '';
+    document.querySelectorAll('#recurChips .v3-chip').forEach(b => b.classList.toggle('active', (b.dataset.recur || '') === recur));
+    document.getElementById('taskRecur').value = recur;
+
     // Show delete menu, toggle buttons
     document.getElementById('taskMenuWrap').style.display  = '';
     document.getElementById('saveTaskBtn').style.display   = 'none';
@@ -2647,6 +2872,9 @@
     document.querySelectorAll('#statusPicker .status-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === (_targetCol || 'backlog')));
     document.getElementById('taskStatus').value = _targetCol || 'backlog';
     renderSubtaskList([]);
+    // Reset recur
+    document.querySelectorAll('#recurChips .v3-chip').forEach((b,i) => b.classList.toggle('active', i === 0));
+    document.getElementById('taskRecur').value = '';
     document.getElementById('taskMenuWrap').style.display = 'none';
     document.getElementById('saveTaskBtn').style.display   = '';
     document.getElementById('updateTaskBtn').style.display = 'none';
@@ -2889,10 +3117,11 @@
       </div>
       ${stHtml ? `<div class="card-progress-row">${stHtml}</div>` : ''}
       ${stBarHtml}
-      ${dl ? `<div class="deadline-row ${dl.cls}">${dl.icon} ${dl.text}</div>` : ''}`;
+      ${dl ? `<div class="deadline-row ${dl.cls}">${dl.icon} ${dl.text}</div>` : ''}
+      ${card.dataset.recur ? `<div style="font-size:10px;color:var(--muted);margin-top:3px;">🔁 ${card.dataset.recur === 'daily' ? 'Каждый день' : card.dataset.recur === 'weekly' ? 'Каждую неделю' : 'Каждый месяц'}</div>` : ''}`;
   }
 
-  function addKanbanCard(colId, { title, cat, prio, date, time, desc, estimate, startDate, startTime, pomos, pomosDone, subtasks, color, done }, cardId) {
+  function addKanbanCard(colId, { title, cat, prio, date, time, desc, estimate, startDate, startTime, pomos, pomosDone, subtasks, color, done, recur }, cardId) {
     const col = document.getElementById('col-' + colId);
     if (!col) return;
     const card = document.createElement('div');
@@ -2907,6 +3136,7 @@
     if (startDate) card.dataset.startDate = startDate;
     if (startTime) card.dataset.startTime = startTime;
     if (color)     card.dataset.color     = color;
+    if (recur)     card.dataset.recur     = recur;
     card.dataset.pomos     = pomos    != null ? String(pomos)     : '0';
     card.dataset.pomosDone = pomosDone != null ? String(pomosDone) : '0';
     card.dataset.subtasks  = subtasks ? JSON.stringify(subtasks) : '[]';
@@ -2945,6 +3175,7 @@
           pomosDone:   parseInt(card.dataset.pomosDone || '0'),
           subtasks:    card.dataset.subtasks || '[]',
           done:        card.dataset.done === '1',
+          recur:       card.dataset.recur   || '',
         };
         state[colId].push(item);
         rows.push({ id: card.dataset.id, status: colId, position: pos, ...item });
@@ -2987,7 +3218,7 @@
             if (!col || !saved[colId]) return;
             col.innerHTML = '';
             saved[colId].forEach(item => {
-              addKanbanCard(colId, { title: item.title, cat: item.cat, prio: item.prio, date: item.date, time: item.time, desc: item.desc, estimate: item.estimate, startDate: item.startDate, startTime: item.startTime, color: item.color, pomos: item.pomos, pomosDone: item.pomosDone, subtasks: item.subtasks ? JSON.parse(item.subtasks) : [], done: item.done });
+              addKanbanCard(colId, { title: item.title, cat: item.cat, prio: item.prio, date: item.date, time: item.time, desc: item.desc, estimate: item.estimate, startDate: item.startDate, startTime: item.startTime, color: item.color, pomos: item.pomos, pomosDone: item.pomosDone, subtasks: item.subtasks ? JSON.parse(item.subtasks) : [], done: item.done, recur: item.recur || '' });
             });
           });
         }
@@ -3023,7 +3254,7 @@
 
       const col = document.createElement('div');
       col.className = 'kanban-col' + (isToday ? ' col-today' : '');
-      col.style.width = '300px';
+      col.style.width = '230px';
       col.style.flexShrink = '0';
       col.dataset.col = key;
       const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -3186,6 +3417,7 @@
       color:    document.getElementById('taskColor').value,
       subtasks: collectSubtasks(),
       status:   document.getElementById('taskStatus').value,
+      recur:    document.getElementById('taskRecur').value || '',
     };
   }
 
@@ -3235,6 +3467,7 @@
     card.dataset.subtasks = JSON.stringify(data.subtasks || []);
     if (data.startDate) card.dataset.startDate = data.startDate;
     if (data.startTime) card.dataset.startTime = data.startTime;
+    card.dataset.recur = data.recur || '';
     // Move to correct column if status changed
     const newColId = data.status || card.closest('.kanban-col')?.dataset.col || 'backlog';
     const newCol = document.getElementById('col-' + newColId);
@@ -3372,27 +3605,39 @@
     document.getElementById('ideaComplexityLabel').textContent = COMPLEXITY_LABELS[val] || '';
   }
 
+  const IDEA_EMOJIS = {
+    work: '💼', jobsearch: '🔍', sideproject: '🚀', entertainment: '🎬',
+    learning: '📚', friends: '🤝', relationships: '💛', family: '🏡',
+    sports: '⚡', hobbies: '🎨'
+  };
+
   function renderIdeas() {
     const list  = document.getElementById('ideaList');
     const empty = document.getElementById('ideaEmpty');
+    const count = document.getElementById('ideaCount');
     if (!list || !empty) return;
+    if (count) count.textContent = _ideas.length;
     if (!_ideas.length) { list.innerHTML = ''; empty.style.display = ''; return; }
     empty.style.display = 'none';
     list.innerHTML = _ideas.map(idea => {
-      const catLabel   = CAT_LABELS[idea.cat] || idea.cat || '';
-      const prioIcon   = prioSvg(idea.prio);
-      const complexity = idea.complexity ? `<span class="chip" style="background:#f0ede8;color:#7a6f62;">⚡ ${idea.complexity}/5</span>` : '';
+      const catLabel = CAT_LABELS[idea.cat] || idea.cat || '';
+      const emoji    = IDEA_EMOJIS[idea.cat] || '💡';
+      const cx       = parseInt(idea.complexity) || 0;
+      const dots     = cx ? Array.from({length:5}, (_,i) =>
+        `<span class="idea-dot${i < cx ? ' filled' : ''}"></span>`).join('') : '';
+      const prio     = idea.prio === 'high' ? '🔴' : idea.prio === 'low' ? '🟢' : '';
       return `
-        <div class="kanban-card" style="cursor:pointer;" onclick="openIdeaForEdit('${idea.id}')">
-          <div class="kanban-card-header-row">
-            <div class="kanban-card-title">${escapeHtml(idea.title)}</div>
-            ${prioIcon ? `<span class="prio-icon">${prioIcon}</span>` : ''}
-          </div>
-          ${idea.desc ? `<div style="font-size:12px;color:var(--muted);margin:3px 0 5px;">${escapeHtml(idea.desc)}</div>` : ''}
-          <div class="task-meta">
-            ${catLabel ? `<span class="chip ${idea.cat}">${catLabel}</span>` : ''}
-            <span class="chip" style="background:#fff8d6;color:#8a6e10;">💡 Idea</span>
-            ${complexity}
+        <div class="idea-card" onclick="openIdeaForEdit('${idea.id}')">
+          <div class="idea-card-band ${idea.cat || 'default'}"></div>
+          <div class="idea-card-body">
+            <span class="idea-card-emoji">${emoji}</span>
+            <div class="idea-card-title">${escapeHtml(idea.title)}</div>
+            ${idea.desc ? `<div class="idea-card-desc">${escapeHtml(idea.desc)}</div>` : ''}
+            <div class="idea-card-footer">
+              ${catLabel ? `<span class="idea-chip">${catLabel}</span>` : ''}
+              ${prio ? `<span style="font-size:10px;">${prio}</span>` : ''}
+              ${dots ? `<div class="idea-complexity-dots">${dots}</div>` : ''}
+            </div>
           </div>
         </div>`;
     }).join('');
@@ -4777,6 +5022,15 @@
     });
   });
 
+  // ── Modal: Recur chips ───────────────────────────────────────────────────
+  document.querySelectorAll('#recurChips .v3-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#recurChips .v3-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('taskRecur').value = btn.dataset.recur || '';
+    });
+  });
+
   // ── Modal: Subtasks ─────────────────────────────────────────────────────
 
   function collectSubtasks() {
@@ -5078,6 +5332,8 @@
       const RU_DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       const RU_DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       if (range) range.textContent = RU_DAYS[today.getDay()] + ', ' + today.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()];
+      const t3title = document.getElementById('t3CalTitle');
+      if (t3title) t3title.textContent = RU_DAYS_FULL[today.getDay()] + ' ' + today.getDate();
 
       const key = dateKey(today);
       const evs = allEvents.filter(ev => dateKey(ev.dtstart) === key && !ev.allDay);
@@ -5419,6 +5675,58 @@
     });
   })();
 
+  // ── RIGHT CALENDAR PANEL ──────────────────────────────────
+  (function() {
+    const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                    'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    const DOWS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+    let cur = new Date();
+
+    function renderCal() {
+      const year = cur.getFullYear(), month = cur.getMonth();
+      const today = new Date();
+      document.getElementById('calMonthLabel').textContent = `${MONTHS[month]} ${year}`;
+
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = DOWS.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+      const first = new Date(year, month, 1);
+      // Monday-based: 0=Mon…6=Sun
+      let startDow = (first.getDay() + 6) % 7;
+
+      // Fill blanks from previous month
+      const prevMonth = new Date(year, month, 0);
+      for (let i = startDow - 1; i >= 0; i--) {
+        const d = prevMonth.getDate() - i;
+        grid.innerHTML += `<div class="cal-day other-month">${d}</div>`;
+      }
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (let d = 1; d <= daysInMonth; d++) {
+        const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        grid.innerHTML += `<div class="cal-day${isToday ? ' today' : ''}">${d}</div>`;
+      }
+
+      // Fill remainder
+      const total = startDow + daysInMonth;
+      const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
+      for (let d = 1; d <= remainder; d++) {
+        grid.innerHTML += `<div class="cal-day other-month">${d}</div>`;
+      }
+    }
+
+    document.getElementById('calPrev').addEventListener('click', () => {
+      cur = new Date(cur.getFullYear(), cur.getMonth() - 1, 1);
+      renderCal();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+      cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
+      renderCal();
+    });
+
+    renderCal();
+  })();
 </script>
 </body>
 </html>
