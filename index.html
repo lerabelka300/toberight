@@ -64,11 +64,37 @@
   a { color: inherit; }
   button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
-  .app { display: grid; grid-template-columns: 64px 1fr; height: 100vh; overflow: hidden; }
-  .main { padding-right: 276px; }
-  /* Today screen has its own 3-col layout, no need for calendar padding */
-  #today.active ~ .cal-panel, .main:has(#today.active) { /* noop — see below */ }
-  .main:has(#today.active) { padding-right: 0; }
+  /* HEADER */
+  .app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+    gap: 10px;
+  }
+  .app-header-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #ffb097);
+    flex-shrink: 0;
+  }
+  .app-header-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .app { display: grid; grid-template-columns: 64px 1fr; height: 100vh; overflow: hidden; padding-top: 52px; }
+  .main { padding-right: 0; }
+  .cal-panel { display: none; }
 
   /* SIDEBAR */
   .sidebar { background: var(--surface-2); border-right: 1px solid var(--border); padding: 16px 10px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -125,7 +151,7 @@
   /* ── 3-column Today layout ── */
   .today-3col {
     display: grid;
-    grid-template-columns: 280px 340px 1fr;
+    grid-template-columns: 280px 300px 1fr;
     flex: 1;
     overflow: hidden;
     min-height: 0;
@@ -137,6 +163,104 @@
     overflow: hidden;
     border-right: 1px solid var(--border);
   }
+  /* Голубой фон для Inbox */
+  .t3-inbox {
+    background: #e8eeff;
+  }
+  .t3-inbox .t3-col-head {
+    background: #e8eeff;
+    border-bottom: 1px solid rgba(120, 140, 220, 0.2);
+  }
+  .t3-inbox .t3-col-body {
+    background: #e8eeff;
+  }
+
+  /* Доска — скролл */
+  .board-scroll-wrap {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    gap: 10px;
+    padding: 8px 16px 12px;
+    align-items: stretch;
+    min-height: 0;
+  }
+  .board-scroll-wrap::-webkit-scrollbar { height: 6px; }
+  .board-scroll-wrap::-webkit-scrollbar-track { background: transparent; }
+  .board-scroll-wrap::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+  /* Колонка Гараж */
+  .col-garage {
+    background: #fefce8 !important;
+    border: 1.5px dashed #d4a017 !important;
+  }
+  .col-garage .kanban-col-title { color: #92660a !important; }
+  .col-garage .kanban-col-count { color: #b5860d !important; }
+
+  /* Помидоры — строка */
+  .pomo-row {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    padding: 10px 16px 12px;
+    background: var(--surface);
+  }
+  .pomo-row-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .pomo-row-body {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .pomo-row .pv2-active-zone {
+    flex: 1;
+    min-height: 80px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .pomo-row .pv2-basket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .pomo-row .pv2-tomatoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 100px;
+  }
+
+  /* Статистика */
+  .stats-row {
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .stat-chip-icon { font-size: 16px; }
+  .stat-chip-val { font-size: 16px; font-weight: 700; color: var(--text); }
+  .stat-chip-lbl { font-size: 12px; color: var(--muted); }
   .t3-board { border-right: none; }
   .t3-col-head {
     display: flex;
@@ -175,6 +299,10 @@
     height: 100%;
   }
   .t3-inbox .kanban-cards { flex: 1; }
+  /* Отступ у карточек справа в Inbox */
+  .t3-inbox .kanban-card {
+    margin-right: 8px;
+  }
   /* Board scrollable columns */
   .t3-board .kanban-col {
     min-width: 220px;
@@ -743,11 +871,15 @@
   .kanban-card-title[contenteditable="true"] { cursor: text; border-radius: 4px; padding: 1px 3px; margin: -1px -3px; background: rgba(26,115,232,0.06); }
   .prio-icon { display: none; }
   .kanban-card.done-card .kanban-card-title { text-decoration: line-through; color: var(--muted); }
-  /* Done checkbox */
+  /* Done checkbox — visible only on hover */
   .card-done-btn { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #cbc3b5; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s, background .15s, border-color .15s; margin-top: 1px; }
   .kanban-card:hover .card-done-btn { opacity: 1; }
   .card-done-btn.is-done { background: var(--success); border-color: var(--success); }
   .card-done-btn.is-done::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; line-height: 1; }
+  /* Edit button */
+  .card-edit-btn { background: transparent; border: none; cursor: pointer; font-size: 13px; padding: 0 2px; flex-shrink: 0; opacity: 0; transition: opacity .15s; line-height: 1; }
+  .kanban-card:hover .card-edit-btn { opacity: 0.6; }
+  .card-edit-btn:hover { opacity: 1 !important; }
   /* Context menu */
   .kcard-ctx-menu { position: fixed; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,.15); padding: 6px 0; z-index: 9999; min-width: 150px; display: none; }
   .kcard-ctx-menu.open { display: block; }
@@ -1398,6 +1530,12 @@
 </style>
 </head>
 <body>
+<!-- HEADER -->
+<header class="app-header">
+  <div class="app-header-logo"></div>
+  <span class="app-header-name">Halo</span>
+</header>
+
 <div class="app">
 
   <!-- SIDEBAR -->
@@ -1421,13 +1559,16 @@
         <div class="t3-inbox">
           <div class="t3-col-head">
             <span class="t3-col-title">Inbox</span>
-            <div style="display:flex;gap:6px;" id="kanbanFilterBar">
-              <button class="kanban-filter active" data-filter="all" title="All">·</button>
-              <button class="kanban-filter" data-filter="high" title="High">🔴</button>
-              <button class="kanban-filter" data-filter="med" title="Med">🟡</button>
-              <button class="kanban-filter" data-filter="low" title="Low">🟢</button>
+<span class="kanban-col-count" id="cnt-backlog" style="margin-left:auto;">0</span>
+          </div>
+          <!-- Stats mini-panel -->
+          <div id="taskStatsCard" style="padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0;">
+            <div class="ts-week-bars" id="tsWeekBars" style="height:60px;"></div>
+            <div style="display:flex;gap:10px;margin-top:6px;font-size:12px;font-weight:600;">
+              <span id="tsDone" style="color:var(--muted);"></span>
+              <span id="tsOverdue" style="color:#e05c5c;margin-left:auto;"></span>
             </div>
-            <span class="kanban-col-count" id="cnt-backlog" style="margin-left:auto;">0</span>
+            <div id="tsOverdueList"></div>
           </div>
           <div class="t3-col-body">
             <div class="kanban-col col-backlog" data-col="backlog" style="background:transparent;border:none;box-shadow:none;padding:0;border-radius:0;height:100%;">
@@ -1451,39 +1592,73 @@
         <div class="t3-cal">
           <div class="t3-col-head">
             <span class="t3-col-title" id="t3CalTitle">—</span>
-            <button onclick="gcalLoad()" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:15px;padding:2px 4px;line-height:1;margin-left:auto;" title="Обновить">↺</button>
-            <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:600;">Open ↗</a>
+            <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:600;margin-left:auto;">Open ↗</a>
           </div>
           <div class="t3-col-body" id="gcalBody">
-            <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">⏳ Loading…</div>
+            <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Нет событий</div>
           </div>
-          <!-- hidden compat -->
           <div id="gcalRange" style="display:none;"></div>
         </div>
 
         <!-- ③ BOARD (scrollable columns) -->
         <div class="t3-board" style="display:flex;flex-direction:column;">
-          <!-- Day columns -->
-          <div class="t3-col-head" style="flex-shrink:0;">
+
+          <!-- Board header with calendar toggle -->
+          <div class="t3-col-head" style="flex-shrink:0;justify-content:space-between;">
             <span class="t3-col-title">Доска</span>
-          </div>
-          <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;gap:10px;padding:8px 16px 12px;align-items:stretch;min-height:0;" id="kanbanBoard">
-            <!-- injected by initDayColumns() -->
+            <button id="calToggleBtn" onclick="toggleCalendar()" style="font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;">
+              📅 <span id="calToggleLabel">Скрыть календарь</span>
+            </button>
           </div>
 
-          <!-- Idea Garage panel -->
-          <div class="t3-idea-panel">
-            <div class="t3-idea-head">
-              <span class="t3-col-title">💡 Идеи</span>
-              <span class="idea-count" id="ideaCount">0</span>
-              <button class="t3-idea-add-btn" id="addIdeaBtn">+ Добавить</button>
+          <!-- Kanban: дни недели + Гараж -->
+          <div class="board-scroll-wrap" id="kanbanBoard">
+            <!-- injected by initDayColumns() + garage col -->
+          </div>
+
+          <!-- Pomodoro row -->
+          <div class="pomo-row">
+            <div class="pomo-row-head">
+              <span class="t3-col-title">🍅 Помидоры</span>
+              <span style="font-size:12px;color:var(--muted);">Сегодня: <b><span id="pv2TodayCount">0</span></b></span>
+              <button class="t3-idea-add-btn" id="pv2PauseBtn" style="margin-left:auto;">⏸</button>
             </div>
-            <div class="idea-grid" id="ideaList"></div>
-            <div class="idea-empty-state" id="ideaEmpty">
-              <div class="idea-empty-icon">💡</div>
-              <div class="idea-empty-text">Место для идей, которые ещё не стали задачами</div>
+            <div class="pomo-row-body">
+              <div class="pv2-active-zone" id="pv2ActiveZone">
+                <div class="pv2-drop-target" id="pv2DropTarget"><span class="pv2-drop-hint">Перетащи помидор сюда</span></div>
+                <div class="pv2-sessions" id="pv2Sessions"></div>
+              </div>
+              <div class="pv2-basket" id="pv2Basket">
+                <div class="pv2-tomatoes" id="pv2Tomatoes">
+                  <div class="pv2-tomato" draggable="true">🍅</div>
+                  <div class="pv2-tomato" draggable="true">🍅</div>
+                  <div class="pv2-tomato" draggable="true">🍅</div>
+                  <div class="pv2-tomato" draggable="true">🍅</div>
+                </div>
+                <div class="pv2-basket-lbl">Корзина</div>
+              </div>
             </div>
           </div>
+
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-chip">
+              <span class="stat-chip-icon">✅</span>
+              <span class="stat-chip-val" id="statTasksDone">0</span>
+              <span class="stat-chip-lbl">задач сегодня</span>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip-icon">🍅</span>
+              <span class="stat-chip-val" id="statPomoToday">0</span>
+              <span class="stat-chip-lbl">помидоров</span>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip-icon">⏱</span>
+              <span class="stat-chip-val" id="statPomoMins">0м</span>
+              <span class="stat-chip-lbl">в фокусе</span>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1500,12 +1675,7 @@
         <div id="pomoDailyGoalPct">0/8</div>
         <div id="pomoDots"></div>
         <div id="pomoFocusBlock"><div id="pomoFocusInfo" style="display:none"><span id="pomoFocusTitle"></span><span id="pomoFocusTag"></span><span id="pomoFocusPct"></span></div><div id="pomoFocusEmpty"></div></div>
-        <div id="pv2TodayCount">0</div>
-        <button id="pv2PauseBtn"></button>
-        <div id="pv2ActiveZone"><div id="pv2DropTarget"><span class="pv2-drop-hint"></span></div><div id="pv2Sessions"></div></div>
-        <div id="pv2Basket"><div id="pv2Tomatoes"><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div><div class="pv2-tomato" draggable="true">🍅</div></div></div>
-        <div id="taskStatsCard"><div id="tsWeekBars"></div><span id="tsDone"></span><span id="tsOverdue"></span><div id="tsOverdueList"></div></div>
-        <!-- ideaGarageCard moved to t3-board panel above -->
+        <!-- pv2, taskStatsCard moved to visible panels above -->
         <div id="calendarCard"></div>
       </div>
     </section>
@@ -2085,21 +2255,7 @@
 </div>
 
 <!-- ── RIGHT CALENDAR PANEL ── -->
-<aside class="cal-panel" id="calPanel">
-  <div class="cal-panel-title">Календарь</div>
-  <div class="cal-month-nav">
-    <button class="cal-nav-btn" id="calPrev">‹</button>
-    <span class="cal-month-label" id="calMonthLabel">—</span>
-    <button class="cal-nav-btn" id="calNext">›</button>
-  </div>
-  <div class="cal-grid" id="calGrid"></div>
-  <div class="cal-divider"></div>
-  <div class="cal-events-title">Сегодня</div>
-  <div id="calEventsList"><div class="cal-empty">Нет событий</div></div>
-</aside>
-
-<!-- Floating help button -->
-<button class="help-fab" title="Помощь">?</button>
+<!-- Floating help button removed -->
 
 <!-- Sync status -->
 <div class="sync-status" id="syncStatus"></div>
@@ -3109,7 +3265,7 @@
       <div class="kanban-card-header-row">
         <button class="card-done-btn${isDone ? ' is-done' : ''}" title="${isDone ? 'Mark as undone' : 'Mark as done'}" onclick="event.stopPropagation(); toggleCardDone(this.closest('.kanban-card'))"></button>
         <div class="kanban-card-title">${escapeHtml(title)}</div>
-        ${prioIcon ? `<span class="prio-icon" title="${prioLabel}">${prioIcon}</span>` : ''}
+        <button class="card-edit-btn" title="Редактировать" onclick="event.stopPropagation(); openCardForEdit(this.closest('.kanban-card'))">✏️</button>
       </div>
       ${desc ? `<div style="font-size:12px;color:var(--muted);margin:2px 0 4px;">${escapeHtml(desc)}</div>` : ''}
       <div class="task-meta">
@@ -3284,11 +3440,62 @@
     }
   }
   initDayColumns();
-  // Scroll so today's column is the first visible (right after Backlog)
+
+  // Добавить колонку Гараж после дней недели
+  (function addGarageCol() {
+    const board = document.getElementById('kanbanBoard');
+    const col = document.createElement('div');
+    col.className = 'kanban-col col-garage';
+    col.style.width = '230px';
+    col.style.flexShrink = '0';
+    col.dataset.col = 'garage';
+    col.innerHTML = `
+      <div class="kanban-col-header">
+        <div class="kanban-col-header-left">
+          <span class="kanban-col-title">💡 Гараж</span>
+        </div>
+        <span class="kanban-col-count" id="cnt-garage">0</span>
+        <button class="kanban-col-menu-btn" title="Меню">···</button>
+      </div>
+      <div class="kanban-cards" id="col-garage"></div>
+      <div class="inline-add-wrap" id="inline-add-garage">
+        <input class="inline-add-input" placeholder="Идея…">
+        <div class="inline-add-row">
+          <button class="inline-add-cancel">✕</button>
+          <button class="inline-add-ok">✓ Добавить</button>
+        </div>
+      </div>
+      <button class="kanban-add" data-col="garage"><span style="font-size:18px;line-height:1;font-weight:300;">+</span> Добавить идею</button>`;
+    board.appendChild(col);
+    bindKanbanCol(col);
+  })();
+
+  // Scroll to today
   requestAnimationFrame(() => {
     const todayCol = document.querySelector('#kanbanBoard .col-today');
     if (todayCol) document.getElementById('kanbanBoard').scrollLeft = todayCol.offsetLeft;
   });
+
+  // Календарь toggle
+  let calVisible = true;
+  function toggleCalendar() {
+    const cal = document.querySelector('.t3-cal');
+    const label = document.getElementById('calToggleLabel');
+    const layout = document.querySelector('.today-3col');
+    if (!cal) return;
+    calVisible = !calVisible;
+    if (calVisible) {
+      cal.style.display = '';
+      label.textContent = 'Скрыть календарь';
+      layout.style.gridTemplateColumns = '280px 320px 1fr';
+    } else {
+      cal.style.display = 'none';
+      label.textContent = 'Показать календарь';
+      layout.style.gridTemplateColumns = '280px 1fr';
+    }
+  }
+  // Восстановить t3-cal (было скрыто ранее)
+  document.querySelector('.t3-cal') && (document.querySelector('.t3-cal').style.display = 'flex');
 
   // ── Inline add logic ───────────────────────────────────────────────────
   let _targetCol = 'backlog';
