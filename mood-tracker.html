@@ -507,7 +507,7 @@
         <div class="part-header">
           <div class="part-header-left">
             <div class="part-img-wrap" id="valImgWrap">
-              <img src="взрослый.png" alt="Валерия" />
+              <img src="img/взрослый.png" alt="Валерия" />
             </div>
             <div>
               <div class="part-name">Валерия</div>
@@ -541,7 +541,7 @@
         <div class="part-header">
           <div class="part-header-left">
             <div class="part-img-wrap" id="leraImgWrap">
-              <img src="ребенок.png" alt="Лера" />
+              <img src="img/ребенок.png" alt="Лера" />
             </div>
             <div>
               <div class="part-name">Лера</div>
@@ -576,7 +576,7 @@
         <div class="part-header">
           <div class="part-header-left">
             <div class="part-img-wrap" id="teenImgWrap">
-              <img src="подросток.png" alt="Подросток" />
+              <img src="img/подросток.png" alt="Подросток" />
             </div>
             <div>
               <div class="part-name">Подросток</div>
@@ -611,7 +611,7 @@
         <div class="part-header">
           <div class="part-header-left">
             <div class="part-img-wrap" id="criticImgWrap">
-              <img src="критик.png" alt="Критик" />
+              <img src="img/критик.png" alt="Критик" />
             </div>
             <div>
               <div class="part-name">Критик</div>
@@ -693,9 +693,13 @@
   // ── SUPABASE ──────────────────────────────────────────────
   const SUPABASE_URL  = window.SUPABASE_URL  || 'YOUR_SUPABASE_URL';
   const SUPABASE_ANON = window.SUPABASE_ANON || 'YOUR_SUPABASE_ANON_KEY';
-  const configOk = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
+  // Only treat as configured if the key looks like a valid Supabase JWT (starts with eyJ)
+  const configOk = SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON.startsWith('eyJ');
   if (!configOk) document.getElementById('configBanner').classList.add('show');
-  const db = configOk ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+  let db = null;
+  if (configOk) {
+    try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON); } catch(e) { db = null; }
+  }
   // ─────────────────────────────────────────────────────────
 
   const $ = s => document.querySelector(s);
@@ -794,11 +798,29 @@
   }
 
   // ── DATA LAYER ──
+  function lsGetEntries() {
+    return JSON.parse(localStorage.getItem('moodEntries') || '[]');
+  }
+  function lsSaveEntry(entry) {
+    const entries = lsGetEntries();
+    entries.unshift({ ...entry, id: crypto.randomUUID() });
+    localStorage.setItem('moodEntries', JSON.stringify(entries));
+  }
+  function lsDeleteEntry(id) {
+    const entries = lsGetEntries().filter(e => e.id !== id);
+    localStorage.setItem('moodEntries', JSON.stringify(entries));
+  }
+
   async function getEntries() {
-    if (!db) return JSON.parse(localStorage.getItem('moodEntries') || '[]');
-    const { data, error } = await db.from('mood_entries').select('*').order('date', { ascending: false });
-    if (error) { showToast('Error loading data: ' + error.message, true); return []; }
-    return data || [];
+    if (!db) return lsGetEntries();
+    try {
+      const { data, error } = await db.from('mood_entries').select('*').order('date', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch(e) {
+      db = null; // disable Supabase for this session
+      return lsGetEntries();
+    }
   }
 
   async function saveEntry() {
@@ -821,12 +843,15 @@
     };
 
     if (db) {
-      const { error } = await db.from('mood_entries').insert(entry);
-      if (error) { showToast('Error: ' + error.message, true); btn.disabled = false; btn.textContent = 'Save check-in'; return; }
+      try {
+        const { error } = await db.from('mood_entries').insert(entry);
+        if (error) throw error;
+      } catch(e) {
+        db = null; // fallback to localStorage
+        lsSaveEntry(entry);
+      }
     } else {
-      const entries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
-      entries.unshift({ ...entry, id: crypto.randomUUID() });
-      localStorage.setItem('moodEntries', JSON.stringify(entries));
+      lsSaveEntry(entry);
     }
 
     // show insight
@@ -840,11 +865,15 @@
 
   async function deleteEntry(id) {
     if (db) {
-      const { error } = await db.from('mood_entries').delete().eq('id', id);
-      if (error) { showToast('Delete failed', true); return; }
+      try {
+        const { error } = await db.from('mood_entries').delete().eq('id', id);
+        if (error) throw error;
+      } catch(e) {
+        db = null;
+        lsDeleteEntry(id);
+      }
     } else {
-      const entries = JSON.parse(localStorage.getItem('moodEntries') || '[]').filter(e => e.id !== id);
-      localStorage.setItem('moodEntries', JSON.stringify(entries));
+      lsDeleteEntry(id);
     }
     showToast('Entry deleted');
     renderHistory(); renderResults();
