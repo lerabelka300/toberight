@@ -92,6 +92,67 @@
     color: var(--text);
     letter-spacing: -0.01em;
   }
+  .auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .auth-box {
+    width: 100%;
+    max-width: 320px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  .auth-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .auth-error { color: #dc2626; font-size: 12px; margin-top: 6px; min-height: 14px; }
+  .auth-msg   { color: #059669; font-size: 12px; margin-top: 4px; min-height: 14px; }
+  .header-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2, #f3f4f6);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .12s, transform .1s;
+  }
+  .header-icon-btn:hover { background: var(--accent-soft, #ffe7e0); }
+  .header-icon-btn:active { transform: scale(0.94); }
+
+  /* Coffee check-in modal answers */
+  .coffee-scale-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+  .coffee-scale-btn {
+    width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); font-size: 17px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: transform .1s, border-color .12s, background .12s;
+  }
+  .coffee-scale-btn:hover { transform: scale(1.08); }
+  .coffee-scale-btn.active { border-color: var(--accent); background: var(--accent-soft, #ffe7e0); }
+  .coffee-scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .coffee-textarea, .coffee-number-input {
+    width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; font-size: 14px; font-family: inherit; resize: vertical;
+  }
+  .coffee-textarea { min-height: 70px; }
   .app { display: grid; grid-template-columns: 64px 1fr; height: 100vh; overflow: hidden; padding-top: 52px; }
   .main { padding-right: 0; }
   .cal-panel { display: none; }
@@ -146,12 +207,22 @@
   /* Today screen layout */
   #today { display: none; flex-direction: column; overflow: hidden; padding: 0; }
   #today.active { display: flex; }
+  .t3-page-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 14px 20px 10px;
+  }
+  .t3-page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+  .t3-page-sub { font-size: 13px; color: var(--muted); }
   .today-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 28px 24px; display: flex; flex-direction: column; gap: 0; }
 
   /* ── 3-column Today layout ── */
   .today-3col {
     display: grid;
     grid-template-columns: 280px 300px 1fr;
+    grid-template-rows: minmax(0, 1fr);
     flex: 1;
     overflow: hidden;
     min-height: 0;
@@ -160,6 +231,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
     overflow: hidden;
     border-right: 1px solid var(--border);
   }
@@ -184,6 +256,7 @@
     gap: 10px;
     padding: 8px 16px 12px;
     align-items: stretch;
+    align-content: stretch;
     min-height: 0;
   }
   .board-scroll-wrap::-webkit-scrollbar { height: 6px; }
@@ -197,6 +270,30 @@
   }
   .col-garage .kanban-col-title { color: #92660a !important; }
   .col-garage .kanban-col-count { color: #b5860d !important; }
+
+  /* ── Блок 3: Гараж идей — отдельная строка под доской ── */
+  .t3-garage-row {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    padding: 10px 16px 14px;
+    background: var(--surface);
+  }
+  .t3-garage-row .kanban-col {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 260px;
+  }
+  .t3-garage-row .kanban-cards {
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 170px;
+  }
+  .t3-garage-row .kanban-card {
+    width: 200px;
+    flex-shrink: 0;
+  }
 
   /* Помидоры — строка */
   .pomo-row {
@@ -231,13 +328,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    width: 120px;
+    flex-shrink: 0;
+    background: #f0ede9;
+    border-radius: 14px;
+    padding: 14px 10px 10px;
   }
   .pomo-row .pv2-tomatoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    max-width: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    justify-items: center;
+    align-items: center;
   }
 
   /* Статистика */
@@ -1520,10 +1624,31 @@
 </style>
 </head>
 <body>
+
+<!-- AUTH GATE — перекрывает всё приложение, пока не вошла в аккаунт -->
+<div id="authGate" class="auth-gate" style="display:flex;">
+  <div class="auth-box">
+    <div class="app-header-logo" style="margin:0 auto 12px;"></div>
+    <h2 style="margin:0 0 6px;font-size:18px;text-align:center;">Halo</h2>
+    <p style="margin:0 0 18px;font-size:13px;color:var(--text-secondary,#666);text-align:center;">Личные данные видишь только ты. Войди, чтобы синхронизировать между устройствами.</p>
+    <input id="authEmail" type="email" placeholder="Email" autocomplete="username" class="auth-input">
+    <input id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password" class="auth-input">
+    <div id="authError" class="auth-error"></div>
+    <div id="authMsg" class="auth-msg"></div>
+    <button id="authSignInBtn" class="btn" style="width:100%;margin-top:10px;">Войти</button>
+    <button id="authSignUpBtn" class="btn" style="width:100%;margin-top:8px;background:#f3f4f6;color:#111;">Создать аккаунт</button>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header class="app-header">
   <div class="app-header-logo"></div>
   <span class="app-header-name">Halo</span>
+  <button id="coffeeCheckinBtn" class="header-icon-btn" title="Быстрый опросник" style="margin-left:auto;">☕</button>
+  <div id="authUserBox" style="display:none;align-items:center;gap:10px;font-size:12px;color:var(--text-secondary,#666);">
+    <span id="authUserEmail"></span>
+    <button id="authSignOutBtn" class="btn" style="padding:4px 10px;font-size:12px;background:#f3f4f6;color:#111;">Выйти</button>
+  </div>
 </header>
 
 <div class="app">
@@ -1542,6 +1667,12 @@
 
     <!-- TODAY -->
     <section class="screen active" id="today">
+      <!-- Заголовок страницы — тот же паттерн, что на Mood/Finances -->
+      <div class="t3-page-head">
+        <span class="t3-page-title">Сегодня</span>
+        <span class="t3-page-sub">Задачи, доска и трекеры дня</span>
+      </div>
+
       <!-- 3-column layout -->
       <div class="today-3col">
 
@@ -1582,7 +1713,7 @@
         </div>
 
         <!-- ③ BOARD (scrollable columns) -->
-        <div class="t3-board" style="display:flex;flex-direction:column;">
+        <div class="t3-board" style="display:flex;flex-direction:column;height:100%;min-height:0;">
 
           <!-- Board header with calendar toggle -->
           <div class="t3-col-head" style="flex-shrink:0;justify-content:space-between;">
@@ -1592,69 +1723,72 @@
             </button>
           </div>
 
-          <!-- Kanban: дни недели + Гараж -->
+          <!-- Kanban: дни недели -->
           <div class="board-scroll-wrap" id="kanbanBoard">
-            <!-- injected by initDayColumns() + garage col -->
-          </div>
-
-          <!-- Pomodoro row -->
-          <div class="pomo-row">
-            <div class="pomo-row-head">
-              <span class="t3-col-title">🍅 Помидоры</span>
-              <span style="font-size:12px;color:var(--muted);">Сегодня: <b><span id="pv2TodayCount">0</span></b></span>
-              <button class="t3-idea-add-btn" id="pv2PauseBtn" style="margin-left:auto;">⏸</button>
-            </div>
-            <div class="pomo-row-body">
-              <div class="pv2-active-zone" id="pv2ActiveZone">
-                <div class="pv2-drop-target" id="pv2DropTarget"><span class="pv2-drop-hint">Перетащи помидор сюда</span></div>
-                <div class="pv2-sessions" id="pv2Sessions"></div>
-              </div>
-              <div class="pv2-basket" id="pv2Basket">
-                <div class="pv2-tomatoes" id="pv2Tomatoes">
-                  <div class="pv2-tomato" draggable="true">🍅</div>
-                  <div class="pv2-tomato" draggable="true">🍅</div>
-                  <div class="pv2-tomato" draggable="true">🍅</div>
-                  <div class="pv2-tomato" draggable="true">🍅</div>
-                </div>
-                <div class="pv2-basket-lbl">Корзина</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Stats block -->
-          <div class="stats-row" id="taskStatsCard" style="flex-direction:column;gap:12px;">
-            <!-- Chips row -->
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <div class="stat-chip">
-                <span class="stat-chip-icon">✅</span>
-                <span class="stat-chip-val" id="statTasksDone">0</span>
-                <span class="stat-chip-lbl">задач сегодня</span>
-              </div>
-              <div class="stat-chip">
-                <span class="stat-chip-icon">🍅</span>
-                <span class="stat-chip-val" id="statPomoToday">0</span>
-                <span class="stat-chip-lbl">помидоров</span>
-              </div>
-              <div class="stat-chip">
-                <span class="stat-chip-icon">⏱</span>
-                <span class="stat-chip-val" id="statPomoMins">0м</span>
-                <span class="stat-chip-lbl">в фокусе</span>
-              </div>
-            </div>
-            <!-- Weekly bar chart -->
-            <div>
-              <div class="ts-week-bars" id="tsWeekBars" style="height:60px;"></div>
-              <div style="display:flex;gap:10px;margin-top:6px;font-size:12px;font-weight:600;">
-                <span id="tsDone" style="color:var(--muted);"></span>
-                <span id="tsOverdue" style="color:#e05c5c;margin-left:auto;"></span>
-              </div>
-              <div id="tsOverdueList"></div>
-            </div>
+            <!-- injected by initDayColumns() -->
           </div>
 
         </div>
 
       </div>
+
+      <!-- ② BLOCK 2: Помидоры на всю ширину + мини-дашборд -->
+      <div class="pomo-row">
+        <div class="pomo-row-head">
+          <span class="t3-col-title">🍅 Помидоры</span>
+          <span style="font-size:12px;color:var(--muted);">Сегодня: <b><span id="pv2TodayCount">0</span></b></span>
+          <button class="t3-idea-add-btn" id="pv2PauseBtn" style="margin-left:auto;">⏸</button>
+        </div>
+        <div class="pomo-row-body">
+          <div class="pv2-active-zone" id="pv2ActiveZone">
+            <div class="pv2-drop-target" id="pv2DropTarget"><span class="pv2-drop-hint">Перетащи помидор сюда</span></div>
+            <div class="pv2-sessions" id="pv2Sessions"></div>
+          </div>
+          <div class="pv2-basket" id="pv2Basket">
+            <div class="pv2-tomatoes" id="pv2Tomatoes">
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+              <div class="pv2-tomato" draggable="true">🍅</div>
+            </div>
+            <div class="pv2-basket-lbl">Корзина</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats block (дашборд, часть блока 2) -->
+      <div class="stats-row" id="taskStatsCard" style="flex-direction:column;gap:12px;">
+        <!-- Chips row -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="stat-chip">
+            <span class="stat-chip-icon">✅</span>
+            <span class="stat-chip-val" id="statTasksDone">0</span>
+            <span class="stat-chip-lbl">задач сегодня</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-chip-icon">🍅</span>
+            <span class="stat-chip-val" id="statPomoToday">0</span>
+            <span class="stat-chip-lbl">помидоров</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-chip-icon">⏱</span>
+            <span class="stat-chip-val" id="statPomoMins">0м</span>
+            <span class="stat-chip-lbl">в фокусе</span>
+          </div>
+        </div>
+        <!-- Weekly bar chart -->
+        <div>
+          <div class="ts-week-bars" id="tsWeekBars" style="height:60px;"></div>
+          <div style="display:flex;gap:10px;margin-top:6px;font-size:12px;font-weight:600;">
+            <span id="tsDone" style="color:var(--muted);"></span>
+            <span id="tsOverdue" style="color:#e05c5c;margin-left:auto;"></span>
+          </div>
+          <div id="tsOverdueList"></div>
+        </div>
+      </div>
+
+      <!-- ③ IDEA GARAGE — отдельный блок, вынесен из доски -->
+      <div class="t3-garage-row" id="garageRow"></div>
 
       <!-- hidden elements for backward compat (pomodoro etc) -->
       <div style="display:none">
@@ -1690,6 +1824,7 @@
         <button class="mt-tab active" data-mt-screen="mtCheckin">Чек-ин</button>
         <button class="mt-tab" data-mt-screen="mtJournal">История</button>
         <button class="mt-tab" data-mt-screen="mtParts">Части</button>
+        <button class="mt-tab" data-mt-screen="mtCoffee">☕ Опросник</button>
       </nav>
 
       <!-- CHECK-IN -->
@@ -1940,7 +2075,7 @@
           <div class="part-card">
             <div class="part-header">
               <div class="part-header-left">
-                <div class="part-img-wrap"><img src="взрослый.png" alt="Валерия" /></div>
+                <div class="part-img-wrap"><img src="img/взрослый.png" alt="Валерия" /></div>
                 <div>
                   <div class="part-name">Валерия</div>
                   <div class="part-desc">Взрослая часть — спокойная, решает проблемы, заботится о себе</div>
@@ -1972,7 +2107,7 @@
           <div class="part-card">
             <div class="part-header">
               <div class="part-header-left">
-                <div class="part-img-wrap"><img src="ребенок.png" alt="Лера" /></div>
+                <div class="part-img-wrap"><img src="img/ребенок.png" alt="Лера" /></div>
                 <div>
                   <div class="part-name">Лера</div>
                   <div class="part-desc">Маленькая часть — грусть, одиночество, нуждается в заботе</div>
@@ -2005,7 +2140,7 @@
           <div class="part-card">
             <div class="part-header">
               <div class="part-header-left">
-                <div class="part-img-wrap"><img src="подросток.png" alt="Подросток" /></div>
+                <div class="part-img-wrap"><img src="img/подросток.png" alt="Подросток" /></div>
                 <div>
                   <div class="part-name">Подросток</div>
                   <div class="part-desc">Бунтует, злится, отстаивает себя — иногда слишком резко</div>
@@ -2038,7 +2173,7 @@
           <div class="part-card">
             <div class="part-header">
               <div class="part-header-left">
-                <div class="part-img-wrap"><img src="критик.png" alt="Критик" /></div>
+                <div class="part-img-wrap"><img src="img/критик.png" alt="Критик" /></div>
                 <div>
                   <div class="part-name">Критик</div>
                   <div class="part-desc">Самокритика, осуждение, стыд — внутренний голос, который давит</div>
@@ -2078,6 +2213,20 @@
             <div id="mtPartsHistory"><div class="empty-state">Пока нет записей</div></div>
           </div>
 
+        </div>
+      </section>
+
+      <!-- ОПРОСНИК (☕ из хедера) -->
+      <section class="mt-screen" id="mtCoffee">
+        <div class="results-grid" style="margin-bottom:18px;">
+          <div class="stat"><div class="small">Настроение</div><div class="big" id="coffeeAvgMood">—</div></div>
+          <div class="stat"><div class="small">Энергия</div><div class="big" id="coffeeAvgEnergy">—</div></div>
+          <div class="stat"><div class="small">Продуктивность</div><div class="big" id="coffeeAvgProd">—</div></div>
+          <div class="stat"><div class="small">Записей</div><div class="big" id="coffeeCount">0</div></div>
+        </div>
+        <div class="mt-card">
+          <h2 class="mt-section-title">История ответов</h2>
+          <div id="coffeeHistoryList"><div class="empty-state">Пока нет записей</div></div>
         </div>
       </section>
 
@@ -2555,6 +2704,42 @@
     <div class="modal-actions">
       <button class="btn-ghost btn" data-close="confirmModal">Cancel</button>
       <button class="btn" id="confirmOk">Yes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Coffee check-in modal (быстрый опросник) -->
+<div class="modal-backdrop" id="coffeeModal">
+  <div class="modal" style="max-width:460px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h2 style="margin:0;font-size:17px;">☕ Быстрый опросник</h2>
+      <button class="modal-menu-btn" data-close="coffeeModal">✕</button>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;">
+        <span id="coffeeStepLabel">1 / 12</span>
+        <span id="coffeeStepTag"></span>
+      </div>
+      <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;">
+        <div id="coffeeProgressFill" style="height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s;"></div>
+      </div>
+    </div>
+
+    <div id="coffeeQuestionText" style="font-size:17px;font-weight:700;margin-bottom:4px;"></div>
+    <div id="coffeeQuestionHint" style="font-size:13px;color:var(--muted);margin-bottom:16px;"></div>
+
+    <div id="coffeeAnswerArea"></div>
+
+    <div id="coffeeDoneMsg" style="display:none;text-align:center;padding:12px 0;">
+      <div style="font-size:32px;margin-bottom:8px;">✅</div>
+      <div style="font-weight:600;margin-bottom:4px;">Записала!</div>
+      <div style="font-size:13px;color:var(--muted);">Ответы сохранены</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:22px;">
+      <button class="btn-ghost btn" id="coffeeBackBtn" style="flex:1;">Назад</button>
+      <button class="btn" id="coffeeNextBtn" style="flex:2;">Далее</button>
     </div>
   </div>
 </div>
@@ -3299,11 +3484,82 @@
     saveKanban();
   }
 
-  // ── Supabase init ────────────────────────────────────────
+  // ── Supabase init + Auth ──────────────────────────────────
+  // Единый клиент на всё приложение (канбан + mood tracker).
+  // Без логина всё работает только через localStorage — в облако
+  // ничего не уходит. После логина данные читаются/пишутся в
+  // Supabase, но RLS-политики (см. setup.sql) разрешают каждому
+  // юзеру видеть только свои строки (auth.uid() = user_id).
   const _sbOk = window.SUPABASE_URL && window.SUPABASE_URL !== 'YOUR_SUPABASE_URL';
   const _sb   = _sbOk ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON) : null;
 
-  function saveKanban() {
+  let _currentUser = null;
+
+  function updateAuthUI() {
+    const gate    = document.getElementById('authGate');
+    const userBox = document.getElementById('authUserBox');
+    const emailEl = document.getElementById('authUserEmail');
+    if (!_sb) { if (gate) gate.style.display = 'none'; return; } // Supabase не настроен — работаем локально без гейта
+    if (_currentUser) {
+      if (gate)    gate.style.display = 'none';
+      if (userBox) userBox.style.display = 'flex';
+      if (emailEl) emailEl.textContent = _currentUser.email || '';
+    } else {
+      if (gate)    gate.style.display = 'flex';
+      if (userBox) userBox.style.display = 'none';
+    }
+  }
+
+  // Промис, который резолвится, когда мы точно знаем — есть сессия или нет.
+  // Все функции загрузки данных ждут его перед тем, как решать,
+  // идти в Supabase или в localStorage.
+  const _authReady = _sb
+    ? _sb.auth.getSession().then(({ data: { session } }) => {
+        _currentUser = session ? session.user : null;
+        updateAuthUI();
+      }).catch(() => { _currentUser = null; updateAuthUI(); })
+    : Promise.resolve();
+  if (!_sb) updateAuthUI(); // Supabase не настроен — сразу прячем гейт, работаем локально
+
+  if (_sb) {
+    _sb.auth.onAuthStateChange((_event, session) => {
+      const wasLoggedIn = !!_currentUser;
+      _currentUser = session ? session.user : null;
+      updateAuthUI();
+      // Если состояние логина реально поменялось после начальной загрузки —
+      // перезагружаем страницу, чтобы все данные подтянулись под нового юзера.
+      if (wasLoggedIn !== !!_currentUser && document.readyState === 'complete') {
+        location.reload();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const emailInput = document.getElementById('authEmail');
+      const passInput  = document.getElementById('authPassword');
+      const errEl      = document.getElementById('authError');
+      const msgEl      = document.getElementById('authMsg');
+
+      document.getElementById('authSignInBtn')?.addEventListener('click', async () => {
+        if (errEl) errEl.textContent = ''; if (msgEl) msgEl.textContent = '';
+        const { error } = await _sb.auth.signInWithPassword({ email: (emailInput?.value || '').trim(), password: passInput?.value || '' });
+        if (error && errEl) errEl.textContent = error.message;
+      });
+
+      document.getElementById('authSignUpBtn')?.addEventListener('click', async () => {
+        if (errEl) errEl.textContent = ''; if (msgEl) msgEl.textContent = '';
+        const { error } = await _sb.auth.signUp({ email: (emailInput?.value || '').trim(), password: passInput?.value || '' });
+        if (error && errEl) { errEl.textContent = error.message; return; }
+        if (msgEl) msgEl.textContent = 'Проверь почту и подтверди адрес, потом войди.';
+      });
+
+      document.getElementById('authSignOutBtn')?.addEventListener('click', async () => {
+        await _sb.auth.signOut();
+      });
+    });
+  }
+
+  async function saveKanban() {
+    await _authReady;
     const state = {};
     const rows  = [];
     ALL_COLS.forEach(colId => {
@@ -3329,22 +3585,52 @@
           recur:       card.dataset.recur   || '',
         };
         state[colId].push(item);
-        rows.push({ id: card.dataset.id, status: colId, position: pos, ...item });
+        // Supabase schema (setup.sql) only has: title, cat, prio, date, time,
+        // description, estimate, start_date, start_time as top-level columns.
+        // Everything else (color, pomos, pomosDone, subtasks, done, recur)
+        // gets packed into the jsonb `extra` column.
+        rows.push({
+          id:          card.dataset.id,
+          user_id:     _currentUser ? _currentUser.id : null,
+          status:      colId,
+          position:    pos,
+          title:       item.title,
+          cat:         item.cat,
+          prio:        item.prio,
+          date:        item.date,
+          time:        item.time,
+          description: item.description,
+          estimate:    item.estimate,
+          start_date:  item.startDate,
+          start_time:  item.startTime,
+          extra: {
+            color:     item.color,
+            pomos:     item.pomos,
+            pomosDone: item.pomosDone,
+            subtasks:  (() => { try { return JSON.parse(item.subtasks || '[]'); } catch(e) { return []; } })(),
+            done:      item.done,
+            recur:     item.recur,
+          },
+        });
       });
     });
-    // localStorage fallback
+    // localStorage fallback — всегда пишем, это единственное хранилище, если не залогинена
     try { localStorage.setItem('kanbanState', JSON.stringify(state)); } catch(e) {}
-    // Supabase sync (fire-and-forget)
-    if (_sb) {
+    // Supabase sync — только если реально залогинена; RLS в базе всё равно
+    // ограничит доступ строками с auth.uid() = user_id, но без сессии
+    // запрос просто ничего не сделает, так что не тратим его впустую.
+    if (_sb && _currentUser) {
       _sb.from('tasks').delete().neq('id', '00000000-0000-0000-0000-000000000000')
-        .then(() => _sb.from('tasks').insert(rows));
+        .then(() => _sb.from('tasks').insert(rows))
+        .then(({ error }) => { if (error) console.warn('Supabase kanban sync failed', error); });
     }
     saveTasks();
   }
 
   async function loadKanban() {
+    await _authReady;
     let loaded = false;
-    if (_sb) {
+    if (_sb && _currentUser) {
       try {
         const { data } = await _sb.from('tasks').select('*').order('position');
         if (data && data.length) {
@@ -3353,7 +3639,8 @@
             if (!col) return;
             col.innerHTML = '';
             data.filter(r => r.status === colId).forEach(r => {
-              addKanbanCard(colId, { title: r.title, cat: r.cat, prio: r.prio, date: r.date, time: r.time, desc: r.description, estimate: r.estimate, startDate: r.start_date, startTime: r.start_time, color: r.color, pomos: r.pomos, pomosDone: r.pomosDone, subtasks: r.subtasks ? JSON.parse(r.subtasks) : [] }, r.id);
+              const extra = r.extra || {};
+              addKanbanCard(colId, { title: r.title, cat: r.cat, prio: r.prio, date: r.date, time: r.time, desc: r.description, estimate: r.estimate, startDate: r.start_date, startTime: r.start_time, color: extra.color, pomos: extra.pomos, pomosDone: extra.pomosDone, subtasks: extra.subtasks || [], done: extra.done, recur: extra.recur || '' }, r.id);
             });
           });
           loaded = true;
@@ -3436,13 +3723,12 @@
   }
   initDayColumns();
 
-  // Добавить колонку Гараж после дней недели
+  // Гараж идей — теперь отдельный блок под доской, а не колонка в ней
   (function addGarageCol() {
-    const board = document.getElementById('kanbanBoard');
+    const board = document.getElementById('garageRow');
+    if (!board) return;
     const col = document.createElement('div');
     col.className = 'kanban-col col-garage';
-    col.style.width = '230px';
-    col.style.flexShrink = '0';
     col.dataset.col = 'garage';
     col.innerHTML = `
       <div class="kanban-col-header">
@@ -3943,7 +4229,7 @@
   });
 
   // + Idea button
-  document.getElementById('addIdeaBtn').addEventListener('click', () => openIdeaModal(null));
+  document.getElementById('addIdeaBtn')?.addEventListener('click', () => openIdeaModal(null));
 
   // Load ideas from localStorage
   try {
@@ -4702,10 +4988,9 @@
   //  MOOD TRACKER (inlined from mood-tracker.html)
   // ══════════════════════════════════════════════════════
   (function mtInit() {
-    const SUPABASE_URL  = window.SUPABASE_URL  || 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON = window.SUPABASE_ANON || 'YOUR_SUPABASE_ANON_KEY';
-    const configOk = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
-    const db = configOk && window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+    // Используем тот же клиент и ту же сессию, что и канбан (см. выше),
+    // а не отдельный — так авторизация общая для всего приложения.
+    const db = _sb;
 
     const $mt  = s => document.querySelector(s);
     const $$mt = s => document.querySelectorAll(s);
@@ -4801,13 +5086,15 @@
     }
 
     async function getEntries() {
-      if (!db) return JSON.parse(localStorage.getItem('moodEntries') || '[]');
+      await _authReady;
+      if (!db || !_currentUser) return JSON.parse(localStorage.getItem('moodEntries') || '[]');
       const { data, error } = await db.from('mood_entries').select('*').order('date', { ascending: false });
       if (error) { showMtToast('Ошибка загрузки: ' + error.message, true); return []; }
       return data || [];
     }
 
     async function saveEntry() {
+      await _authReady;
       const btn = $mt('#mtSaveBtn');
       if (btn) { btn.disabled = true; btn.textContent = 'Сохраняю...'; }
       const { day, phase } = calculateCycle();
@@ -4838,8 +5125,8 @@
         ref_distract:   ($mt('#mtRefDistract')?.value || '').trim(),
         ref_conclusion: ($mt('#mtRefConclusion')?.value || '').trim(),
       };
-      if (db) {
-        const { error } = await db.from('mood_entries').insert(entry);
+      if (db && _currentUser) {
+        const { error } = await db.from('mood_entries').insert({ ...entry, user_id: _currentUser.id });
         if (error) { showMtToast('Ошибка: ' + error.message, true); if (btn) { btn.disabled=false; btn.textContent='Сохранить чек-ин'; } return; }
       } else {
         const entries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
@@ -4859,7 +5146,8 @@
     }
 
     async function deleteMtEntry(id) {
-      if (db) {
+      await _authReady;
+      if (db && _currentUser) {
         const { error } = await db.from('mood_entries').delete().eq('id', id);
         if (error) { showMtToast('Ошибка удаления', true); return; }
       } else {
@@ -5012,6 +5300,7 @@
         if (sc) sc.classList.add('active');
         if (tab.dataset.mtScreen==='mtJournal') renderMtJournal();
         if (tab.dataset.mtScreen==='mtParts') renderMtPartsHistory();
+        if (tab.dataset.mtScreen==='mtCoffee') window.renderCoffeeHistory?.();
       });
     });
 
@@ -5158,6 +5447,218 @@
     // Init
     updateMood();
     updateCycleUI();
+  })();
+
+  // ══════════════════════════════════════════════════════
+  //  COFFEE CHECK-IN — быстрый опросник (модалка из хедера)
+  //  Сохраняет в отдельную таблицу voice_checkins (см. setup.sql).
+  //  Использует общий _sb / _currentUser / _authReady (см. выше).
+  // ══════════════════════════════════════════════════════
+  (function coffeeCheckin() {
+    const QUESTIONS = [
+      { id: 'mood',         tag: '😊 Настроение',        text: 'Как твоё настроение прямо сейчас?', hint: 'Оцени от 1 до 10', type: 'scale',
+        emojis: ['😭','😢','😞','😕','😶','🙂','😊','😄','😁','🤩'], labels: ['совсем плохо', 'отлично'] },
+      { id: 'energy',       tag: '⚡ Энергия',           text: 'Сколько у тебя энергии сегодня?', hint: 'Оцени от 1 до 10', type: 'scale',
+        emojis: ['🪫','😴','🥱','😑','😐','⚡','💪','🔋','🚀','🔥'], labels: ['на нуле', 'много энергии'] },
+      { id: 'priority',     tag: '🎯 Фокус',             text: 'Что сегодня самое важное для тебя сделать?', hint: 'Необязательно', type: 'text',
+        placeholder: 'Например: дописать презентацию, позвонить маме…' },
+      { id: 'blocker',      tag: '🚧 Помехи',            text: 'Есть что-то, что уже тревожит или может помешать?', hint: 'Если ничего — просто пропусти', type: 'text',
+        placeholder: 'Например: устала, много отвлекаюсь, тревога…' },
+      { id: 'productivity', tag: '📈 Продуктивность',    text: 'Насколько продуктивным был день?', hint: 'Оцени от 1 до 10', type: 'scale',
+        emojis: ['😵','😣','😔','😑','🤔','🙂','💼','🔥','🚀','🏆'], labels: ['потерян', 'супер-день'] },
+      { id: 'pomodoros',    tag: '🍅 Помидоры',          text: 'Сколько помидоров ты сделала сегодня?', hint: 'Цифра', type: 'number',
+        placeholder: '0' },
+      { id: 'flow',         tag: '🌊 Поток',             text: 'Был ли момент, когда ты была в потоке — всё шло легко?', hint: 'Опиши коротко или «да / нет»', type: 'text',
+        placeholder: 'Например: да, когда писала текст для клиента…' },
+      { id: 'interference', tag: '😤 Что мешало',        text: 'Что больше всего мешало работать сегодня?', hint: 'Необязательно', type: 'text',
+        placeholder: 'Например: постоянно отвлекалась на соцсети…' },
+      { id: 'energy_plus',  tag: '✨ Что давало силы',   text: 'Что дало больше всего энергии сегодня?', hint: 'Необязательно', type: 'text',
+        placeholder: 'Например: хорошая музыка, звонок с подругой…' },
+      { id: 'energy_minus', tag: '🔋 Что забирало',      text: 'Что больше всего забрало энергию?', hint: 'Необязательно', type: 'text',
+        placeholder: 'Например: долгое совещание, соцсети, тревога…' },
+      { id: 'meaning',      tag: '🌱 Смысл',             text: 'Ты двигалась сегодня к чему-то важному для тебя?', hint: 'Оцени от 1 до 10', type: 'scale',
+        emojis: ['😶','😕','🤷','😑','🙂','👣','🌱','💫','🎯','🌟'], labels: ['совсем нет', 'точно да'] },
+      { id: 'tomorrow',     tag: '🔁 Завтра',            text: 'Если бы завтра повторить этот день — что изменила бы?', hint: 'Необязательно', type: 'text',
+        placeholder: 'Например: начала бы раньше, меньше проверяла телефон…' },
+    ];
+
+    let step = 0;
+    let answers = {};
+
+    const stepLabel   = () => document.getElementById('coffeeStepLabel');
+    const stepTag      = () => document.getElementById('coffeeStepTag');
+    const fill          = () => document.getElementById('coffeeProgressFill');
+    const qText         = () => document.getElementById('coffeeQuestionText');
+    const qHint          = () => document.getElementById('coffeeQuestionHint');
+    const answerArea     = () => document.getElementById('coffeeAnswerArea');
+    const backBtn         = () => document.getElementById('coffeeBackBtn');
+    const nextBtn          = () => document.getElementById('coffeeNextBtn');
+    const doneMsg           = () => document.getElementById('coffeeDoneMsg');
+
+    function renderStep() {
+      doneMsg().style.display = 'none';
+      answerArea().style.display = '';
+      qText().style.display = '';
+      qHint().style.display = '';
+      backBtn().style.display = '';
+      nextBtn().style.display = '';
+
+      const q = QUESTIONS[step];
+      stepLabel().textContent = `${step + 1} / ${QUESTIONS.length}`;
+      stepTag().textContent = q.tag;
+      fill().style.width = `${((step + 1) / QUESTIONS.length) * 100}%`;
+      qText().textContent = q.text;
+      qHint().textContent = q.hint || '';
+
+      const current = answers[q.id];
+      let html = '';
+      if (q.type === 'scale') {
+        html += '<div class="coffee-scale-row">';
+        for (let n = 1; n <= 10; n++) {
+          html += `<button type="button" class="coffee-scale-btn${current === n ? ' active' : ''}" data-val="${n}">${q.emojis[n - 1]}</button>`;
+        }
+        html += '</div>';
+        html += `<div class="coffee-scale-labels"><span>${q.labels[0]}</span><span>${q.labels[1]}</span></div>`;
+      } else if (q.type === 'number') {
+        html = `<input type="number" min="0" class="coffee-number-input" id="coffeeInput" placeholder="${q.placeholder || ''}" value="${current != null ? current : ''}">`;
+      } else {
+        html = `<textarea class="coffee-textarea" id="coffeeInput" placeholder="${q.placeholder || ''}">${current || ''}</textarea>`;
+      }
+      answerArea().innerHTML = html;
+
+      if (q.type === 'scale') {
+        answerArea().querySelectorAll('.coffee-scale-btn').forEach(b => {
+          b.addEventListener('click', () => {
+            answers[q.id] = parseInt(b.dataset.val, 10);
+            answerArea().querySelectorAll('.coffee-scale-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+          });
+        });
+      }
+
+      backBtn().disabled = step === 0;
+      nextBtn().textContent = step === QUESTIONS.length - 1 ? 'Готово ✓' : 'Далее';
+    }
+
+    function captureCurrentAnswer() {
+      const q = QUESTIONS[step];
+      if (q.type === 'scale') return; // уже записано в answers по клику
+      const input = document.getElementById('coffeeInput');
+      if (!input) return;
+      const val = input.value.trim();
+      if (q.type === 'number') answers[q.id] = val === '' ? null : parseInt(val, 10);
+      else answers[q.id] = val;
+    }
+
+    async function finish() {
+      captureCurrentAnswer();
+      nextBtn().disabled = true;
+      await _authReady;
+      const row = { ...answers, date: new Date().toISOString() };
+      if (_sb && _currentUser) {
+        const { error } = await _sb.from('voice_checkins').insert({ ...row, user_id: _currentUser.id });
+        if (error) {
+          console.warn('voice_checkins insert failed', error);
+          toast('Сохранено локально (ошибка облака)', 'error');
+          saveLocalCoffee(row);
+        }
+      } else {
+        saveLocalCoffee(row);
+      }
+      nextBtn().disabled = false;
+      qText().style.display = 'none';
+      qHint().style.display = 'none';
+      answerArea().style.display = 'none';
+      backBtn().style.display = 'none';
+      nextBtn().style.display = 'none';
+      doneMsg().style.display = '';
+      window.renderCoffeeHistory?.();
+    }
+
+    function saveLocalCoffee(row) {
+      try {
+        const all = JSON.parse(localStorage.getItem('voiceCheckins') || '[]');
+        all.unshift({ ...row, id: crypto.randomUUID() });
+        localStorage.setItem('voiceCheckins', JSON.stringify(all));
+      } catch (e) {}
+    }
+
+    function openCoffeeModal() {
+      step = 0;
+      answers = {};
+      renderStep();
+      openModal('coffeeModal');
+    }
+
+    document.getElementById('coffeeCheckinBtn')?.addEventListener('click', openCoffeeModal);
+
+    backBtn()?.addEventListener('click', () => {
+      if (step === 0) return;
+      captureCurrentAnswer();
+      step--;
+      renderStep();
+    });
+
+    nextBtn()?.addEventListener('click', () => {
+      captureCurrentAnswer();
+      if (step === QUESTIONS.length - 1) { finish(); return; }
+      step++;
+      renderStep();
+    });
+
+    // ── Дашборд ответов опросника (вкладка "☕ Опросник" в Mood Tracker) ──
+    async function renderCoffeeHistory() {
+      await _authReady;
+      let rows = [];
+      if (_sb && _currentUser) {
+        const { data, error } = await _sb.from('voice_checkins').select('*').order('date', { ascending: false });
+        if (!error && data) rows = data;
+      } else {
+        try { rows = JSON.parse(localStorage.getItem('voiceCheckins') || '[]'); } catch (e) {}
+      }
+
+      const countEl     = document.getElementById('coffeeCount');
+      const avgMoodEl    = document.getElementById('coffeeAvgMood');
+      const avgEnergyEl   = document.getElementById('coffeeAvgEnergy');
+      const avgProdEl      = document.getElementById('coffeeAvgProd');
+      const listEl           = document.getElementById('coffeeHistoryList');
+      if (!listEl) return;
+
+      if (countEl) countEl.textContent = rows.length;
+      const avg = key => {
+        const vals = rows.map(r => r[key]).filter(v => typeof v === 'number');
+        if (!vals.length) return '—';
+        return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);
+      };
+      if (avgMoodEl)   avgMoodEl.textContent = avg('mood');
+      if (avgEnergyEl) avgEnergyEl.textContent = avg('energy');
+      if (avgProdEl)   avgProdEl.textContent = avg('productivity');
+
+      if (!rows.length) {
+        listEl.innerHTML = '<div class="empty-state">Пока нет записей</div>';
+        return;
+      }
+
+      listEl.innerHTML = rows.slice(0, 30).map(r => {
+        const d = r.date ? new Date(r.date) : null;
+        const dateLabel = d ? d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+        const chips = [];
+        if (r.mood != null)         chips.push(`😊 ${r.mood}`);
+        if (r.energy != null)       chips.push(`⚡ ${r.energy}`);
+        if (r.productivity != null) chips.push(`📈 ${r.productivity}`);
+        if (r.pomodoros != null)    chips.push(`🍅 ${r.pomodoros}`);
+        const textBits = [r.priority, r.blocker, r.flow].filter(Boolean).map(escapeHtml).join(' · ');
+        return `
+          <div class="mt-card" style="padding:12px 14px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;color:var(--muted);font-weight:600;">${dateLabel}</span>
+              <span style="font-size:12px;">${chips.join('  ')}</span>
+            </div>
+            ${textBits ? `<div style="font-size:13px;color:var(--text);">${textBits}</div>` : ''}
+          </div>`;
+      }).join('');
+    }
+    window.renderCoffeeHistory = renderCoffeeHistory;
   })();
 
   // ── Modal: Pomodoro stepper ─────────────────────────────────────────────
