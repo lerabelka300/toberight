@@ -205,8 +205,15 @@
   .lera-logo span { color: var(--accent); }
 
   /* Today screen layout */
-  #today { display: none; flex-direction: column; overflow: hidden; padding: 0; }
+  /* Экран скроллится по вертикали: экран 1 = задачи (полная высота),
+     экран 2 = помидоры + дашборд + гараж идей */
+  #today { display: none; flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 0; scroll-snap-type: y proximity; }
   #today.active { display: flex; }
+  .t3-screen { flex-shrink: 0; display: flex; flex-direction: column; min-height: 0; scroll-snap-align: start; }
+  .t3-screen-tasks { height: 100%; }
+  .t3-screen-trackers { min-height: 100%; }
+  .t3-trackers-cols { flex: 1; display: grid; grid-template-columns: 280px 1fr; min-height: 0; overflow: hidden; }
+  .t3-trackers-main { display: flex; flex-direction: column; min-height: 0; overflow-y: auto; }
   .t3-page-head {
     flex-shrink: 0;
     display: flex;
@@ -271,28 +278,36 @@
   .col-garage .kanban-col-title { color: #92660a !important; }
   .col-garage .kanban-col-count { color: #b5860d !important; }
 
-  /* ── Блок 3: Гараж идей — отдельная строка под доской ── */
+  /* ── Гараж идей — колонка шириной как Inbox (экран 2) ── */
   .t3-garage-row {
-    flex-shrink: 0;
-    border-top: 1px solid var(--border);
-    padding: 10px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+    padding: 10px 12px 14px;
     background: var(--surface);
   }
   .t3-garage-row .kanban-col {
     width: 100% !important;
-    height: auto !important;
-    max-height: 260px;
+    height: 100% !important;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
   .t3-garage-row .kanban-cards {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 170px;
+    max-height: none;
   }
   .t3-garage-row .kanban-card {
-    width: 200px;
+    width: auto;
     flex-shrink: 0;
+    margin-right: 6px;
   }
 
   /* Помидоры — строка */
@@ -1247,7 +1262,8 @@
 #mood .mt-helper { color:var(--muted); font-size:13px; line-height:1.5; margin:-6px 0 14px; }
 
 /* Check-in layout */
-#mood .checkin-layout { display:grid; grid-template-columns:minmax(0,680px); }
+/* Все вкладки Mood — одна ширина (контейнер .mt-app), чтобы блоки не «скакали» при переключении */
+#mood .checkin-layout { display:grid; grid-template-columns:1fr; }
 
 /* Mood score display */
 #mood .mt-row { display:flex; justify-content:space-between; align-items:center; gap:16px; }
@@ -1353,7 +1369,7 @@
 #mood .phase-desc { color:var(--muted); font-size:14px; line-height:1.6; margin-top:6px; }
 
 /* ── ЧАСТИ ── */
-#mood .parts-grid { display:flex; flex-direction:column; gap:14px; max-width:680px; }
+#mood .parts-grid { display:flex; flex-direction:column; gap:14px; }
 #mood .part-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow); }
 #mood .part-header { display:flex; justify-content:space-between; align-items:center; }
 #mood .part-header-left { display:flex; gap:12px; align-items:center; }
@@ -1667,6 +1683,9 @@
 
     <!-- TODAY -->
     <section class="screen active" id="today">
+      <!-- ЭКРАН 1: задачи (inbox + календарь + доска) на всю высоту -->
+      <div class="t3-screen t3-screen-tasks">
+
       <!-- Заголовок страницы — тот же паттерн, что на Mood/Finances -->
       <div class="t3-page-head">
         <span class="t3-page-title">Сегодня</span>
@@ -1732,6 +1751,17 @@
 
       </div>
 
+      </div><!-- /t3-screen-tasks (экран 1) -->
+
+      <!-- ЭКРАН 2: гараж идей + помидоры + мини-дашборд -->
+      <div class="t3-screen t3-screen-trackers">
+      <div class="t3-trackers-cols">
+
+      <!-- ГАРАЖ ИДЕЙ — колонка шириной как Inbox -->
+      <div class="t3-garage-row" id="garageRow"></div>
+
+      <div class="t3-trackers-main">
+
       <!-- ② BLOCK 2: Помидоры на всю ширину + мини-дашборд -->
       <div class="pomo-row">
         <div class="pomo-row-head">
@@ -1787,8 +1817,9 @@
         </div>
       </div>
 
-      <!-- ③ IDEA GARAGE — отдельный блок, вынесен из доски -->
-      <div class="t3-garage-row" id="garageRow"></div>
+      </div><!-- /t3-trackers-main -->
+      </div><!-- /t3-trackers-cols -->
+      </div><!-- /t3-screen-trackers (экран 2) -->
 
       <!-- hidden elements for backward compat (pomodoro etc) -->
       <div style="display:none">
